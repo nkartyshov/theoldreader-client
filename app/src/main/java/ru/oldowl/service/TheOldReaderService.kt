@@ -7,10 +7,12 @@ import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
+import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.error
 import ru.oldowl.R
 import java.io.IOException
 
-class TheOldReaderService(private val context: Context) {
+class TheOldReaderService(private val context: Context) : AnkoLogger {
 
     private val httpClient: OkHttpClient = OkHttpClient()
 
@@ -44,7 +46,7 @@ class TheOldReaderService(private val context: Context) {
                 }
             }
         } catch (e: IOException) {
-            // TODO print error
+            error("Error authentication in the old reader", e)
         }
 
         return null

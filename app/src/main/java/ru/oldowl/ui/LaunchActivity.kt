@@ -1,8 +1,8 @@
 package ru.oldowl.ui
 
-import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import org.jetbrains.anko.startActivity
 import org.koin.standalone.KoinComponent
 import ru.oldowl.R
 
@@ -12,7 +12,7 @@ class LaunchActivity : AppCompatActivity(), KoinComponent {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_launch)
 
-        startActivity(Intent(this, LoginActivity::class.java))
+        startActivity<LoginActivity>()
         finish()
     }
 }
