@@ -11,11 +11,11 @@ import org.jetbrains.anko.startActivity
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
 import ru.oldowl.R
-import ru.oldowl.service.TheOldReaderService
+import ru.oldowl.api.TheOldReaderApi
 import kotlin.coroutines.CoroutineContext
 
 class LoginActivity : AppCompatActivity(), KoinComponent, CoroutineScope {
-    private val oldReaderService: TheOldReaderService by inject()
+    private val oldReaderService: TheOldReaderApi by inject()
 
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main
@@ -31,17 +31,17 @@ class LoginActivity : AppCompatActivity(), KoinComponent, CoroutineScope {
 
 
                 val deferred = async(Dispatchers.Default) {
-                    oldReaderService.authentication(email, password)
+                    oldReaderService.authentication(email, password, getString(R.string.app_name))
                 }
 
                 val authToken = deferred.await()
                 if (authToken != null) {
-                    //TODO show error
-                } else {
-                    //TODO save to preference
+                    //TODO save to account manager
 
                     startActivity<MainActivity>()
                     finish()
+                } else {
+                    //TODO show error
                 }
             }
         }
