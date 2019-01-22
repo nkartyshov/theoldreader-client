@@ -8,8 +8,8 @@ import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.error
 import ru.oldowl.api.model.AuthResponse
 import ru.oldowl.api.model.SubscriptionsResponse
-import ru.oldowl.db.entity.Article
-import ru.oldowl.db.entity.Subscription
+import ru.oldowl.model.Article
+import ru.oldowl.model.Subscription
 import java.io.IOException
 import java.io.StringReader
 

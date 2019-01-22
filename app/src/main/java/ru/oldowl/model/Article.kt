@@ -1,4 +1,4 @@
-package ru.oldowl.db.entity
+package ru.oldowl.model
 
 import android.arch.persistence.room.*
 import java.util.*

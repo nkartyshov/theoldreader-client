@@ -1,9 +1,9 @@
-package ru.oldowl.db.dao
+package ru.oldowl.dao
 
 import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Query
-import ru.oldowl.db.entity.Subscription
+import ru.oldowl.model.Subscription
 
 @Dao
 interface SubscriptionDao {
