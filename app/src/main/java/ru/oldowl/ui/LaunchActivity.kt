@@ -8,7 +8,6 @@ import org.koin.standalone.inject
 import ru.oldowl.R
 import ru.oldowl.service.AccountService
 
-// todo remove
 class LaunchActivity : AppCompatActivity(), KoinComponent {
     private val accountService: AccountService by inject()
 
