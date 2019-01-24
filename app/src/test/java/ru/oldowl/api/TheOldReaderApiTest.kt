@@ -18,7 +18,12 @@ class TheOldReaderApiTest {
     fun testAuthentication() = runBlocking {
         val token = theOldReaderApi?.authentication("nkartyshov@adguard.com", "Test12345", "OldOwl")
         assertNotNull(token)
+    }
 
+    @Test
+    fun testAuthenticationFault() = runBlocking {
+        val token = theOldReaderApi?.authentication("test@fault.com", "Test12345", "OldOwl")
+        assertNull(token)
     }
 
     @Test

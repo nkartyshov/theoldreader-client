@@ -1,55 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="@dimen/margin_default">
+    android:padding="@dimen/indent_default">
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/TextHeader"
-        android:textAlignment="center"
-        android:text="@string/log_in_old_reader"/>
+        android:layout_gravity="center"
+        android:orientation="vertical">
 
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_default">
-
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/email"
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/TextNormal"
-            android:hint="@string/email"
-            android:inputType="textEmailAddress" />
+            android:layout_marginTop="@dimen/indent_default">
 
-    </android.support.design.widget.TextInputLayout>
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/email"
+                style="@style/TextNormal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/email"
+                android:inputType="textEmailAddress" />
 
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_default"
-        app:passwordToggleEnabled="true">
+        </android.support.design.widget.TextInputLayout>
 
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/password"
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/indent_default"
+            app:passwordToggleEnabled="true">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/password"
+                style="@style/TextNormal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/password"
+                android:inputType="textPassword" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <Button
+            android:id="@+id/sign_in"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/indent_default"
+            android:text="@string/sing_in" />
+
+        <TextView
+            android:id="@+id/reset_password"
+            style="@style/TextNormal.Bold"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/indent_default"
+            android:text="@string/forgot_your_password" />
+
+        <TextView
+            android:id="@+id/sing_up"
             style="@style/TextNormal"
-            android:hint="@string/password"
-            android:inputType="textPassword" />
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/indent_default"
+            android:text="@string/sign_up_to_theoldreader" />
 
-    </android.support.design.widget.TextInputLayout>
-
-    <Button
-        android:id="@+id/sign_in"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right"
-        android:layout_marginTop="@dimen/margin_default"
-        android:text="@string/sing_in" />
-
-</LinearLayout>
+    </LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

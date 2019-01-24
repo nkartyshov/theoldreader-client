@@ -1,11 +1,10 @@
 package ru.oldowl.api
 
 import com.rometools.rome.io.SyndFeedInput
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.error
+import ru.oldowl.JsonHelper
 import ru.oldowl.api.model.AuthResponse
 import ru.oldowl.api.model.SubscriptionsResponse
 import ru.oldowl.model.Article
@@ -17,11 +16,7 @@ class TheOldReaderApi : AnkoLogger {
 
     private val httpClient: OkHttpClient = OkHttpClient()
 
-    private val moshi: Moshi = Moshi.Builder()
-            .add(KotlinJsonAdapterFactory())
-            .build()
-
-    suspend fun authentication(email: String, password: String, appName: String): String? {
+    fun authentication(email: String, password: String, appName: String): String? {
         try {
             val httpUrl = HttpUrl.Builder()
                     .scheme(SCHEMA)
@@ -39,14 +34,13 @@ class TheOldReaderApi : AnkoLogger {
 
             val request = Request.Builder()
                     .url(httpUrl)
-
                     .post(requestBody)
                     .build()
 
             val response: Response = httpClient.newCall(request).execute()
             if (response.isSuccessful) {
                 response.body()?.let {
-                    val authAdapter = moshi.adapter(AuthResponse::class.java)
+                    val authAdapter = JsonHelper.adapter(AuthResponse::class.java)
                     val authResponse = authAdapter.fromJson(it.string())
 
                     return authResponse?.auth
@@ -59,7 +53,7 @@ class TheOldReaderApi : AnkoLogger {
         return null
     }
 
-    suspend fun getSubscriptions(token: String): List<Subscription> {
+    fun getSubscriptions(token: String): List<Subscription> {
         val result = ArrayList<Subscription>()
 
         try {
@@ -79,7 +73,7 @@ class TheOldReaderApi : AnkoLogger {
             val response = httpClient.newCall(request).execute()
             if (response.isSuccessful) {
                 response.body()?.let { responseBody ->
-                    val subscriptionsAdapter = moshi.adapter(SubscriptionsResponse::class.java)
+                    val subscriptionsAdapter = JsonHelper.adapter(SubscriptionsResponse::class.java)
                     val subscriptionsResponse = subscriptionsAdapter.fromJson(responseBody.string())
 
                     subscriptionsResponse?.let {
@@ -106,7 +100,7 @@ class TheOldReaderApi : AnkoLogger {
         return result
     }
 
-    suspend fun getArticles(subscription: Subscription, token: String): List<Article> {
+    fun getArticles(subscription: Subscription, token: String): List<Article> {
         val result = ArrayList<Article>()
 
         try {

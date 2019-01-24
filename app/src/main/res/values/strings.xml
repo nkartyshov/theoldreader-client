@@ -3,7 +3,11 @@
     <string name="sing_in">Sing in</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
-    <string name="welcome">Welcome</string>
 
     <string name="log_in_old_reader">Log in to The Old Reader</string>
+    <string name="email_error">Email is required</string>
+    <string name="password_error">Password is required</string>
+    <string name="authentication_error">Email or password isn\'t valid</string>
+    <string name="forgot_your_password">Forgot your password?</string>
+    <string name="sign_up_to_theoldreader">Sign up to TheOldReader</string>
 </resources>

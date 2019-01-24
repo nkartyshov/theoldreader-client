@@ -1,49 +1,65 @@
 package ru.oldowl.ui
 
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import org.jetbrains.anko.startActivity
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
 import ru.oldowl.R
-import ru.oldowl.api.TheOldReaderApi
+import ru.oldowl.extension.openWebsite
+import ru.oldowl.viewmodel.LoginViewModel
 import kotlin.coroutines.CoroutineContext
 
 class LoginActivity : AppCompatActivity(), KoinComponent, CoroutineScope {
-    private val oldReaderService: TheOldReaderApi by inject()
-
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main
+
+    private val loginViewModel: LoginViewModel by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
         sign_in.setOnClickListener {
+            val emailValue = email.text?.toString() ?: ""
+            val passwordValue = password.text?.toString() ?: ""
+
+            if (emailValue.isBlank()) {
+                email.error = getString(R.string.email_error)
+            }
+
+            if (passwordValue.isBlank()) {
+                password.error = getString(R.string.password_error)
+            }
+
             launch {
-                val email = email.text?.toString() ?: ""
-                val password = password.text?.toString() ?: ""
+                val deferred = loginViewModel.authentication(emailValue, passwordValue)
 
-
-                val deferred = async(Dispatchers.Default) {
-                    oldReaderService.authentication(email, password, getString(R.string.app_name))
-                }
-
-                val authToken = deferred.await()
-                if (authToken != null) {
-                    //TODO save to account manager
-
+                if (deferred.await()) {
                     startActivity<MainActivity>()
                     finish()
                 } else {
-                    //TODO show error
+                    Snackbar.make(it, getString(R.string.authentication_error), Snackbar.LENGTH_LONG).show()
                 }
             }
         }
+
+        reset_password.setOnClickListener {
+            openWebsite(RESET_PASSWORD_URL)
+        }
+
+        sing_up.setOnClickListener {
+            openWebsite(SING_UP_URL)
+        }
+    }
+
+    companion object {
+        private const val RESET_PASSWORD_URL = "https://theoldreader.com/users/password/new"
+        private const val SING_UP_URL = "https://theoldreader.com/users/sign_up"
     }
 }
