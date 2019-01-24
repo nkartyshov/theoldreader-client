@@ -1,7 +1,7 @@
 package ru.oldowl.viewmodel
 
+import android.app.Application
 import android.arch.lifecycle.ViewModel
-import android.content.Context
 import kotlinx.coroutines.*
 import org.koin.standalone.KoinComponent
 import ru.oldowl.R
@@ -10,7 +10,7 @@ import ru.oldowl.model.Account
 import ru.oldowl.service.AccountService
 import kotlin.coroutines.CoroutineContext
 
-class LoginViewModel(private val context: Context,
+class LoginViewModel(private val application: Application,
                      private val theOldReaderApi: TheOldReaderApi,
                      private val accountService: AccountService) : ViewModel(), KoinComponent, CoroutineScope {
 
@@ -20,7 +20,7 @@ class LoginViewModel(private val context: Context,
         get() = job + Dispatchers.Default
 
     fun authentication(email: String, password: String): Deferred<Boolean> = async {
-        val appName = context.getString(R.string.app_name)
+        val appName = application.getString(R.string.app_name)
         theOldReaderApi.authentication(email, password, appName)
 
         val authToken = theOldReaderApi.authentication(email, password, appName)
