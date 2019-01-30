@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#90a4ae</color>
-    <color name="colorPrimaryDark">#62757f</color>
+    <color name="colorPrimary">@color/white</color>
+    <color name="colorPrimaryDark">@color/lightGray</color>
     <color name="colorAccent">#03A9F4</color>
     <color name="colorPrimaryText">#212121</color>
+    <color name="iconColorPrimary">@color/black</color>
 
     <color name="white">#FFFFFF</color>
+    <color name="black">#212121</color>
+    <color name="lightGray">#e1e1e1</color>
 </resources>

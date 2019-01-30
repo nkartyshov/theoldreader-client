@@ -1,6 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="300dp"
+    android:layout_height="match_parent"
+    android:layout_gravity="start"
+    android:background="@color/white"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
 
+    <include layout="@layout/navigation_header" />
+
+    <View style="@style/VerticalDivider" />
+
+    <LinearLayout style="@style/NavItem">
+
+        <ImageView
+            style="@style/NavImageItem"
+            android:src="@drawable/ic_home" />
+
+        <TextView
+            style="@style/TextNormal"
+            android:text="@string/nav_all" />
+    </LinearLayout>
+
+    <LinearLayout style="@style/NavItem">
+
+        <ImageView
+            style="@style/NavImageItem"
+            android:src="@drawable/ic_bookmark" />
+
+        <TextView
+            style="@style/TextNormal"
+            android:text="@string/nav_favorite" />
+    </LinearLayout>
+
+    <LinearLayout
+        style="@style/ContentFullWidth.Vertical"
+        android:visibility="gone">
+
+        <View style="@style/VerticalDivider" />
+
+        <TextView
+            style="@style/TextCaption"
+            android:padding="@dimen/indent_default"
+            android:text="@string/nav_subscriptions" />
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false" />
+    </LinearLayout>
+
+    <View style="@style/VerticalDivider" />
+
+    <LinearLayout style="@style/NavItem">
+
+        <ImageView
+            style="@style/NavImageItem"
+            android:src="@drawable/ic_rss_feed" />
+
+        <TextView
+            style="@style/TextNormal"
+            android:text="@string/nav_add_subscription" />
+    </LinearLayout>
+
+    <LinearLayout style="@style/NavItem">
+
+        <ImageView
+            style="@style/NavImageItem"
+            android:src="@drawable/ic_settings" />
+
+        <TextView
+            style="@style/TextNormal"
+            android:text="@string/nav_settings" />
+    </LinearLayout>
 </LinearLayout>

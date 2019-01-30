@@ -11,7 +11,7 @@
         android:src="@drawable/ic_app" />
 
     <TextView
-        style="@style/TextHeader"
+        style="@style/TextAppearance.AppCompat.Headline"
         android:layout_marginTop="@dimen/indent_default"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

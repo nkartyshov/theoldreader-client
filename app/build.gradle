@@ -58,6 +58,7 @@ dependencies {
     implementation "com.android.support:design:$sdk_version"
     implementation "com.android.support:customtabs:$sdk_version"
     implementation "com.android.support:preference-v7:$sdk_version"
+    implementation "com.android.support:support-v4:$sdk_version"
 
     def koin_version = '0.9.3'
     implementation "org.koin:koin-core:$koin_version"
@@ -73,8 +74,9 @@ dependencies {
     implementation "com.rometools:rome-opml:$rome_version"
 
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support:support-annotations:28.0.0'
+
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test:rules:1.0.2'
+    androidTestImplementation 'com.android.support:support-annotations:28.0.0'
     androidTestImplementation 'android.arch.persistence.room:testing:1.1.1'
 }

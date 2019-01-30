@@ -10,4 +10,15 @@
     <string name="authentication_error">Email or password isn\'t valid</string>
     <string name="forgot_your_password">Forgot your password?</string>
     <string name="sign_up_to_theoldreader">Sign up to TheOldReader</string>
+    <string name="open_drawer">Open</string>
+    <string name="close_drawer">Close</string>
+    <string name="nav_all">All</string>
+    <string name="nav_unread">Unread</string>
+    <string name="nav_favorite">Favorite</string>
+    <string name="nav_subscriptions">Subscriptions</string>
+    <string name="nav_add_subscription">Add subscription</string>
+    <string name="nav_settings">Settings</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
