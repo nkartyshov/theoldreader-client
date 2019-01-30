@@ -9,6 +9,8 @@
 
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+
+        <item name="buttonStyle">@style/Base.Widget.AppCompat.Button.Colored</item>
     </style>
 
     <style name="TextNormal" parent="TextAppearance.AppCompat.Body1">
@@ -55,6 +57,4 @@
     <style name="ContentFullWidth.Vertical">
         <item name="android:orientation">vertical</item>
     </style>
-
-    <color name="gray">#8e8e8e</color>
 </resources>
