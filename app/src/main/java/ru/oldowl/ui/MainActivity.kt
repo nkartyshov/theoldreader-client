@@ -16,6 +16,8 @@ class MainActivity : AppCompatActivity() {
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        drawer_view.setStatusBarBackground(R.color.colorPrimaryDark)
+
         val actionBarDrawerToggle = ActionBarDrawerToggle(this, drawer_view,
                 toolbar,
                 R.string.open_drawer,
