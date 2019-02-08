@@ -2,13 +2,20 @@ package ru.oldowl.model
 
 import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Entity
+import android.arch.persistence.room.ForeignKey
 import android.arch.persistence.room.PrimaryKey
 import java.util.*
 
-@Entity(tableName = "subscriptions")
+@Entity(tableName = "subscriptions",
+        foreignKeys = [ForeignKey(entity = Category::class,
+                parentColumns = ["id"],
+                childColumns = ["category_id"],
+                onDelete = ForeignKey.SET_NULL)])
 data class Subscription(
         @PrimaryKey(autoGenerate = true)
         var id: Int = 0,
+        @ColumnInfo(name = "category_id")
+        var categoryId: Int,
         @ColumnInfo(name = "feed_id")
         var feedId: String,
         @ColumnInfo(name = "title")

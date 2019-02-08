@@ -1,23 +1,30 @@
 <resources>
     <string name="app_name">Old owl</string>
-    <string name="sing_in">Sing in</string>
-    <string name="email">Email</string>
-    <string name="password">Password</string>
+    <string translatable="false" name="empty"/>
 
-    <string name="log_in_old_reader">Log in to The Old Reader</string>
+    <string name="sing_in">Sing in</string>
+
+    <string name="email">Email</string>
     <string name="email_error">Email is required</string>
+
+    <string name="password">Password</string>
     <string name="password_error">Password is required</string>
+
     <string name="authentication_error">Email or password isn\'t valid</string>
+
     <string name="forgot_your_password">Forgot your password?</string>
-    <string name="sign_up_to_theoldreader">Sign up to TheOldReader</string>
+    <string name="sign_up">Sign up to TheOldReader</string>
+
     <string name="open_drawer">Open</string>
     <string name="close_drawer">Close</string>
+
     <string name="nav_all">All</string>
     <string name="nav_unread">Unread</string>
     <string name="nav_favorite">Favorite</string>
     <string name="nav_subscriptions">Subscriptions</string>
     <string name="nav_add_subscription">Add subscription</string>
     <string name="nav_settings">Settings</string>
+    <string name="nav_last_sync_date">Last sync date: %s</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

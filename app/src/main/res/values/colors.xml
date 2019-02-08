@@ -4,7 +4,9 @@
     <color name="colorPrimaryDark">@color/lightGray</color>
     <color name="colorAccent">#03A9F4</color>
     <color name="colorPrimaryText">#212121</color>
+
     <color name="iconColorPrimary">@color/black</color>
+    <color name="statusBarColor">#1A000000</color>
 
     <color name="white">#FFFFFF</color>
     <color name="black">#212121</color>

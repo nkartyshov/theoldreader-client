@@ -9,7 +9,7 @@
         <item name="android:textColorSecondary">@color/gray</item>
 
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:statusBarColor">#1A000000</item>
+        <item name="android:statusBarColor">@color/statusBarColor</item>
 
         <item name="buttonStyle">@style/Base.Widget.AppCompat.Button.Colored</item>
     </style>

@@ -5,6 +5,7 @@ import org.junit.After
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
+import ru.oldowl.model.Subscription
 
 class TheOldReaderApiTest {
     private var theOldReaderApi: TheOldReaderApi? = null
@@ -33,6 +34,7 @@ class TheOldReaderApiTest {
 
         assertNotNull(subscriptions)
         assertEquals(subscriptions?.size, 1)
+        assertEquals(subscriptions!![0].categories.size, 1)
     }
 
     @Test
@@ -43,7 +45,17 @@ class TheOldReaderApiTest {
         assertNotNull(subscriptions)
         assertEquals(subscriptions?.size, 1)
 
-        val articles = theOldReaderApi?.getArticles(subscriptions?.get(0)!!, token!!)
+        val subscriptionResponse = subscriptions!![0]
+
+        val subscription = Subscription(
+                id = 1,
+                feedId = subscriptionResponse.id,
+                title = "",
+                url = "",
+                categoryId = 0
+        )
+
+        val articles = theOldReaderApi?.getArticles(subscription, token!!)
         assertNotNull(articles)
         assertTrue(articles!!.isNotEmpty())
     }

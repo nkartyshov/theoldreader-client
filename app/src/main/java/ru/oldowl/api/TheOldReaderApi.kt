@@ -6,6 +6,7 @@ import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.error
 import ru.oldowl.JsonHelper
 import ru.oldowl.api.model.AuthResponse
+import ru.oldowl.api.model.SubscriptionResponse
 import ru.oldowl.api.model.SubscriptionsResponse
 import ru.oldowl.model.Article
 import ru.oldowl.model.Subscription
@@ -53,9 +54,7 @@ class TheOldReaderApi : AnkoLogger {
         return null
     }
 
-    fun getSubscriptions(token: String): List<Subscription> {
-        val result = ArrayList<Subscription>()
-
+    fun getSubscriptions(token: String): List<SubscriptionResponse> {
         try {
             val httpUrl = HttpUrl.Builder()
                     .scheme(SCHEMA)
@@ -76,28 +75,18 @@ class TheOldReaderApi : AnkoLogger {
                     val subscriptionsAdapter = JsonHelper.adapter(SubscriptionsResponse::class.java)
                     val subscriptionsResponse = subscriptionsAdapter.fromJson(responseBody.string())
 
-                    subscriptionsResponse?.let {
-                        for (subscriptionResponse in it.subscriptions) {
-                            if (!subscriptionResponse.id.contains("sponsored")) {
-                                val subscription = Subscription(
-                                        feedId = subscriptionResponse.id,
-                                        title = subscriptionResponse.title,
-                                        url = subscriptionResponse.url,
-                                        htmlUrl = subscriptionResponse.htmlUrl
-                                )
-
-                                result.add(subscription)
-                            }
+                    subscriptionsResponse?.let { subscriptionResponse ->
+                        return subscriptionResponse.subscriptions.filter { v ->
+                            !v.id.contains("sponsored")
                         }
                     }
-
                 }
             }
         } catch (e: IOException) {
             error("Error getting subscription list", e)
         }
 
-        return result
+        return emptyList()
     }
 
     fun getArticles(subscription: Subscription, token: String): List<Article> {

@@ -62,7 +62,7 @@
             style="@style/TextNormal"
             android:layout_gravity="center"
             android:layout_marginTop="@dimen/indent_default"
-            android:text="@string/sign_up_to_theoldreader" />
+            android:text="@string/sign_up" />
 
     </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>
