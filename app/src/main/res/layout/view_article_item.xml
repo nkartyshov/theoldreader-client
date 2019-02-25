@@ -1,37 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
         <variable
-            name="subscription"
-            type="ru.oldowl.model.Subscription" />
+            name="article"
+            type="ru.oldowl.model.Article" />
 
         <variable
-            name="unread"
-            type="int" />
+            name="subscriptionTitle"
+            type="String" />
     </data>
 
-    <LinearLayout style="@style/NavItem">
-
-        <ImageView
-            style="@style/NavImageItem"
-            app:text="@{subscription.title}" />
+    <LinearLayout
+        style="@style/ContentFullWidth.Vertical"
+        android:padding="@dimen/indent_default">
 
         <TextView
             style="@style/TextNormal"
-            android:layout_weight="1"
-            android:ellipsize="end"
-            android:lines="1"
-            android:singleLine="true"
-            android:text="@{subscription.title}"
-            tools:text="Subscription name" />
+            android:text="@{article.title}"
+            tools:text="Article title" />
 
         <TextView
-            style="@style/TextNormal"
-            android:text="@{unread == 0 ? @string/empty : unread}"
-            tools:text="200" />
+            style="@style/TextSummary"
+            android:layout_marginTop="@dimen/indent_small"
+            android:text="@{article.description}"
+            tools:text="Article description" />
+
+        <LinearLayout
+            style="@style/ContentFullWidth.Horizontal"
+            android:paddingTop="@dimen/indent_small">
+
+            <TextView
+                style="@style/TextCaption"
+                android:layout_marginEnd="@dimen/indent_small"
+                android:text="@{article.publishDate}"
+                tools:text="Today" />
+
+            <TextView
+                style="@style/TextCaption"
+                android:text="@string/item_sep" />
+
+            <TextView
+                style="@style/TextCaption.SingleLine"
+                android:layout_marginStart="@dimen/indent_small"
+                android:text="@{subscriptionTitle}"
+                tools:text="Subscription"/>
+
+        </LinearLayout>
+
     </LinearLayout>
 </layout>

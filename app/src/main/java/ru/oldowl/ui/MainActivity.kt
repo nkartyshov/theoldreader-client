@@ -2,16 +2,20 @@ package ru.oldowl.ui
 
 import android.databinding.DataBindingUtil
 import android.os.Bundle
+import android.support.v4.app.Fragment
+import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
+import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.navigation_layout.*
 import kotlinx.android.synthetic.main.toolbar.*
 import org.koin.standalone.inject
 import ru.oldowl.R
 import ru.oldowl.databinding.ActivityMainBinding
-import ru.oldowl.ui.adapter.SubscriptionWithUnreadAdapter
+import ru.oldowl.extension.replaceFragment
+import ru.oldowl.ui.adapter.SubscriptionAndUnreadCountAdapter
 import ru.oldowl.viewmodel.MainViewModel
 
 class MainActivity : BaseActivity() {
@@ -20,11 +24,6 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val dataBinding: ActivityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        dataBinding.setLifecycleOwner(this)
-
-        dataBinding.viewModel = mainViewModel
-        dataBinding.navigationView.viewModel = mainViewModel
-        dataBinding.navigationView.navigationHeader.viewModel = mainViewModel
 
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -37,13 +36,50 @@ class MainActivity : BaseActivity() {
         actionBarDrawerToggle.syncState()
 
         drawer_view.setStatusBarBackground(R.color.colorPrimaryDark)
+        drawer_view.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
+            override fun onDrawerOpened(drawerView: View) {
+                super.onDrawerOpened(drawerView)
 
-        subscription_list.adapter = SubscriptionWithUnreadAdapter(this)
+                mainViewModel.updateSubscriptions()
+            }
+        })
+
+        val adapter = SubscriptionAndUnreadCountAdapter(this)
+        adapter.setOnItemClickListener {
+            openFragment(ArticleListFragment.openSubscription(it))
+        }
+
+        subscription_list.adapter = adapter
         subscription_list.layoutManager = LinearLayoutManager(this)
         subscription_list.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
 
-        supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, ArticleListFragment())
-                .commit()
+        all_articles.setOnClickListener {
+            openFragment(ArticleListFragment.openAllArticles())
+        }
+
+        favorite_articles.setOnClickListener {
+            openFragment(ArticleListFragment.openFavorites())
+        }
+
+        add_subscription.setOnClickListener {
+            openFragment(AddSubscriptionFragment())
+        }
+
+        settings.setOnClickListener {
+            openFragment(SettingsFragment())
+        }
+
+        dataBinding.viewModel = mainViewModel
+        dataBinding.navigationView.viewModel = mainViewModel
+        dataBinding.navigationView.navigationHeader.viewModel = mainViewModel
+        dataBinding.setLifecycleOwner(this)
+
+        replaceFragment(R.id.fragment_container, ArticleListFragment.openAllArticles(), addToBackStack = false)
+    }
+
+    private fun openFragment(fragment: Fragment) {
+        replaceFragment(R.id.fragment_container, fragment)
+
+        drawer_view.closeDrawers()
     }
 }

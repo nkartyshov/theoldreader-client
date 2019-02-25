@@ -30,13 +30,16 @@ class LoginActivity : BaseActivity() {
             }
 
             launch {
-                val deferred = loginViewModel.authentication(emailValue, passwordValue)
+                val authToken = loginViewModel.authentication(emailValue, passwordValue)
 
-                if (deferred.await()) {
+                if (authToken.isNullOrBlank()) {
+                    Snackbar.make(it, getString(R.string.authentication_error), Snackbar.LENGTH_LONG).show()
+                } else {
+                    loginViewModel.saveAccount(emailValue, passwordValue, authToken)
+                    loginViewModel.downloadSubscriptions(authToken)
+
                     startActivity<MainActivity>()
                     finish()
-                } else {
-                    Snackbar.make(it, getString(R.string.authentication_error), Snackbar.LENGTH_LONG).show()
                 }
             }
         }

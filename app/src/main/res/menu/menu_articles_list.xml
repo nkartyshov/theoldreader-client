@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/hide_read"
+        android:checkable="true"
+        android:title="@string/hide_read"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/unsubscribe"
+        android:title="@string/unsubscribe"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/delete_all"
+        android:title="@string/delete_all"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/delete_all_read"
+        android:title="@string/delete_all_read"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/read_all"
+        android:title="@string/mark_all_read"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/sync"
+        android:title="@string/sync"
+        app:showAsAction="never" />
+</menu>

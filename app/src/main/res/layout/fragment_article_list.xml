@@ -1,14 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.ArticleListFragment">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment"
-        android:gravity="center"/>
+    <data>
 
-</FrameLayout>
+        <variable
+            name="viewModel"
+            type="ru.oldowl.viewmodel.ArticleListViewModel" />
+    </data>
+
+    <android.support.design.widget.CoordinatorLayout style="@style/ContentFullParent">
+
+        <android.support.v4.widget.SwipeRefreshLayout style="@style/ContentFullParent"
+            refreshing="@{viewModel.dataLoading}">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/article_list"
+                style="@style/ContentFullParent"
+                articles="@{viewModel.articles}" />
+        </android.support.v4.widget.SwipeRefreshLayout>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/make_all_read"
+            style="@style/FloatingButton"
+            android:src="@drawable/ic_add_white_24dp"
+            app:fabSize="normal" />
+
+    </android.support.design.widget.CoordinatorLayout>
+</layout>

@@ -1,11 +1,9 @@
 package ru.oldowl.api
 
-import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
-import ru.oldowl.model.Subscription
 
 class TheOldReaderApiTest {
     private var theOldReaderApi: TheOldReaderApi? = null
@@ -15,53 +13,55 @@ class TheOldReaderApiTest {
         theOldReaderApi = TheOldReaderApi()
     }
 
+    @After
+    fun tearDown() {
+        theOldReaderApi = null
+    }
+
     @Test
-    fun testAuthentication() = runBlocking {
+    fun testAuthentication() {
         val token = theOldReaderApi?.authentication("nkartyshov@adguard.com", "Test12345", "OldOwl")
         assertNotNull(token)
     }
 
     @Test
-    fun testAuthenticationFault() = runBlocking {
+    fun testAuthenticationFault() {
         val token = theOldReaderApi?.authentication("test@fault.com", "Test12345", "OldOwl")
         assertNull(token)
     }
 
     @Test
-    fun testGetSubscription() = runBlocking {
+    fun testGetSubscription() {
         val token = theOldReaderApi?.authentication("nkartyshov@adguard.com", "Test12345", "OldOwl")
         val subscriptions = theOldReaderApi?.getSubscriptions(token!!)
 
         assertNotNull(subscriptions)
         assertEquals(subscriptions?.size, 1)
-        assertEquals(subscriptions!![0].categories.size, 1)
+        assertEquals(subscriptions?.first()?.categories?.size, 1)
     }
 
     @Test
-    fun testGetArticles() = runBlocking {
+    fun testGetItemsRef() {
         val token = theOldReaderApi?.authentication("nkartyshov@adguard.com", "Test12345", "OldOwl")
         val subscriptions = theOldReaderApi?.getSubscriptions(token!!)
+        val subscriptionResponse = subscriptions?.first()
 
-        assertNotNull(subscriptions)
-        assertEquals(subscriptions?.size, 1)
+        val itemIds = theOldReaderApi?.getItemIds(subscriptionResponse?.id!!, token!!)
 
-        val subscriptionResponse = subscriptions!![0]
-
-        val subscription = Subscription(
-                id = 1,
-                feedId = subscriptionResponse.id,
-                title = "",
-                url = "",
-                categoryId = 0
-        )
-
-        val articles = theOldReaderApi?.getArticles(subscription, token!!)
-        assertNotNull(articles)
-        assertTrue(articles!!.isNotEmpty())
+        assertNotNull(itemIds)
+        assertTrue(itemIds?.size!! > 0)
     }
 
-    @After
-    fun tearDown() {
-        theOldReaderApi = null
+    @Test
+    fun testContents() {
+        val token = theOldReaderApi?.authentication("nkartyshov@adguard.com", "Test12345", "OldOwl")
+        val subscriptions = theOldReaderApi?.getSubscriptions(token!!)
+        val subscriptionResponse = subscriptions?.first()
+
+        val itemIds = theOldReaderApi?.getItemIds(subscriptionResponse?.id!!, token!!)
+        val contents = theOldReaderApi?.getContents(itemIds!!, token!!)
+
+        assertNotNull(contents)
+        assertTrue(contents?.size!! > 0)
     }
 }

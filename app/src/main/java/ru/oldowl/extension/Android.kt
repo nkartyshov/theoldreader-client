@@ -1,7 +1,19 @@
 package ru.oldowl.extension
 
-import android.app.Activity
 import android.content.Intent
 import android.net.Uri
+import android.support.v4.app.Fragment
+import ru.oldowl.ui.BaseActivity
 
-fun Activity.openWebsite(url: String) = startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+fun BaseActivity.openWebsite(url: String) = startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+
+fun BaseActivity.replaceFragment(id: Int, fragment: Fragment, addToBackStack: Boolean = true) {
+    val beginTransaction = supportFragmentManager.beginTransaction()
+    beginTransaction.replace(id, fragment)
+
+    if (addToBackStack) {
+        beginTransaction.addToBackStack(null)
+    }
+
+    beginTransaction.commit()
+}

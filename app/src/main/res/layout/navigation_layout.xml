@@ -27,7 +27,8 @@
 
         <View style="@style/VerticalDivider" />
 
-        <LinearLayout style="@style/NavItem">
+        <LinearLayout style="@style/NavItem"
+            android:id="@+id/all_articles">
 
             <ImageView
                 style="@style/NavImageItem"
@@ -38,7 +39,8 @@
                 android:text="@string/nav_all" />
         </LinearLayout>
 
-        <LinearLayout style="@style/NavItem">
+        <LinearLayout style="@style/NavItem"
+            android:id="@+id/favorite_articles">
 
             <ImageView
                 style="@style/NavImageItem"
@@ -56,7 +58,7 @@
             <View style="@style/VerticalDivider" />
 
             <TextView
-                style="@style/TextCaption"
+                style="@style/TextNormal"
                 android:padding="@dimen/indent_default"
                 android:text="@string/nav_subscriptions" />
 
@@ -69,9 +71,8 @@
 
         </LinearLayout>
 
-        <View style="@style/VerticalDivider" />
-
-        <LinearLayout style="@style/NavItem">
+        <LinearLayout style="@style/NavItem"
+            android:id="@+id/add_subscription">
 
             <ImageView
                 style="@style/NavImageItem"
@@ -82,7 +83,8 @@
                 android:text="@string/nav_add_subscription" />
         </LinearLayout>
 
-        <LinearLayout style="@style/NavItem">
+        <LinearLayout style="@style/NavItem"
+            android:id="@+id/settings">
 
             <ImageView
                 style="@style/NavImageItem"

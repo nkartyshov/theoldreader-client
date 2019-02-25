@@ -1,15 +1,19 @@
 package ru.oldowl.viewmodel
 
-import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MutableLiveData
 import android.databinding.ObservableBoolean
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import ru.oldowl.dao.SubscriptionDao
 import ru.oldowl.model.Account
-import ru.oldowl.model.SubscriptionWithUnread
-import ru.oldowl.repository.SubscriptionRepository
+import ru.oldowl.model.SubscriptionAndUnreadCount
 import ru.oldowl.service.AccountService
 import ru.oldowl.service.SettingsService
 import java.text.DateFormat
 
-class MainViewModel(private val subscriptionRepository: SubscriptionRepository,
+class MainViewModel(private val subscriptionDao: SubscriptionDao,
                     private val accountService: AccountService,
                     private val settingsService: SettingsService) : BaseViewModel() {
 
@@ -17,9 +21,8 @@ class MainViewModel(private val subscriptionRepository: SubscriptionRepository,
     private val dateTimeFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT)
 
     val email: String by lazy { account?.email ?: "" }
-
-
     val hasItems: ObservableBoolean = ObservableBoolean(false)
+    val subscriptions: MutableLiveData<List<SubscriptionAndUnreadCount>> = MutableLiveData()
 
     fun getLastSyncDate(): String? {
         return if (settingsService.lastSyncDate != null)
@@ -27,5 +30,14 @@ class MainViewModel(private val subscriptionRepository: SubscriptionRepository,
         else null
     }
 
-    fun getSubscriptions(): LiveData<List<SubscriptionWithUnread>> = subscriptionRepository.observeSubscriptionWithUnread()
+    fun updateSubscriptions() = launch {
+        val deferred = async {  subscriptionDao.findAllWithUnread() }
+
+        withContext(Dispatchers.Main) {
+            val list = deferred.await()
+
+            subscriptions.value = list
+            hasItems.set(list.isNotEmpty())
+        }
+    }
 }

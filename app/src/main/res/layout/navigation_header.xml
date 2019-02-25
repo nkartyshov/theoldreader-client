@@ -35,7 +35,7 @@
             <TextView
                 android:id="@+id/sync_date"
                 style="@style/TextCaption"
-                android:text="@{viewModel.lastSyncDate == null ? @string/empty : @string/nav_last_sync_date(viewModel.lastSyncDate)}"
+                android:text="@{viewModel.lastSyncDate == null ? @string/nav_last_sync_date_not_sync : @string/nav_last_sync_date(viewModel.lastSyncDate)}"
                 tools:text="Last sync: 30.01.18 09:30" />
         </LinearLayout>
     </RelativeLayout>

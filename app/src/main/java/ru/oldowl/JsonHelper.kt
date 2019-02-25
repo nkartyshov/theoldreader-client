@@ -9,7 +9,7 @@ object JsonHelper {
             .add(KotlinJsonAdapterFactory())
             .build()
 
-    fun<T> adapter(clazz: Class<T>): JsonAdapter<T> {
+    fun <T> adapter(clazz: Class<T>): JsonAdapter<T> {
         return moshi.adapter(clazz)
     }
 }

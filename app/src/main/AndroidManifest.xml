@@ -16,6 +16,8 @@
         android:name=".AppApplication"
         tools:ignore="GoogleAppIndexingWarning">
 
+        <activity android:name=".ui.MainActivity" />
+        <activity android:name=".ui.LoginActivity" android:label="@string/sing_in"/>
         <activity android:name=".ui.LaunchActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,8 +26,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.MainActivity" />
-        <activity android:name=".ui.LoginActivity" android:label="@string/sing_in"/>
+        <service android:name=".AutoUpdateJob"
+            android:permission="android.permission.BIND_JOB_SERVICE"/>
     </application>
 
 </manifest>
