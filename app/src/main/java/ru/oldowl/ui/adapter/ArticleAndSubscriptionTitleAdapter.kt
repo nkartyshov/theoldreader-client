@@ -7,14 +7,13 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import ru.oldowl.R
 import ru.oldowl.databinding.ViewArticleItemBinding
-import ru.oldowl.model.Article
 import ru.oldowl.model.ArticleAndSubscriptionTitle
 
 class ArticleAndSubscriptionTitleAdapter(private val context: Context?)
     : RecyclerView.Adapter<ArticleAndSubscriptionTitleHolder>() {
 
     private var article = emptyList<ArticleAndSubscriptionTitle>()
-    private var onItemClickListener: ((article: Article) -> Unit)? = null
+    private var onItemClickListener: ((article: ArticleAndSubscriptionTitle) -> Unit)? = null
 
     override fun getItemCount(): Int {
         return article.size
@@ -32,7 +31,7 @@ class ArticleAndSubscriptionTitleAdapter(private val context: Context?)
         viewHolder.bind(item)
 
         viewHolder.itemView.setOnClickListener {
-            onItemClickListener?.invoke(item.article)
+            onItemClickListener?.invoke(item)
         }
     }
 
@@ -41,7 +40,7 @@ class ArticleAndSubscriptionTitleAdapter(private val context: Context?)
         notifyDataSetChanged()
     }
 
-    fun setOnItemClickListener(listener: (article: Article) -> Unit) {
+    fun setOnItemClickListener(listener: (article: ArticleAndSubscriptionTitle) -> Unit) {
         this.onItemClickListener = listener
     }
 }

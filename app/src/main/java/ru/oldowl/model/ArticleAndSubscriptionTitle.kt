@@ -2,6 +2,7 @@ package ru.oldowl.model
 
 import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Embedded
+import java.io.Serializable
 
 data class ArticleAndSubscriptionTitle(
     @Embedded
@@ -9,4 +10,4 @@ data class ArticleAndSubscriptionTitle(
 
     @ColumnInfo(name = "subscription_title")
     var subscriptionTitle: String
-)
+) : Serializable

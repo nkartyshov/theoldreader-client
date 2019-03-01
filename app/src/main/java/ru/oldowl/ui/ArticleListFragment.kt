@@ -20,9 +20,7 @@ class ArticleListFragment : BaseFragment() {
     private var articleListBinding: FragmentArticleListBinding? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-
         articleListBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_article_list, container, false)
-
         return articleListBinding?.root
     }
 
@@ -31,6 +29,14 @@ class ArticleListFragment : BaseFragment() {
         setHasOptionsMenu(true)
 
         val adapter = ArticleAndSubscriptionTitleAdapter(context)
+        adapter.setOnItemClickListener {
+            ArticleActivity.openArticle(context, it)
+        }
+
+        val density = resources.displayMetrics.density
+        val distanceToTriggerSync = 256 * density.toInt()
+
+        sync_list.setDistanceToTriggerSync(distanceToTriggerSync)
 
         article_list.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         article_list.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))

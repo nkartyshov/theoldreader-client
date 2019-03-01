@@ -7,6 +7,7 @@ import ru.oldowl.api.TheOldReaderApi
 import ru.oldowl.service.AccountService
 import ru.oldowl.service.SettingsService
 import ru.oldowl.viewmodel.ArticleListViewModel
+import ru.oldowl.viewmodel.ArticleViewModel
 import ru.oldowl.viewmodel.LoginViewModel
 import ru.oldowl.viewmodel.MainViewModel
 
@@ -28,4 +29,5 @@ val serviceModule = applicationContext {
     viewModel { LoginViewModel(androidApplication(), get(), get(), get(), get()) }
     viewModel { MainViewModel(get(), get(), get()) }
     viewModel { ArticleListViewModel(get(), get()) }
+    viewModel { ArticleViewModel() }
 }

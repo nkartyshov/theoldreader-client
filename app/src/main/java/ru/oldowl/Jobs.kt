@@ -84,8 +84,9 @@ class AutoUpdateJob : JobService(), KoinComponent, CoroutineScope {
             val extras = params?.extras
 
             val forced: Boolean = extras?.getInt(FORCE) == 1
-            val subscriptionId = extras?.getLong(SUBSCRIPTION_ID)
             val lastSyncDate = settingsService.lastSyncDate
+
+            val subscriptionId = extras?.getLong(SUBSCRIPTION_ID)
 
             try {
                 sendJobStatus(params?.jobId, false)
@@ -107,22 +108,24 @@ class AutoUpdateJob : JobService(), KoinComponent, CoroutineScope {
                     // Downloading new articles
                     val feedId = subscription.feedId ?: ""
 
-                    val itemIds = theOldReaderApi.getItemIds(feedId, token, true, lastItem.originalId)
-                    val contents = theOldReaderApi.getContents(itemIds, token)
+                    val itemIds = theOldReaderApi.getItemIds(feedId, token, true, lastItem?.originalId)
+                    if (itemIds.isNotEmpty()) {
+                        val contents = theOldReaderApi.getContents(itemIds, token)
 
-                    if (contents.isNotEmpty()) {
-                        val articles = contents.map {
-                            Article(
-                                    originalId = it.itemId,
-                                    title = it.title,
-                                    description = it.description,
-                                    subscriptionId = subscription.id
-                            )
-                        }
+                        if (contents.isNotEmpty()) {
+                            val articles = contents.map {
+                                Article(
+                                        originalId = it.itemId,
+                                        title = it.title,
+                                        description = it.description,
+                                        subscriptionId = subscription.id
+                                )
+                            }
 
-                        articles.forEach {
-                            if (!articleDao.exists(it.originalId)) {
-                                articleDao.save(it)
+                            articles.forEach {
+                                if (!articleDao.exists(it.originalId)) {
+                                    articleDao.save(it)
+                                }
                             }
                         }
                     }

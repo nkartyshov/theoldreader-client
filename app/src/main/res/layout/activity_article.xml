@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="ru.oldowl.viewmodel.ArticleViewModel" />
+    </data>
+
+    <LinearLayout style="@style/ContentFullParent.Vertical">
+
+        <include layout="@layout/toolbar" />
+
+        <LinearLayout
+            style="@style/ContentFullParent.Vertical"
+            android:padding="@dimen/indent_default">
+
+            <TextView
+                style="@style/TextHeader"
+                android:text="@{viewModel.title}"
+                tools:text="Article title" />
+
+            <View
+                style="@style/VerticalDivider"
+                android:layout_marginTop="@dimen/indent_small"
+                android:layout_marginBottom="@dimen/indent_small" />
+
+            <LinearLayout
+                style="@style/ContentFullWidth.Horizontal"
+                android:paddingBottom="@dimen/indent_small">
+
+                <TextView
+                    style="@style/TextCaption"
+                    android:layout_marginEnd="@dimen/indent_small"
+                    android:text="@{viewModel.publishDate}"
+                    tools:text="Today" />
+
+                <TextView
+                    style="@style/TextCaption"
+                    android:text="@string/item_sep" />
+
+                <TextView
+                    style="@style/TextCaption.SingleLine"
+                    android:layout_marginStart="@dimen/indent_small"
+                    android:text="@{viewModel.subscriptionTitle}"
+                    tools:text="4pda" />
+
+            </LinearLayout>
+
+            <FrameLayout style="@style/ContentFullParent">
+
+                <ProgressBar
+                    android:id="@+id/loading_progress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:visibility="gone" />
+
+                <WebView
+                    android:id="@+id/article_content"
+                    style="@style/ContentFullParent" />
+            </FrameLayout>
+        </LinearLayout>
+    </LinearLayout>
+</layout>

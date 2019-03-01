@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:name=".AppApplication"
         android:allowBackup="false"
         android:fullBackupContent="false"
         android:icon="@mipmap/ic_launcher"
@@ -13,11 +14,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:name=".AppApplication"
         tools:ignore="GoogleAppIndexingWarning">
-
-        <activity android:name=".ui.MainActivity" />
-        <activity android:name=".ui.LoginActivity" android:label="@string/sing_in"/>
         <activity android:name=".ui.LaunchActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,9 +22,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ui.LoginActivity"
+            android:label="@string/sing_in" />
+        <activity android:name=".ui.MainActivity" />
+        <activity android:name=".ui.ArticleActivity"/>
 
-        <service android:name=".AutoUpdateJob"
-            android:permission="android.permission.BIND_JOB_SERVICE"/>
+        <service
+            android:name=".AutoUpdateJob"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+
     </application>
 
 </manifest>

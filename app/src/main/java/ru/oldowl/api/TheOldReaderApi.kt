@@ -97,7 +97,7 @@ class TheOldReaderApi : AnkoLogger {
                     .addEncodedQueryParameter(COUNT_PARAM, COUNT_VALUE)
 
             if (!newerThan.isNullOrBlank()) {
-                httpUrl.addEncodedQueryParameter(NEWER_THAN_PARAM, newerThan)
+                httpUrl.addEncodedQueryParameter(NEWER_THAN_PARAM, newerThan.removePrefix(ITEM_PREFIX))
             }
 
             if (onlyUnread) {
@@ -117,8 +117,6 @@ class TheOldReaderApi : AnkoLogger {
                     val itemsRefResponse = adapter.fromJson(responseBody.string())
 
                     return itemsRefResponse?.itemRefs?.map { it.id } ?: emptyList()
-
-
                 }
             }
         } catch (e: IOException) {
@@ -138,7 +136,7 @@ class TheOldReaderApi : AnkoLogger {
 
             val formBody = FormBody.Builder()
             for (itemId in itemIds) {
-                formBody.addEncoded(ITEMS_PARAM, "tag:google.com,2005:reader/item/$itemId")
+                formBody.addEncoded(ITEMS_PARAM, ITEM_PREFIX + itemId)
             }
 
             formBody.addEncoded(OUTPUT_PARAM, OUTPUT_ATOM)
@@ -205,7 +203,7 @@ class TheOldReaderApi : AnkoLogger {
         private const val UPDATE_ITEMS = "reader/api/0/edit-tag"
 
         private const val QUERY_PARAM = "s"
-        private const val NEWER_THAN_PARAM = "ot"
+        private const val NEWER_THAN_PARAM = "nt"
         private const val ITEMS_PARAM = "i"
 
         private const val COUNT_PARAM = "n"
@@ -217,6 +215,8 @@ class TheOldReaderApi : AnkoLogger {
         private const val OUTPUT_PARAM = "output"
         private const val OUTPUT_JSON = "json"
         private const val OUTPUT_ATOM = "atom"
+
+        private const val ITEM_PREFIX = "tag:google.com,2005:reader/item/"
     }
 }
 

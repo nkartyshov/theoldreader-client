@@ -71,5 +71,13 @@ object BindingAdapter {
             swipeRefreshLayout.isRefreshing = it
         }
     }
+
+    @JvmStatic
+    @BindingAdapter("onRefresh")
+    fun setOnRefreshListener(swipeRefreshLayout: SwipeRefreshLayout, onRefreshListener: SwipeRefreshLayout.OnRefreshListener?) {
+        onRefreshListener?.let {
+            swipeRefreshLayout.setOnRefreshListener(onRefreshListener)
+        }
+    }
 }
 

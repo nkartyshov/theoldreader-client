@@ -43,6 +43,10 @@
         <item name="android:singleLine">true</item>
     </style>
 
+    <style name="TextHeader" parent="TextNormal">
+        <item name="android:textSize">20sp</item>
+    </style>
+
     <style name="TextSummary" parent="TextCaption">
         <item name="android:ellipsize">end</item>
         <item name="android:maxLines">3</item>

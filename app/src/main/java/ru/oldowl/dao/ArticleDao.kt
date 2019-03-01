@@ -21,7 +21,7 @@ interface ArticleDao {
     fun observeUnread(subscriptionId: Long): LiveData<List<ArticleAndSubscriptionTitle>>
 
     @Query("select * from articles order by publish_date desc limit 1")
-    fun findLastItem(): Article
+    fun findLastItem(): Article?
 
     @Query("select 1 from articles where original_id = :originalId")
     fun exists(originalId: String): Boolean

@@ -11,13 +11,17 @@
 
     <android.support.design.widget.CoordinatorLayout style="@style/ContentFullParent">
 
-        <android.support.v4.widget.SwipeRefreshLayout style="@style/ContentFullParent"
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/sync_list"
+            style="@style/ContentFullParent"
+            onRefresh="@{() -> viewModel.sync()}"
             refreshing="@{viewModel.dataLoading}">
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/article_list"
                 style="@style/ContentFullParent"
                 articles="@{viewModel.articles}" />
+
         </android.support.v4.widget.SwipeRefreshLayout>
 
         <android.support.design.widget.FloatingActionButton
