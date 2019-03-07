@@ -9,6 +9,7 @@ import ru.oldowl.api.model.*
 import ru.oldowl.model.Article
 import java.io.IOException
 import java.io.StringReader
+import java.util.*
 
 class TheOldReaderApi : AnkoLogger {
 
@@ -86,7 +87,7 @@ class TheOldReaderApi : AnkoLogger {
         return emptyList()
     }
 
-    fun getItemIds(feedId: String, token: String, onlyUnread: Boolean = true, newerThan: String? = null): List<String> {
+    fun getItemIds(feedId: String, token: String, onlyUnread: Boolean = true, newerThan: Date? = null): List<String> {
         try {
             val httpUrl = HttpUrl.Builder()
                     .scheme(SCHEMA)
@@ -96,8 +97,8 @@ class TheOldReaderApi : AnkoLogger {
                     .addEncodedQueryParameter(QUERY_PARAM, feedId)
                     .addEncodedQueryParameter(COUNT_PARAM, COUNT_VALUE)
 
-            if (!newerThan.isNullOrBlank()) {
-                httpUrl.addEncodedQueryParameter(NEWER_THAN_PARAM, newerThan.removePrefix(ITEM_PREFIX))
+            newerThan?.let {
+                httpUrl.addEncodedQueryParameter(NEWER_THAN_PARAM, it.time.toString())
             }
 
             if (onlyUnread) {
@@ -203,7 +204,7 @@ class TheOldReaderApi : AnkoLogger {
         private const val UPDATE_ITEMS = "reader/api/0/edit-tag"
 
         private const val QUERY_PARAM = "s"
-        private const val NEWER_THAN_PARAM = "nt"
+        private const val NEWER_THAN_PARAM = "ot"
         private const val ITEMS_PARAM = "i"
 
         private const val COUNT_PARAM = "n"

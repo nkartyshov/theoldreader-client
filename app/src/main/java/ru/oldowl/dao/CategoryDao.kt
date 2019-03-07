@@ -14,7 +14,13 @@ interface CategoryDao {
     fun findAll(): LiveData<List<Category>>
 
     @Query("select * from category where label_id = :labelId")
-    fun findByLabelId(labelId: String): Category?
+    fun findByLabelId(labelId: String): Category
+
+    @Query("select id from category where label_id = :labelId")
+    fun findIdByLabelId(labelId: String): Long
+
+    @Query("select 1 from category where label_id = :labelId")
+    fun exists(labelId: String): Boolean
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun save(category: Category): Long

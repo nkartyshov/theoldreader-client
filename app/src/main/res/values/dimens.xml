@@ -3,5 +3,7 @@
     <dimen name="indent_default">16dp</dimen>
     <dimen name="indent_small">4dp</dimen>
 
+    <dimen name="web_view_indent">10dp</dimen>
+
     <dimen name="default_elevation">4dp</dimen>
 </resources>

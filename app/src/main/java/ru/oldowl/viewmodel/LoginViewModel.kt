@@ -29,16 +29,17 @@ class LoginViewModel(private val application: Application,
         accountService.saveAccount(account)
     }
 
+    // FIXME will move to JobService
     suspend fun downloadSubscriptions(authToken: String) = async {
         val subscriptionResponses = theOldReaderApi.getSubscriptions(authToken)
         for (subscriptionResponse in subscriptionResponses) {
             val category = subscriptionResponse.categories.map {
                 Category(labelId = it.id, title = it.label)
-            }.firstOrNull()
+            }.getOrElse(0) { Category(1, "default", "Default") }
 
-            val categoryId = if (category != null)
-                categoryDao.save(category)
-            else 0
+            val categoryId = if (categoryDao.exists(category.labelId))
+                categoryDao.findIdByLabelId(category.labelId)
+            else categoryDao.save(category)
 
             val subscription = Subscription(
                     categoryId = categoryId,

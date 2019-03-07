@@ -11,17 +11,14 @@ import ru.oldowl.model.ArticleAndSubscriptionTitle
 @Dao
 interface ArticleDao {
 
-    @Query("select a.*, s.title as subscription_title from articles a inner join subscriptions s on a.subscription_id = s.id where read = 0")
+    @Query("select a.*, s.title as subscription_title from articles a inner join subscriptions s on a.subscription_id = s.id where read = 0 order by a.publish_date desc")
     fun observeAllUnread(): LiveData<List<ArticleAndSubscriptionTitle>>
 
-    @Query("select a.*, s.title as subscription_title from articles a inner join subscriptions s on a.subscription_id = s.id where favorite = 1")
+    @Query("select a.*, s.title as subscription_title from articles a inner join subscriptions s on a.subscription_id = s.id where favorite = 1 order by a.publish_date desc")
     fun observeFavorite(): LiveData<List<ArticleAndSubscriptionTitle>>
 
-    @Query("select a.*, s.title as subscription_title from articles a inner join subscriptions s on a.subscription_id = s.id where subscription_id = :subscriptionId and read = 0")
+    @Query("select a.*, s.title as subscription_title from articles a inner join subscriptions s on a.subscription_id = s.id where subscription_id = :subscriptionId and read = 0 order by a.publish_date desc")
     fun observeUnread(subscriptionId: Long): LiveData<List<ArticleAndSubscriptionTitle>>
-
-    @Query("select * from articles order by publish_date desc limit 1")
-    fun findLastItem(): Article?
 
     @Query("select 1 from articles where original_id = :originalId")
     fun exists(originalId: String): Boolean

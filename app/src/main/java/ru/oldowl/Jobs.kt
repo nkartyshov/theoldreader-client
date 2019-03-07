@@ -19,6 +19,7 @@ import ru.oldowl.model.Article
 import ru.oldowl.model.Subscription
 import ru.oldowl.service.AccountService
 import ru.oldowl.service.SettingsService
+import java.util.*
 import kotlin.coroutines.CoroutineContext
 
 const val FORCED_UPDATE_ID = 1
@@ -45,7 +46,7 @@ object Jobs {
         intent.putInt(FORCE, 1)
 
         subscription?.let {
-            intent.putLong(SUBSCRIPTION_ID, it.id!!)
+            intent.putLong(SUBSCRIPTION_ID, it.id)
         }
 
         val componentName = ComponentName(context, AutoUpdateJob::class.java)
@@ -86,29 +87,31 @@ class AutoUpdateJob : JobService(), KoinComponent, CoroutineScope {
             val forced: Boolean = extras?.getInt(FORCE) == 1
             val lastSyncDate = settingsService.lastSyncDate
 
-            val subscriptionId = extras?.getLong(SUBSCRIPTION_ID)
+            val subscriptionId = extras?.getLong(SUBSCRIPTION_ID) ?: -1
 
             try {
                 sendJobStatus(params?.jobId, false)
 
                 val account = accountService.getAccount()
 
-                val subscriptions: List<Subscription> = if (subscriptionId != null)
+                // Sync subscriptions
+                // TODO Implement update subscription
+
+                // Sync articles
+                // TODO Implement events table
+
+                val subscriptions: List<Subscription> = if (subscriptionId > 0)
                     listOf(subscriptionDao.findById(subscriptionId))
                 else subscriptionDao.findAll()
-
-                val lastItem = articleDao.findLastItem()
 
                 for (subscription in subscriptions) {
                     val token = account?.authToken ?: ""
 
-                    // Sync articles
-                    // TODO Implement events table
 
                     // Downloading new articles
                     val feedId = subscription.feedId ?: ""
 
-                    val itemIds = theOldReaderApi.getItemIds(feedId, token, true, lastItem?.originalId)
+                    val itemIds = theOldReaderApi.getItemIds(feedId, token, true, lastSyncDate)
                     if (itemIds.isNotEmpty()) {
                         val contents = theOldReaderApi.getContents(itemIds, token)
 
@@ -130,6 +133,8 @@ class AutoUpdateJob : JobService(), KoinComponent, CoroutineScope {
                         }
                     }
                 }
+
+                settingsService.lastSyncDate = Date()
             } finally {
                 sendJobStatus(params?.jobId, true)
                 jobFinished(params, false)

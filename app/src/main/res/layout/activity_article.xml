@@ -14,8 +14,10 @@
         <include layout="@layout/toolbar" />
 
         <LinearLayout
-            style="@style/ContentFullParent.Vertical"
-            android:padding="@dimen/indent_default">
+            style="@style/ContentFullWidth.Vertical"
+            android:paddingStart="@dimen/indent_default"
+            android:paddingTop="@dimen/indent_default"
+            android:paddingEnd="@dimen/indent_default">
 
             <TextView
                 style="@style/TextHeader"
@@ -48,20 +50,25 @@
                     tools:text="4pda" />
 
             </LinearLayout>
+        </LinearLayout>
 
-            <FrameLayout style="@style/ContentFullParent">
+        <FrameLayout style="@style/ContentFullParent">
 
-                <ProgressBar
-                    android:id="@+id/loading_progress"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:visibility="gone" />
+            <ProgressBar
+                android:id="@+id/loading_progress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="gone" />
+
+            <ScrollView style="@style/ContentFullParent">
 
                 <WebView
                     android:id="@+id/article_content"
-                    style="@style/ContentFullParent" />
-            </FrameLayout>
-        </LinearLayout>
+                    style="@style/ContentFullParent"
+                    setHtml="@{viewModel.pageContent}" />
+            </ScrollView>
+
+        </FrameLayout>
     </LinearLayout>
 </layout>

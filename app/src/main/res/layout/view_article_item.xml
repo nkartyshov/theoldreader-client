@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <import type="android.text.Html" />
+        
         <variable
             name="article"
             type="ru.oldowl.model.Article" />
@@ -25,7 +26,7 @@
         <TextView
             style="@style/TextSummary"
             android:layout_marginTop="@dimen/indent_small"
-            android:text="@{article.description}"
+            android:text="@{Html.fromHtml(article.description, Html.FROM_HTML_MODE_COMPACT)}"
             tools:text="Article description" />
 
         <LinearLayout

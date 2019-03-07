@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
-import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
@@ -51,7 +50,6 @@ class MainActivity : BaseActivity() {
 
         subscription_list.adapter = adapter
         subscription_list.layoutManager = LinearLayoutManager(this)
-        subscription_list.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
 
         all_articles.setOnClickListener {
             openFragment(ArticleListFragment.openAllArticles())

@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.webkit.WebResourceRequest
+import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.ProgressBar
@@ -35,14 +36,14 @@ class ArticleActivity : BaseActivity() {
 
         dataBinding.viewModel = viewModel
 
+        val settings = article_content.settings
+        settings.javaScriptEnabled = false
+        settings.cacheMode = WebSettings.LOAD_NO_CACHE
+
         article_content.webViewClient = WebViewClientImpl(loading_progress)
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
-            android.R.id.home -> onBackPressed()
-        }
-
         return super.onOptionsItemSelected(item)
     }
 

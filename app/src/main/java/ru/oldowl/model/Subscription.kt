@@ -14,7 +14,7 @@ import java.util.*
                 onDelete = ForeignKey.SET_NULL)])
 data class Subscription(
         @PrimaryKey(autoGenerate = true)
-        var id: Long? = 0,
+        var id: Long = 0,
         @ColumnInfo(name = "category_id")
         var categoryId: Long?,
         @ColumnInfo(name = "feed_id")
