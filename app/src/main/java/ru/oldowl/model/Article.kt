@@ -23,6 +23,8 @@ data class Article(
         var title: String,
         @ColumnInfo(name = "description")
         var description: String,
+        @ColumnInfo(name = "url")
+        var url: String,
         @ColumnInfo(name = "subscription_id")
         var subscriptionId: Long?,
         @ColumnInfo(name = "read")

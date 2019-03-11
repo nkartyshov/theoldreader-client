@@ -1,8 +1,10 @@
 package ru.oldowl
 
 import android.databinding.BindingAdapter
+import android.os.Build
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.RecyclerView
+import android.text.Html
 import android.webkit.WebView
 import android.widget.EditText
 import android.widget.ImageView
@@ -65,6 +67,20 @@ object BindingAdapter {
         date?.let {
             val dateTimeInstance = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT)
             textView.text = dateTimeInstance.format(it)
+        }
+    }
+
+    @JvmStatic
+    @BindingAdapter("html")
+    fun setHtml(textView: TextView, html: String?) {
+        html?.let {
+            val html = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                Html.fromHtml(html, Html.FROM_HTML_MODE_COMPACT)
+            } else {
+                Html.fromHtml(html)
+            }
+
+            textView.text = html
         }
     }
 

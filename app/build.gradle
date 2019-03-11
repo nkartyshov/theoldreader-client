@@ -62,10 +62,10 @@ dependencies {
     implementation "com.android.support:preference-v7:$sdk_version"
     implementation "com.android.support:support-v4:$sdk_version"
 
-    def koin_version = '0.9.3'
+    def koin_version = '1.0.2'
     implementation "org.koin:koin-core:$koin_version"
     implementation "org.koin:koin-android:$koin_version"
-    implementation "org.koin:koin-android-architecture:$koin_version"
+    implementation "org.koin:koin-android-viewmodel:$koin_version"
 
     implementation 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
     implementation 'com.squareup.okhttp3:okhttp:3.12.1'

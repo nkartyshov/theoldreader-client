@@ -45,4 +45,9 @@
     <string name="settings_general">General</string>
     <string name="settings_notification">Notification</string>
     <string name="settings_storage">Storage</string>
+    <string name="mark_favorite">Mark favorite</string>
+    <string name="unmark_favorite">Unmark favorite</string>
+    <string name="copy_url_to_clipboard">Copy url to clipboard</string>
+    <string name="open_in_browser">Open in browser</string>
+    <string name="favorite_article">Favorite article</string>
 </resources>

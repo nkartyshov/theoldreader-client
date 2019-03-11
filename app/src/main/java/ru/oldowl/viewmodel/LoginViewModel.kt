@@ -1,8 +1,6 @@
 package ru.oldowl.viewmodel
 
-import android.app.Application
 import kotlinx.coroutines.async
-import ru.oldowl.R
 import ru.oldowl.api.TheOldReaderApi
 import ru.oldowl.dao.CategoryDao
 import ru.oldowl.dao.SubscriptionDao
@@ -11,14 +9,13 @@ import ru.oldowl.model.Category
 import ru.oldowl.model.Subscription
 import ru.oldowl.service.AccountService
 
-class LoginViewModel(private val application: Application,
+class LoginViewModel(private val appName: String,
                      private val theOldReaderApi: TheOldReaderApi,
                      private val accountService: AccountService,
                      private val subscriptionDao: SubscriptionDao,
                      private val categoryDao: CategoryDao) : BaseViewModel() {
 
     suspend fun authentication(email: String, password: String): String? = async {
-        val appName = application.getString(R.string.app_name)
         theOldReaderApi.authentication(email, password, appName)
 
         return@async theOldReaderApi.authentication(email, password, appName)

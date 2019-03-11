@@ -121,7 +121,9 @@ class AutoUpdateJob : JobService(), KoinComponent, CoroutineScope {
                                         originalId = it.itemId,
                                         title = it.title,
                                         description = it.description,
-                                        subscriptionId = subscription.id
+                                        subscriptionId = subscription.id,
+                                        url = it.link,
+                                        publishDate = it.publishDate
                                 )
                             }
 

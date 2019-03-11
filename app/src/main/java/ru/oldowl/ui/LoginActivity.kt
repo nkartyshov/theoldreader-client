@@ -5,13 +5,14 @@ import android.support.design.widget.Snackbar
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.coroutines.launch
 import org.jetbrains.anko.startActivity
+import org.koin.core.parameter.parametersOf
 import org.koin.standalone.inject
 import ru.oldowl.R
 import ru.oldowl.extension.openWebsite
 import ru.oldowl.viewmodel.LoginViewModel
 
 class LoginActivity : BaseActivity() {
-    private val loginViewModel: LoginViewModel by inject()
+    private val loginViewModel: LoginViewModel by inject { parametersOf(getString(R.string.app_name)) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

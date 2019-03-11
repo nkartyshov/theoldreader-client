@@ -25,4 +25,10 @@ interface ArticleDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun save(article: Article)
+
+    @Query("update articles set favorite = :favorite where id = :id")
+    fun updateFavoriteState(id: Long, favorite: Boolean)
+
+    @Query("update articles set read = :read where id = :id")
+    fun updateReadState(id: Long, read: Boolean)
 }

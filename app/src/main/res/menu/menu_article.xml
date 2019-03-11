@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/mark_favorite"
+        android:icon="@drawable/ic_star_border_black_24dp"
+        android:title="@string/mark_favorite"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/unmark_favorite"
+        android:icon="@drawable/ic_star_black_24dp"
+        android:title="@string/unmark_favorite"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/copy_url"
+        android:title="@string/copy_url_to_clipboard"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/open_in_browser"
+        android:title="@string/open_in_browser"
+        app:showAsAction="never" />
+</menu>

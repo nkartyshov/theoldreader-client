@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -9,66 +10,90 @@
             type="ru.oldowl.viewmodel.ArticleViewModel" />
     </data>
 
-    <LinearLayout style="@style/ContentFullParent.Vertical">
+    <android.support.design.widget.CoordinatorLayout style="@style/ContentFullParent">
 
-        <include layout="@layout/toolbar" />
+        <android.support.design.widget.AppBarLayout style="@style/ContentFullWidth">
 
-        <LinearLayout
-            style="@style/ContentFullWidth.Vertical"
-            android:paddingStart="@dimen/indent_default"
-            android:paddingTop="@dimen/indent_default"
-            android:paddingEnd="@dimen/indent_default">
+            <include layout="@layout/toolbar" />
+        </android.support.design.widget.AppBarLayout>
 
-            <TextView
-                style="@style/TextHeader"
-                android:text="@{viewModel.title}"
-                tools:text="Article title" />
+        <ScrollView
+            android:id="@+id/article_wrapper"
+            style="@style/ContentFullParent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <View
-                style="@style/VerticalDivider"
-                android:layout_marginTop="@dimen/indent_small"
-                android:layout_marginBottom="@dimen/indent_small" />
+            <LinearLayout style="@style/ContentFullParent.Vertical">
 
-            <LinearLayout
-                style="@style/ContentFullWidth.Horizontal"
-                android:paddingBottom="@dimen/indent_small">
+                <RelativeLayout
+                    style="@style/ContentFullWidth"
+                    android:paddingStart="@dimen/indent_default"
+                    android:paddingTop="@dimen/indent_default"
+                    android:paddingEnd="@dimen/indent_default">
 
-                <TextView
-                    style="@style/TextCaption"
-                    android:layout_marginEnd="@dimen/indent_small"
-                    android:text="@{viewModel.publishDate}"
-                    tools:text="Today" />
+                    <TextView
+                        android:id="@+id/article_title"
+                        style="@style/TextHeader"
+                        android:layout_alignParentTop="true"
+                        android:text="@{viewModel.title}"
+                        tools:text="Article title" />
 
-                <TextView
-                    style="@style/TextCaption"
-                    android:text="@string/item_sep" />
+                    <View
+                        android:id="@+id/divider"
+                        style="@style/VerticalDivider"
+                        android:layout_below="@+id/article_title"
+                        android:layout_marginTop="@dimen/indent_small"
+                        android:layout_marginBottom="@dimen/indent_small" />
 
-                <TextView
-                    style="@style/TextCaption.SingleLine"
-                    android:layout_marginStart="@dimen/indent_small"
-                    android:text="@{viewModel.subscriptionTitle}"
-                    tools:text="4pda" />
+                    <RelativeLayout
+                        style="@style/ContentFullWidth.Horizontal"
+                        android:layout_below="@+id/divider"
+                        android:paddingBottom="@dimen/indent_small">
 
-            </LinearLayout>
-        </LinearLayout>
+                        <TextView
+                            android:id="@+id/article_date"
+                            style="@style/TextCaption"
+                            android:layout_alignParentStart="true"
+                            android:layout_marginEnd="@dimen/indent_small"
+                            android:text="@{viewModel.publishDate}"
+                            tools:text="Today" />
 
-        <FrameLayout style="@style/ContentFullParent">
+                        <TextView
+                            android:id="@+id/divider_horizontal"
+                            style="@style/TextCaption"
+                            android:layout_toEndOf="@+id/article_date"
+                            android:text="@string/item_sep" />
 
-            <ProgressBar
-                android:id="@+id/loading_progress"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:visibility="gone" />
+                        <TextView
+                            android:id="@+id/subscription_title"
+                            style="@style/TextCaption.SingleLine"
+                            android:layout_marginStart="@dimen/indent_small"
+                            android:layout_toEndOf="@+id/divider_horizontal"
+                            android:text="@{viewModel.subscriptionTitle}"
+                            tools:text="4pda" />
 
-            <ScrollView style="@style/ContentFullParent">
+                    </RelativeLayout>
+                </RelativeLayout>
 
                 <WebView
                     android:id="@+id/article_content"
                     style="@style/ContentFullParent"
                     setHtml="@{viewModel.pageContent}" />
-            </ScrollView>
 
-        </FrameLayout>
-    </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+
+        <ProgressBar
+            android:id="@+id/loading_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/open_in_browser"
+            style="@style/FloatingButton"
+            android:src="@drawable/ic_open_in_browser_white_24dp"
+            app:fabSize="normal" />
+
+    </android.support.design.widget.CoordinatorLayout>
 </layout>

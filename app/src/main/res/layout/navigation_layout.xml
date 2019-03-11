@@ -32,7 +32,8 @@
 
             <ImageView
                 style="@style/NavImageItem"
-                android:src="@drawable/ic_home" />
+                android:src="@drawable/ic_home"
+                android:contentDescription="@string/nav_all" />
 
             <TextView
                 style="@style/TextNormal"
@@ -44,7 +45,8 @@
 
             <ImageView
                 style="@style/NavImageItem"
-                android:src="@drawable/ic_bookmark" />
+                android:src="@drawable/ic_bookmark"
+                android:contentDescription="@string/nav_favorite"/>
 
             <TextView
                 style="@style/TextNormal"
@@ -71,12 +73,15 @@
 
         </LinearLayout>
 
+        <View style="@style/VerticalDivider" />
+
         <LinearLayout style="@style/NavItem"
             android:id="@+id/add_subscription">
 
             <ImageView
                 style="@style/NavImageItem"
-                android:src="@drawable/ic_rss_feed" />
+                android:src="@drawable/ic_rss_feed"
+                android:contentDescription="@string/nav_add_subscription" />
 
             <TextView
                 style="@style/TextNormal"
@@ -88,7 +93,8 @@
 
             <ImageView
                 style="@style/NavImageItem"
-                android:src="@drawable/ic_settings" />
+                android:src="@drawable/ic_settings"
+                android:contentDescription="@string/nav_settings" />
 
             <TextView
                 style="@style/TextNormal"

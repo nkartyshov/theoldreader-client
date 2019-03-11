@@ -1,5 +1,8 @@
 package ru.oldowl.extension
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.support.v4.app.Fragment
@@ -16,4 +19,18 @@ fun BaseActivity.replaceFragment(id: Int, fragment: Fragment, addToBackStack: Bo
     }
 
     beginTransaction.commit()
+}
+
+fun Context.openUrl(url: String) {
+    val intent = Intent(Intent.ACTION_VIEW).apply {
+        flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        data = Uri.parse(url)
+    }
+
+    startActivity(intent)
+}
+
+fun Context.copyToClipboard(url: String) {
+    val clipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager?
+    clipboardManager?.primaryClip = ClipData.newRawUri(url, Uri.parse(url))
 }

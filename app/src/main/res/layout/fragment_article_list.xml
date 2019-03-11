@@ -27,7 +27,7 @@
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/make_all_read"
             style="@style/FloatingButton"
-            android:src="@drawable/ic_add_white_24dp"
+            android:src="@drawable/ic_done_all_white_24dp"
             app:fabSize="normal" />
 
     </android.support.design.widget.CoordinatorLayout>

@@ -3,8 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <import type="android.text.Html" />
-        
+
+        <import type="android.view.View" />
+
         <variable
             name="article"
             type="ru.oldowl.model.Article" />
@@ -14,42 +17,65 @@
             type="String" />
     </data>
 
-    <LinearLayout
+    <RelativeLayout
         style="@style/ContentFullWidth.Vertical"
         android:padding="@dimen/indent_default">
 
-        <TextView
-            style="@style/TextNormal"
-            android:text="@{article.title}"
-            tools:text="Article title" />
+        <LinearLayout style="@style/ContentFullWidth.Horizontal"
+            android:id="@+id/article_title_wrapper">
+
+            <TextView
+                android:layout_weight="1"
+                android:id="@+id/article_title"
+                style="@style/TextNormal"
+                android:text="@{article.title}"
+                tools:text="Article title" />
+
+            <ImageView
+                android:layout_gravity="top"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_star_black_24dp"
+                android:visibility="@{ article.favorite ? View.VISIBLE : View.GONE }"
+                android:contentDescription="@string/favorite_article" />
+
+        </LinearLayout>
 
         <TextView
+            android:id="@+id/article_summary"
             style="@style/TextSummary"
+            html="@{article.description}"
+            android:layout_below="@+id/article_title_wrapper"
             android:layout_marginTop="@dimen/indent_small"
-            android:text="@{Html.fromHtml(article.description, Html.FROM_HTML_MODE_COMPACT)}"
             tools:text="Article description" />
 
-        <LinearLayout
+        <RelativeLayout
             style="@style/ContentFullWidth.Horizontal"
+            android:layout_below="@+id/article_summary"
             android:paddingTop="@dimen/indent_small">
 
             <TextView
+                android:id="@+id/article_date"
                 style="@style/TextCaption"
                 android:layout_marginEnd="@dimen/indent_small"
                 android:text="@{article.publishDate}"
                 tools:text="Today" />
 
             <TextView
+                android:id="@+id/divider_horizontal"
                 style="@style/TextCaption"
+                android:layout_toEndOf="@+id/article_date"
                 android:text="@string/item_sep" />
 
             <TextView
                 style="@style/TextCaption.SingleLine"
                 android:layout_marginStart="@dimen/indent_small"
+                android:layout_toEndOf="@+id/divider_horizontal"
                 android:text="@{subscriptionTitle}"
-                tools:text="Subscription"/>
+                tools:text="Subscription" />
 
-        </LinearLayout>
 
-    </LinearLayout>
+        </RelativeLayout>
+
+    </RelativeLayout>
 </layout>
