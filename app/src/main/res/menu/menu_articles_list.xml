@@ -6,11 +6,7 @@
         android:id="@+id/hide_read"
         android:checkable="true"
         android:title="@string/hide_read"
-        app:showAsAction="never" />
-
-    <item
-        android:id="@+id/unsubscribe"
-        android:title="@string/unsubscribe"
+        android:checked="true"
         app:showAsAction="never" />
 
     <item
@@ -26,6 +22,11 @@
     <item
         android:id="@+id/read_all"
         android:title="@string/mark_all_read"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/unsubscribe"
+        android:title="@string/unsubscribe"
         app:showAsAction="never" />
 
     <item

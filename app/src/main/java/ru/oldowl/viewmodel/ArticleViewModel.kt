@@ -49,16 +49,23 @@ class ArticleViewModel(private val articleDao: ArticleDao) : BaseViewModel() {
         }
     }
 
-    fun toggleFavorite() {
-        launch(Dispatchers.Default) {
-            item?.article?.let {
-                it.favorite = !it.favorite
-                articleDao.updateFavoriteState(it.id, it.favorite)
+    fun toggleFavorite() = launch {
+        item?.article?.let {
+            it.favorite = !it.favorite
+            articleDao.updateFavoriteState(it.id, it.favorite)
 
-                launch(Dispatchers.Main) {
-                    updateUi.value = Unit
-                }
+            launch(Dispatchers.Main) {
+                updateUi.value = Unit
             }
         }
     }
+
+
+    fun markRead() = launch {
+        item?.article?.let {
+            it.read = true
+            articleDao.updateReadState(it.id, it.read)
+        }
+    }
+
 }

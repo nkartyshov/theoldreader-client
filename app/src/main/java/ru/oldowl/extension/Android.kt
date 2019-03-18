@@ -21,13 +21,14 @@ fun BaseActivity.replaceFragment(id: Int, fragment: Fragment, addToBackStack: Bo
     beginTransaction.commit()
 }
 
-fun Context.openUrl(url: String) {
-    val intent = Intent(Intent.ACTION_VIEW).apply {
-        flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        data = Uri.parse(url)
+fun Context.openUrl(url: String?) {
+    url?.let {
+        val intent = Intent(Intent.ACTION_VIEW).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            data = Uri.parse(url)
+        }
+        startActivity(intent)
     }
-
-    startActivity(intent)
 }
 
 fun Context.copyToClipboard(url: String) {

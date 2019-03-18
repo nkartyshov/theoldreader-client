@@ -14,7 +14,6 @@ abstract class BaseViewModel : ViewModel(), KoinComponent, CoroutineScope, AnkoL
     override val coroutineContext: CoroutineContext
         get() = job + Dispatchers.Default
 
-
     override fun onCleared() {
         super.onCleared()
 

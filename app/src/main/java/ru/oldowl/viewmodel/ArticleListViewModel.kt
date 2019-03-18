@@ -5,23 +5,22 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MediatorLiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Observer
+import kotlinx.coroutines.launch
 import ru.oldowl.*
+import ru.oldowl.api.TheOldReaderApi
 import ru.oldowl.dao.ArticleDao
 import ru.oldowl.model.ArticleAndSubscriptionTitle
 import ru.oldowl.model.Subscription
+import ru.oldowl.service.SettingsService
 
 class ArticleListViewModel(private val application: Application,
-                           private val articleDao: ArticleDao) : BaseViewModel() {
+                           private val articleDao: ArticleDao,
+                           private val theOldReaderApi: TheOldReaderApi,
+                           private val settingsService: SettingsService) : BaseViewModel() {
 
-    private val mediatorLiveData = MediatorLiveData<List<ArticleAndSubscriptionTitle>>()
+    private lateinit var articleLiveData: LiveData<List<ArticleAndSubscriptionTitle>>
 
-    private val unreadLiveData: LiveData<List<ArticleAndSubscriptionTitle>> by lazy {
-        when (mode) {
-            ArticleListMode.ALL -> articleDao.observeAllUnread()
-            ArticleListMode.FAVORITE -> articleDao.observeFavorite()
-            ArticleListMode.SUBSCRIPTION -> articleDao.observeUnread(subscription?.id!!)
-        }
-    }
+    private val mediatorLiveData: MediatorLiveData<List<ArticleAndSubscriptionTitle>> = MediatorLiveData()
 
     private val jobStatusObserver: Observer<JobStatus?> by lazy {
         Observer<JobStatus?> {
@@ -36,6 +35,19 @@ class ArticleListViewModel(private val application: Application,
     var mode: ArticleListMode = ArticleListMode.ALL
     var subscription: Subscription? = null
 
+    var hideRead: Boolean
+        get() {
+            return settingsService.hideRead
+        }
+
+        set(value) {
+            if (settingsService.hideRead != value) {
+                settingsService.hideRead = value
+
+                reloadLiveData()
+            }
+        }
+
     val title: String
         get() {
             return when (mode) {
@@ -45,13 +57,11 @@ class ArticleListViewModel(private val application: Application,
             }
         }
 
-    val articles: LiveData<List<ArticleAndSubscriptionTitle>> by lazy {
-        mediatorLiveData.addSource(unreadLiveData) {
-            mediatorLiveData.value = it
+    val articles: LiveData<List<ArticleAndSubscriptionTitle>>
+        get() {
+            reloadLiveData()
+            return mediatorLiveData
         }
-
-        mediatorLiveData
-    }
 
     init {
         Jobs.observeJobStatus.observeForever(jobStatusObserver)
@@ -68,6 +78,51 @@ class ArticleListViewModel(private val application: Application,
         super.onCleared()
 
         Jobs.observeJobStatus.removeObserver(jobStatusObserver)
+    }
+
+    fun deleteAll() = launch {
+        articleDao.deleteAll()
+    }
+
+    fun deleteAllRead() {
+        articleDao.deleteAllRead()
+    }
+
+    fun markReadAll() = launch {
+        // TODO add event for mark all read
+        articleDao.markAllRead()
+    }
+
+    fun unsubscribe() {
+        TODO("not implemented")
+
+        // TODO add event for unsubscribe
+        // TODO sending unsubscribe request when network available
+    }
+
+    private fun reloadLiveData() {
+        articleLiveData = when (mode) {
+            ArticleListMode.FAVORITE -> articleDao.observeFavorite()
+
+            ArticleListMode.ALL -> {
+                if (hideRead)
+                    articleDao.observeUnread()
+                else
+                    articleDao.observeAll()
+            }
+
+            ArticleListMode.SUBSCRIPTION -> {
+                if (hideRead)
+                    articleDao.observeUnread(subscription?.id)
+                else
+                    articleDao.observeAll(subscription?.id)
+            }
+        }
+
+        mediatorLiveData.removeSource(articleLiveData)
+        mediatorLiveData.addSource(articleLiveData) {
+            mediatorLiveData.value = it
+        }
     }
 }
 

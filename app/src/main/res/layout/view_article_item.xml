@@ -8,6 +8,8 @@
 
         <import type="android.view.View" />
 
+        <import type="android.graphics.Typeface" />
+
         <variable
             name="article"
             type="ru.oldowl.model.Article" />
@@ -21,23 +23,24 @@
         style="@style/ContentFullWidth.Vertical"
         android:padding="@dimen/indent_default">
 
-        <LinearLayout style="@style/ContentFullWidth.Horizontal"
-            android:id="@+id/article_title_wrapper">
+        <LinearLayout
+            android:id="@+id/article_title_wrapper"
+            style="@style/ContentFullWidth.Horizontal">
 
             <TextView
-                android:layout_weight="1"
                 android:id="@+id/article_title"
                 style="@style/TextNormal"
+                android:layout_weight="1"
                 android:text="@{article.title}"
                 tools:text="Article title" />
 
             <ImageView
-                android:layout_gravity="top"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
+                android:layout_gravity="top"
+                android:contentDescription="@string/favorite_article"
                 android:src="@drawable/ic_star_black_24dp"
-                android:visibility="@{ article.favorite ? View.VISIBLE : View.GONE }"
-                android:contentDescription="@string/favorite_article" />
+                android:visibility="@{article.favorite ? View.VISIBLE : View.GONE }" />
 
         </LinearLayout>
 
@@ -74,8 +77,6 @@
                 android:text="@{subscriptionTitle}"
                 tools:text="Subscription" />
 
-
         </RelativeLayout>
-
     </RelativeLayout>
 </layout>

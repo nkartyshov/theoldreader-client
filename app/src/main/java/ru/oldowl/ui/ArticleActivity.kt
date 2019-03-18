@@ -46,10 +46,15 @@ class ArticleActivity : BaseActivity() {
             cacheMode = WebSettings.LOAD_NO_CACHE
         }
 
-        article_content.webViewClient = WebViewClientImpl(applicationContext, loading_progress, article_wrapper)
+        val webViewClient = WebViewClientImpl(applicationContext, loading_progress, article_wrapper)
+        webViewClient.setOnPageFinishedListener {
+            viewModel.markRead()
+        }
+
+        article_content.webViewClient = webViewClient
 
         open_in_browser.setOnClickListener {
-            openUrl()
+            openUrl(viewModel.url)
         }
 
         viewModel.updateUi.observe(this, Observer {
@@ -74,7 +79,7 @@ class ArticleActivity : BaseActivity() {
                 viewModel.toggleFavorite()
             }
 
-            R.id.open_in_browser -> openUrl()
+            R.id.open_in_browser -> openUrl(viewModel.url)
 
             R.id.copy_url -> viewModel.url?.let {
                 copyToClipboard(it)
@@ -84,12 +89,6 @@ class ArticleActivity : BaseActivity() {
         }
 
         return super.onOptionsItemSelected(item)
-    }
-
-    private fun openUrl() {
-        viewModel.url?.let {
-            openUrl(it)
-        }
     }
 
     companion object {
@@ -105,13 +104,15 @@ private class WebViewClientImpl(private val context: Context,
                                 private val progressBar: ProgressBar,
                                 private val wrapperView: View) : WebViewClient() {
 
+    private var onPageFinishedListener: (() -> Unit)? = null
+
     override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
-        openUrl(url)
+        context.openUrl(url)
         return true
     }
 
     override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
-        openUrl(request?.url.toString())
+        context.openUrl(request?.url.toString())
         return true
     }
 
@@ -125,11 +126,11 @@ private class WebViewClientImpl(private val context: Context,
         wrapperView.visibility = View.VISIBLE
         view?.visibility = View.VISIBLE
         progressBar.visibility = View.GONE
+
+        onPageFinishedListener?.invoke()
     }
 
-    private fun openUrl(url: String?) {
-        url?.let {
-            context.openUrl(it)
-        }
+    fun setOnPageFinishedListener(listener: () -> Unit) {
+        onPageFinishedListener = listener
     }
 }

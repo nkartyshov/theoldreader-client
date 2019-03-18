@@ -54,11 +54,26 @@ class ArticleListFragment : BaseFragment() {
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater?.inflate(R.menu.menu_articles_list, menu)
+
+        menu?.findItem(R.id.unsubscribe)?.isVisible = viewModel.subscription != null
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when(item?.itemId) {
+            R.id.delete_all -> viewModel.deleteAll()
+
+            R.id.delete_all_read -> viewModel.deleteAllRead()
+
+            R.id.unsubscribe -> viewModel.unsubscribe()
+
+            R.id.read_all -> viewModel.markReadAll()
+
             R.id.sync -> viewModel.sync()
+
+            R.id.hide_read -> {
+                item.isChecked = !item.isChecked
+                viewModel.hideRead = item.isChecked
+            }
         }
 
         return super.onOptionsItemSelected(item)
