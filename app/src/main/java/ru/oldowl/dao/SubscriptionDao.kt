@@ -1,9 +1,6 @@
 package ru.oldowl.dao
 
-import android.arch.persistence.room.Dao
-import android.arch.persistence.room.Insert
-import android.arch.persistence.room.OnConflictStrategy
-import android.arch.persistence.room.Query
+import android.arch.persistence.room.*
 import ru.oldowl.model.Subscription
 import ru.oldowl.model.SubscriptionAndUnreadCount
 
@@ -21,4 +18,7 @@ interface SubscriptionDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun save(subscription: Subscription): Long
+
+    @Delete
+    fun delete(subscription: Subscription)
 }

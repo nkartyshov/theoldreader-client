@@ -2,30 +2,35 @@ package ru.oldowl.viewmodel
 
 import android.app.Application
 import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MediatorLiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Observer
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import ru.oldowl.*
 import ru.oldowl.api.TheOldReaderApi
 import ru.oldowl.dao.ArticleDao
+import ru.oldowl.dao.SubscriptionDao
 import ru.oldowl.model.ArticleAndSubscriptionTitle
 import ru.oldowl.model.Subscription
 import ru.oldowl.service.SettingsService
 
 class ArticleListViewModel(private val application: Application,
                            private val articleDao: ArticleDao,
+                           private val subscriptionDao: SubscriptionDao,
                            private val theOldReaderApi: TheOldReaderApi,
                            private val settingsService: SettingsService) : BaseViewModel() {
 
-    private lateinit var articleLiveData: LiveData<List<ArticleAndSubscriptionTitle>>
 
-    private val mediatorLiveData: MediatorLiveData<List<ArticleAndSubscriptionTitle>> = MediatorLiveData()
+    private val articleLiveData: MutableLiveData<List<ArticleAndSubscriptionTitle>> = MutableLiveData()
 
     private val jobStatusObserver: Observer<JobStatus?> by lazy {
         Observer<JobStatus?> {
             when (it?.jobId) {
-                FORCED_UPDATE_ID, AUTO_UPDATE_ID -> dataLoading.value = !it.finished
+                FORCED_UPDATE_ID, AUTO_UPDATE_ID -> {
+                    dataLoading.value = !it.finished
+                    loadArticles()
+                }
             }
         }
     }
@@ -44,7 +49,7 @@ class ArticleListViewModel(private val application: Application,
             if (settingsService.hideRead != value) {
                 settingsService.hideRead = value
 
-                reloadLiveData()
+                loadArticles()
             }
         }
 
@@ -59,8 +64,8 @@ class ArticleListViewModel(private val application: Application,
 
     val articles: LiveData<List<ArticleAndSubscriptionTitle>>
         get() {
-            reloadLiveData()
-            return mediatorLiveData
+            loadArticles()
+            return articleLiveData
         }
 
     init {
@@ -84,44 +89,47 @@ class ArticleListViewModel(private val application: Application,
         articleDao.deleteAll()
     }
 
-    fun deleteAllRead() {
+    fun deleteAllRead() = launch {
         articleDao.deleteAllRead()
     }
 
     fun markReadAll() = launch {
         // TODO add event for mark all read
+        // TODO sending mark all read request when network available
+
         articleDao.markAllRead()
     }
 
     fun unsubscribe() {
-        TODO("not implemented")
-
         // TODO add event for unsubscribe
         // TODO sending unsubscribe request when network available
+
+        subscription?.let {
+            subscriptionDao.delete(it)
+        }
     }
 
-    private fun reloadLiveData() {
-        articleLiveData = when (mode) {
-            ArticleListMode.FAVORITE -> articleDao.observeFavorite()
+    private fun loadArticles() = launch {
+        val articles = when (mode) {
+            ArticleListMode.FAVORITE -> articleDao.findFavorite()
 
             ArticleListMode.ALL -> {
                 if (hideRead)
-                    articleDao.observeUnread()
+                    articleDao.findUnread()
                 else
-                    articleDao.observeAll()
+                    articleDao.findAll()
             }
 
             ArticleListMode.SUBSCRIPTION -> {
                 if (hideRead)
-                    articleDao.observeUnread(subscription?.id)
+                    articleDao.findUnread(subscription?.id)
                 else
-                    articleDao.observeAll(subscription?.id)
+                    articleDao.findAll(subscription?.id)
             }
         }
 
-        mediatorLiveData.removeSource(articleLiveData)
-        mediatorLiveData.addSource(articleLiveData) {
-            mediatorLiveData.value = it
+        withContext(Dispatchers.Main) {
+            articleLiveData.value = articles
         }
     }
 }

@@ -14,8 +14,11 @@ import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
 import ru.oldowl.api.TheOldReaderApi
 import ru.oldowl.dao.ArticleDao
+import ru.oldowl.dao.CategoryDao
 import ru.oldowl.dao.SubscriptionDao
+import ru.oldowl.extension.afterOrEquals
 import ru.oldowl.model.Article
+import ru.oldowl.model.Category
 import ru.oldowl.model.Subscription
 import ru.oldowl.service.AccountService
 import ru.oldowl.service.SettingsService
@@ -75,27 +78,33 @@ class AutoUpdateJob : JobService(), KoinComponent, CoroutineScope {
     private val theOldReaderApi: TheOldReaderApi by inject()
 
     private val subscriptionDao: SubscriptionDao by inject()
+    private val categoryDao: CategoryDao by inject()
     private val articleDao: ArticleDao by inject()
 
     override fun onStartJob(params: JobParameters?): Boolean {
         launch {
-            // TODO check auth token
-            // TODO check last sync date
+            // TODO update auth token
 
             val extras = params?.extras
 
+            val subscriptionId = extras?.getLong(SUBSCRIPTION_ID) ?: -1
             val forced: Boolean = extras?.getInt(FORCE) == 1
+
+            //FIXME Add update period
             val lastSyncDate = settingsService.lastSyncDate
 
-            val subscriptionId = extras?.getLong(SUBSCRIPTION_ID) ?: -1
+            if (!forced && lastSyncDate.afterOrEquals(Date())) {
+                return@launch
+            }
 
             try {
                 sendJobStatus(params?.jobId, false)
 
                 val account = accountService.getAccount()
+                val authToken = account?.authToken ?: ""
 
                 // Sync subscriptions
-                // TODO Implement update subscription
+                syncSubscriptions(authToken)
 
                 // Sync articles
                 // TODO Implement events table
@@ -104,16 +113,13 @@ class AutoUpdateJob : JobService(), KoinComponent, CoroutineScope {
                     listOf(subscriptionDao.findById(subscriptionId))
                 else subscriptionDao.findAll()
 
+                // Downloading new articles
                 for (subscription in subscriptions) {
-                    val token = account?.authToken ?: ""
-
-
-                    // Downloading new articles
                     val feedId = subscription.feedId ?: ""
 
-                    val itemIds = theOldReaderApi.getItemIds(feedId, token, true, lastSyncDate)
+                    val itemIds = theOldReaderApi.getItemIds(feedId, authToken, true, lastSyncDate)
                     if (itemIds.isNotEmpty()) {
-                        val contents = theOldReaderApi.getContents(itemIds, token)
+                        val contents = theOldReaderApi.getContents(itemIds, authToken)
 
                         if (contents.isNotEmpty()) {
                             val articles = contents.map {
@@ -156,4 +162,36 @@ class AutoUpdateJob : JobService(), KoinComponent, CoroutineScope {
         return true
     }
 
+    //FIXME Update subscription
+    //FIXME Delete subscription
+    private fun syncSubscriptions(authToken: String) {
+        val subscriptions = subscriptionDao.findAll()
+        val feedIds = subscriptions.map { it.feedId }
+
+        val subscriptionResponses = theOldReaderApi.getSubscriptions(authToken)
+        for (subscriptionResponse in subscriptionResponses) {
+            if (feedIds.contains(subscriptionResponse.id)) {
+                continue
+            }
+
+            val category = subscriptionResponse.categories.map {
+                Category(labelId = it.id, title = it.label)
+            }.getOrElse(0) { Category(1, "default", "Default") }
+
+            val categoryId = if (categoryDao.exists(category.labelId))
+                categoryDao.findIdByLabelId(category.labelId)
+            else categoryDao.save(category)
+
+            val subscription = Subscription(
+                    categoryId = categoryId,
+                    title = subscriptionResponse.title,
+                    feedId = subscriptionResponse.id,
+                    url = subscriptionResponse.url,
+                    htmlUrl = subscriptionResponse.htmlUrl
+            )
+
+            val subscriptionId = subscriptionDao.save(subscription)
+            subscription.id = subscriptionId
+        }
+    }
 }

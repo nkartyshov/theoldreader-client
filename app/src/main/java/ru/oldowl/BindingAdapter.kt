@@ -42,7 +42,10 @@ object BindingAdapter {
     fun setItems(recyclerView: RecyclerView, items: List<SubscriptionAndUnreadCount>?) {
         items?.let {
             val adapter = recyclerView.adapter as SubscriptionAndUnreadCountAdapter
-            adapter.update(items)
+
+            if (adapter.subscriptions != items) {
+                adapter.update(items)
+            }
         }
     }
 
@@ -51,7 +54,10 @@ object BindingAdapter {
     fun setArticles(recyclerView: RecyclerView, items: List<ArticleAndSubscriptionTitle>?) {
         items?.let {
             val adapter = recyclerView.adapter as ArticleAndSubscriptionTitleAdapter
-            adapter.update(items)
+
+            if (adapter.articles != items) {
+                adapter.update(items)
+            }
         }
     }
 
@@ -74,13 +80,11 @@ object BindingAdapter {
     @BindingAdapter("html")
     fun setHtml(textView: TextView, html: String?) {
         html?.let {
-            val html = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            textView.text = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 Html.fromHtml(html, Html.FROM_HTML_MODE_COMPACT)
             } else {
                 Html.fromHtml(html)
             }
-
-            textView.text = html
         }
     }
 

@@ -10,10 +10,10 @@ import ru.oldowl.databinding.ViewSubscriptionItemBinding
 import ru.oldowl.model.Subscription
 import ru.oldowl.model.SubscriptionAndUnreadCount
 
-class SubscriptionAndUnreadCountAdapter(private val context: Context)
+class SubscriptionAndUnreadCountAdapter(private val context: Context,
+                                        var subscriptions: List<SubscriptionAndUnreadCount> = emptyList())
     : RecyclerView.Adapter<SubscriptionViewHolder>() {
 
-    private var subscriptions = emptyList<SubscriptionAndUnreadCount>()
     private var onItemClickListener: ((Subscription) -> Unit)? = null
 
     override fun getItemCount(): Int {

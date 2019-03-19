@@ -7,6 +7,7 @@ import kotlinx.coroutines.launch
 import org.jetbrains.anko.startActivity
 import org.koin.core.parameter.parametersOf
 import org.koin.standalone.inject
+import ru.oldowl.Jobs
 import ru.oldowl.R
 import ru.oldowl.extension.openWebsite
 import ru.oldowl.viewmodel.LoginViewModel
@@ -37,7 +38,7 @@ class LoginActivity : BaseActivity() {
                     Snackbar.make(it, getString(R.string.authentication_error), Snackbar.LENGTH_LONG).show()
                 } else {
                     loginViewModel.saveAccount(emailValue, passwordValue, authToken)
-                    loginViewModel.downloadSubscriptions(authToken)
+                    Jobs.forceUpdate(this@LoginActivity)
 
                     startActivity<MainActivity>()
                     finish()

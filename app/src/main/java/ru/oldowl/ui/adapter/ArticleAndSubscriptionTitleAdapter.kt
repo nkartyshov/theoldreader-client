@@ -9,14 +9,14 @@ import ru.oldowl.R
 import ru.oldowl.databinding.ViewArticleItemBinding
 import ru.oldowl.model.ArticleAndSubscriptionTitle
 
-class ArticleAndSubscriptionTitleAdapter(private val context: Context?)
+class ArticleAndSubscriptionTitleAdapter(private val context: Context?,
+                                         var articles: List<ArticleAndSubscriptionTitle> = emptyList())
     : RecyclerView.Adapter<ArticleAndSubscriptionTitleHolder>() {
 
-    private var article = emptyList<ArticleAndSubscriptionTitle>()
     private var onItemClickListener: ((article: ArticleAndSubscriptionTitle) -> Unit)? = null
 
     override fun getItemCount(): Int {
-        return article.size
+        return articles.size
     }
 
     override fun onCreateViewHolder(root: ViewGroup, viewType: Int): ArticleAndSubscriptionTitleHolder {
@@ -27,7 +27,7 @@ class ArticleAndSubscriptionTitleAdapter(private val context: Context?)
     }
 
     override fun onBindViewHolder(viewHolder: ArticleAndSubscriptionTitleHolder, position: Int) {
-        val item = article[position]
+        val item = articles[position]
         viewHolder.bind(item)
 
         viewHolder.itemView.setOnClickListener {
@@ -36,7 +36,7 @@ class ArticleAndSubscriptionTitleAdapter(private val context: Context?)
     }
 
     fun update(items: List<ArticleAndSubscriptionTitle>) {
-        article = items
+        articles = items
         notifyDataSetChanged()
     }
 

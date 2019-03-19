@@ -1,6 +1,5 @@
 package ru.oldowl.dao
 
-import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Insert
 import android.arch.persistence.room.OnConflictStrategy
@@ -12,19 +11,19 @@ import ru.oldowl.model.ArticleAndSubscriptionTitle
 interface ArticleDao {
 
     @Query("select a.*, s.title as subscription_title from articles a inner join subscriptions s on a.subscription_id = s.id order by a.publish_date desc")
-    fun observeAll(): LiveData<List<ArticleAndSubscriptionTitle>>
+    fun findAll(): List<ArticleAndSubscriptionTitle>
 
     @Query("select a.*, s.title as subscription_title from articles a inner join subscriptions s on a.subscription_id = s.id where subscription_id = :subscriptionId order by a.publish_date desc")
-    fun observeAll(subscriptionId: Long?): LiveData<List<ArticleAndSubscriptionTitle>>
+    fun findAll(subscriptionId: Long?): List<ArticleAndSubscriptionTitle>
 
     @Query("select a.*, s.title as subscription_title from articles a inner join subscriptions s on a.subscription_id = s.id where read = 0 order by a.publish_date desc")
-    fun observeUnread(): LiveData<List<ArticleAndSubscriptionTitle>>
+    fun findUnread(): List<ArticleAndSubscriptionTitle>
 
     @Query("select a.*, s.title as subscription_title from articles a inner join subscriptions s on a.subscription_id = s.id where subscription_id = :subscriptionId and read = 0 order by a.publish_date desc")
-    fun observeUnread(subscriptionId: Long?): LiveData<List<ArticleAndSubscriptionTitle>>
+    fun findUnread(subscriptionId: Long?): List<ArticleAndSubscriptionTitle>
 
     @Query("select a.*, s.title as subscription_title from articles a inner join subscriptions s on a.subscription_id = s.id where favorite = 1 order by a.publish_date desc")
-    fun observeFavorite(): LiveData<List<ArticleAndSubscriptionTitle>>
+    fun findFavorite(): List<ArticleAndSubscriptionTitle>
 
     @Query("select 1 from articles where original_id = :originalId")
     fun exists(originalId: String): Boolean

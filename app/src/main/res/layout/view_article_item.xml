@@ -32,6 +32,7 @@
                 style="@style/TextNormal"
                 android:layout_weight="1"
                 android:text="@{article.title}"
+                android:textColor="@{article.read ? @color/gray : @color/black}"
                 tools:text="Article title" />
 
             <ImageView
@@ -40,6 +41,7 @@
                 android:layout_gravity="top"
                 android:contentDescription="@string/favorite_article"
                 android:src="@drawable/ic_star_black_24dp"
+                android:tint="@{article.read ? @color/gray : @color/black}"
                 android:visibility="@{article.favorite ? View.VISIBLE : View.GONE }" />
 
         </LinearLayout>

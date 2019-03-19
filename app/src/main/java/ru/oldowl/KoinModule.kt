@@ -26,8 +26,8 @@ val serviceModule = module {
     single { AccountService(androidApplication()) }
 
     // ViewModels
-    viewModel { (appName : String) -> LoginViewModel(appName, get(), get(), get(), get()) }
+    viewModel { (appName : String) -> LoginViewModel(appName, get(), get()) }
     viewModel { MainViewModel(get(), get(), get()) }
-    viewModel { ArticleListViewModel(get(), get(), get(), get()) }
+    viewModel { ArticleListViewModel(get(), get(), get(), get(), get()) }
     viewModel { ArticleViewModel(get()) }
 }

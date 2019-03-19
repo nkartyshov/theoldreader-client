@@ -2,18 +2,12 @@ package ru.oldowl.viewmodel
 
 import kotlinx.coroutines.async
 import ru.oldowl.api.TheOldReaderApi
-import ru.oldowl.dao.CategoryDao
-import ru.oldowl.dao.SubscriptionDao
 import ru.oldowl.model.Account
-import ru.oldowl.model.Category
-import ru.oldowl.model.Subscription
 import ru.oldowl.service.AccountService
 
 class LoginViewModel(private val appName: String,
                      private val theOldReaderApi: TheOldReaderApi,
-                     private val accountService: AccountService,
-                     private val subscriptionDao: SubscriptionDao,
-                     private val categoryDao: CategoryDao) : BaseViewModel() {
+                     private val accountService: AccountService) : BaseViewModel() {
 
     suspend fun authentication(email: String, password: String): String? = async {
         theOldReaderApi.authentication(email, password, appName)
@@ -25,29 +19,4 @@ class LoginViewModel(private val appName: String,
         val account = Account(email, password, authToken)
         accountService.saveAccount(account)
     }
-
-    // FIXME will move to JobService
-    suspend fun downloadSubscriptions(authToken: String) = async {
-        val subscriptionResponses = theOldReaderApi.getSubscriptions(authToken)
-        for (subscriptionResponse in subscriptionResponses) {
-            val category = subscriptionResponse.categories.map {
-                Category(labelId = it.id, title = it.label)
-            }.getOrElse(0) { Category(1, "default", "Default") }
-
-            val categoryId = if (categoryDao.exists(category.labelId))
-                categoryDao.findIdByLabelId(category.labelId)
-            else categoryDao.save(category)
-
-            val subscription = Subscription(
-                    categoryId = categoryId,
-                    title = subscriptionResponse.title,
-                    feedId = subscriptionResponse.id,
-                    url = subscriptionResponse.url,
-                    htmlUrl = subscriptionResponse.htmlUrl
-            )
-
-            val subscriptionId = subscriptionDao.save(subscription)
-            subscription.id = subscriptionId
-        }
-    }.await()
 }

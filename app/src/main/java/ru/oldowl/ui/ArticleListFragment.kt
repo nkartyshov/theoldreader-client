@@ -59,7 +59,7 @@ class ArticleListFragment : BaseFragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when(item?.itemId) {
+        when (item?.itemId) {
             R.id.delete_all -> viewModel.deleteAll()
 
             R.id.delete_all_read -> viewModel.deleteAllRead()
