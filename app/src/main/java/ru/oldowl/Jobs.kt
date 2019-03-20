@@ -103,11 +103,11 @@ class AutoUpdateJob : JobService(), KoinComponent, CoroutineScope {
                 val account = accountService.getAccount()
                 val authToken = account?.authToken ?: ""
 
+                // Sync events
+                // TODO Implement events table
+
                 // Sync subscriptions
                 syncSubscriptions(authToken)
-
-                // Sync articles
-                // TODO Implement events table
 
                 val subscriptions: List<Subscription> = if (subscriptionId > 0)
                     listOf(subscriptionDao.findById(subscriptionId))

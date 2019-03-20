@@ -4,11 +4,14 @@ import android.arch.lifecycle.MutableLiveData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ru.oldowl.dao.ArticleDao
+import ru.oldowl.dao.EventDao
 import ru.oldowl.model.ArticleAndSubscriptionTitle
+import ru.oldowl.model.Event
+import ru.oldowl.model.EventType
 import java.util.*
 
-// TODO mark read after loading data
-class ArticleViewModel(private val articleDao: ArticleDao) : BaseViewModel() {
+class ArticleViewModel(private val articleDao: ArticleDao,
+                       private val eventDao: EventDao) : BaseViewModel() {
     var item: ArticleAndSubscriptionTitle? = null
 
     val title: String?
@@ -54,6 +57,8 @@ class ArticleViewModel(private val articleDao: ArticleDao) : BaseViewModel() {
             it.favorite = !it.favorite
             articleDao.updateFavoriteState(it.id, it.favorite)
 
+            eventDao.save(Event(eventType = EventType.UPDATE_FAVORITE, payload = it.originalId))
+
             launch(Dispatchers.Main) {
                 updateUi.value = Unit
             }
@@ -65,6 +70,8 @@ class ArticleViewModel(private val articleDao: ArticleDao) : BaseViewModel() {
         item?.article?.let {
             it.read = true
             articleDao.updateReadState(it.id, it.read)
+            
+            eventDao.save(Event(eventType = EventType.UPDATE_READ, payload = it.originalId))
         }
     }
 

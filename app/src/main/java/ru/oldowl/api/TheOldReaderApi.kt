@@ -6,7 +6,6 @@ import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.error
 import ru.oldowl.JsonHelper
 import ru.oldowl.api.model.*
-import ru.oldowl.model.Article
 import java.io.IOException
 import java.io.StringReader
 import java.util.*
@@ -153,7 +152,7 @@ class TheOldReaderApi : AnkoLogger {
                 response.body()?.let { responseBody ->
                     val syndFeed = SyndFeedInput().build(StringReader(responseBody.string()))
 
-                    return syndFeed.entries.map {entry ->
+                    return syndFeed.entries.map { entry ->
                         val description = if (entry.contents.isEmpty()) {
                             entry.description.value ?: ""
                         } else {
@@ -177,31 +176,172 @@ class TheOldReaderApi : AnkoLogger {
         return emptyList()
     }
 
-    // TODO FIXME
-    fun updateItem(article: Article) {
+    fun unsubscribe(feedId: String, token: String): Boolean {
         try {
             val httpUrl = HttpUrl.Builder()
                     .scheme(SCHEMA)
                     .host(ENDPOINT)
-                    .addPathSegments(UPDATE_ITEMS)
+                    .addPathSegments(SUBSCRIPTION_UPDATE)
                     .build()
 
+            val formBody = FormBody.Builder()
+                    .addEncoded("ac", "unsubscribe")
+                    .addEncoded("s", feedId)
+                    .build()
 
+            val request = Request.Builder()
+                    .url(httpUrl)
+                    .post(formBody)
+                    .addHeader("Authorization", "GoogleLogin auth=$token")
+                    .build()
 
+            val response = httpClient.newCall(request).execute()
+            if (response.isSuccessful) {
+                val body = response.body()?.string() ?: ""
+
+                if (body.isNotBlank()) {
+                    error("Error unsubscribe from $feedId\n$body")
+                    return false
+                }
+
+                return true
+            }
         } catch (e: IOException) {
-            error("Error updating item ${article.originalId}", e)
+            error("Error unsubscribe from $feedId", e)
         }
+
+        return false
+    }
+
+    fun updateReadState(itemId: String, state: Boolean, token: String): Boolean {
+        try {
+            val httpUrl = HttpUrl.Builder()
+                    .scheme(SCHEMA)
+                    .host(ENDPOINT)
+                    .addPathSegment(MARK_ALL_READ)
+                    .build()
+
+            val parameterName = if (state) "a" else "r"
+
+            val formBody = FormBody.Builder()
+                    .addEncoded("i", ITEM_PREFIX + itemId)
+                    .add(parameterName, "user/-/state/com.google/read")
+                    .build()
+
+            val request = Request.Builder()
+                    .url(httpUrl)
+                    .post(formBody)
+                    .addHeader("Authorization", "GoogleLogin auth=$token")
+                    .build()
+
+            val response = httpClient.newCall(request).execute()
+            if (response.isSuccessful) {
+                val body = response.body()?.string() ?: ""
+
+                if (body.isNotBlank()) {
+                    error("Error mark read item $itemId\n$body")
+                    return false
+                }
+
+                return true
+            }
+        } catch (e: IOException) {
+            error("Error mark read item $itemId", e)
+        }
+
+        return false
+    }
+
+    fun updateFavoriteState(itemId: String, state: Boolean, token: String): Boolean {
+        try {
+            val httpUrl = HttpUrl.Builder()
+                    .scheme(SCHEMA)
+                    .host(ENDPOINT)
+                    .addPathSegment(MARK_ALL_READ)
+                    .build()
+
+            val parameterName = if (state) "a" else "r"
+
+            val formBody = FormBody.Builder()
+                    .addEncoded("i", ITEM_PREFIX + itemId)
+                    .add(parameterName, "user/-/state/com.google/starred")
+                    .build()
+
+            val request = Request.Builder()
+                    .url(httpUrl)
+                    .post(formBody)
+                    .addHeader("Authorization", "GoogleLogin auth=$token")
+                    .build()
+
+            val response = httpClient.newCall(request).execute()
+            if (response.isSuccessful) {
+                val body = response.body()?.string() ?: ""
+
+                if (body.isNotBlank()) {
+                    error("Error mark favorite item $itemId\n$body")
+                    return false
+                }
+
+                return true
+            }
+        } catch (e: IOException) {
+            error("Error mark favorite item $itemId", e)
+        }
+
+        return false
+    }
+
+    fun markAllRead(feedId: String = "", token: String): Boolean {
+        try {
+            val httpUrl = HttpUrl.Builder()
+                    .scheme(SCHEMA)
+                    .host(ENDPOINT)
+                    .addPathSegment(MARK_ALL_READ)
+                    .build()
+
+            val formParamValue = if (feedId.isNotBlank()) feedId else "user/-/state/com.google/reading-list"
+            val formBody = FormBody.Builder()
+                    .addEncoded("s", formParamValue)
+                    .build()
+
+            val request = Request.Builder()
+                    .url(httpUrl)
+                    .post(formBody)
+                    .addHeader("Authorization", "GoogleLogin auth=$token")
+                    .build()
+
+            val response = httpClient.newCall(request).execute()
+            if (response.isSuccessful) {
+                val body = response.body()?.string() ?: ""
+
+                if (body.isNotBlank()) {
+                    error("Error mark all read\n$body")
+                    return false
+                }
+
+                return true
+            }
+        } catch (e: IOException) {
+            error("Error mark all read", e)
+        }
+
+        return false
     }
 
     companion object {
         private const val SCHEMA = "https"
-
         private const val ENDPOINT = "theoldreader.com"
+
         private const val CLIENT_LOGIN = "accounts/ClientLogin"
+
         private const val SUBSCRIPTION_LIST = "reader/api/0/subscription/list"
+        private const val SUBSCRIPTION_UPDATE = "reader/api/0/subscription/edit"
+
         private const val ITEM_IDS_LIST = "reader/api/0/stream/items/ids"
-        private const val CONTENTS_LIST = "reader/api/0/stream/items/contents"
         private const val UPDATE_ITEMS = "reader/api/0/edit-tag"
+        private const val MARK_ALL_READ = "reader/api/0/mark-all-as-read"
+
+        private const val CONTENTS_LIST = "reader/api/0/stream/items/contents"
 
         private const val QUERY_PARAM = "s"
         private const val NEWER_THAN_PARAM = "ot"

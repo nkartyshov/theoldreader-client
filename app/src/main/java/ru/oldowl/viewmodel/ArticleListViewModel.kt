@@ -8,17 +8,19 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.oldowl.*
-import ru.oldowl.api.TheOldReaderApi
 import ru.oldowl.dao.ArticleDao
+import ru.oldowl.dao.EventDao
 import ru.oldowl.dao.SubscriptionDao
 import ru.oldowl.model.ArticleAndSubscriptionTitle
+import ru.oldowl.model.Event
+import ru.oldowl.model.EventType
 import ru.oldowl.model.Subscription
 import ru.oldowl.service.SettingsService
 
 class ArticleListViewModel(private val application: Application,
                            private val articleDao: ArticleDao,
                            private val subscriptionDao: SubscriptionDao,
-                           private val theOldReaderApi: TheOldReaderApi,
+                           private val eventDao: EventDao,
                            private val settingsService: SettingsService) : BaseViewModel() {
 
 
@@ -94,18 +96,14 @@ class ArticleListViewModel(private val application: Application,
     }
 
     fun markReadAll() = launch {
-        // TODO add event for mark all read
-        // TODO sending mark all read request when network available
-
         articleDao.markAllRead()
+        eventDao.save(Event(eventType = EventType.MARK_ALL_READ))
     }
 
     fun unsubscribe() {
-        // TODO add event for unsubscribe
-        // TODO sending unsubscribe request when network available
-
         subscription?.let {
             subscriptionDao.delete(it)
+            eventDao.save(Event(eventType = EventType.UNSUBSCRIBE, payload = it.feedId))
         }
     }
 
