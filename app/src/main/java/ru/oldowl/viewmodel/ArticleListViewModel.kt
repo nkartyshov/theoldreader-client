@@ -46,7 +46,6 @@ class ArticleListViewModel(private val application: Application,
         get() {
             return settingsService.hideRead
         }
-
         set(value) {
             if (settingsService.hideRead != value) {
                 settingsService.hideRead = value
@@ -88,16 +87,32 @@ class ArticleListViewModel(private val application: Application,
     }
 
     fun deleteAll() = launch {
-        articleDao.deleteAll()
+        when (mode) {
+            ArticleListMode.SUBSCRIPTION -> articleDao.deleteAll(subscription?.id)
+            else -> articleDao.deleteAll()
+        }
+
+        loadArticles()
     }
 
     fun deleteAllRead() = launch {
-        articleDao.deleteAllRead()
+        when (mode) {
+            ArticleListMode.SUBSCRIPTION -> articleDao.deleteAllRead(subscription?.id)
+            else -> articleDao.deleteAllRead()
+        }
+
+        loadArticles()
     }
 
     fun markReadAll() = launch {
-        articleDao.markAllRead()
-        eventDao.save(Event(eventType = EventType.MARK_ALL_READ))
+        when (mode) {
+            ArticleListMode.SUBSCRIPTION -> articleDao.markAllRead(subscription?.id)
+            else -> articleDao.markAllRead()
+        }
+
+        eventDao.save(Event(eventType = EventType.MARK_ALL_READ, payload = subscription?.feedId))
+
+        loadArticles()
     }
 
     fun unsubscribe() {

@@ -21,4 +21,7 @@ interface SubscriptionDao {
 
     @Delete
     fun delete(subscription: Subscription)
+
+    @Update
+    fun update(subscription: Subscription)
 }

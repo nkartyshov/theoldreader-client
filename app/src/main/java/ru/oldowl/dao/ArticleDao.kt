@@ -1,9 +1,6 @@
 package ru.oldowl.dao
 
-import android.arch.persistence.room.Dao
-import android.arch.persistence.room.Insert
-import android.arch.persistence.room.OnConflictStrategy
-import android.arch.persistence.room.Query
+import android.arch.persistence.room.*
 import ru.oldowl.model.Article
 import ru.oldowl.model.ArticleAndSubscriptionTitle
 
@@ -25,6 +22,9 @@ interface ArticleDao {
     @Query("select a.*, s.title as subscription_title from articles a inner join subscriptions s on a.subscription_id = s.id where favorite = 1 order by a.publish_date desc")
     fun findFavorite(): List<ArticleAndSubscriptionTitle>
 
+    @Query("select * from articles where original_id = :originalId")
+    fun findByOriginalId(originalId: String): Article?
+
     @Query("select 1 from articles where original_id = :originalId")
     fun exists(originalId: String): Boolean
 
@@ -40,9 +40,21 @@ interface ArticleDao {
     @Query("update articles set read = 1")
     fun markAllRead()
 
+    @Query("update articles set read = 1 where subscription_id = :subscriptionId")
+    fun markAllRead(subscriptionId: Long?)
+
     @Query("delete from articles")
     fun deleteAll()
 
+    @Query("delete from articles where subscription_id = :subscriptionId")
+    fun deleteAll(subscriptionId: Long?)
+
     @Query("delete from articles where read = 1")
     fun deleteAllRead()
+
+    @Query("delete from articles where read = 1 and subscription_id = :subscriptionId")
+    fun deleteAllRead(subscriptionId: Long?)
+
+    @Delete
+    fun delete(article: Article)
 }

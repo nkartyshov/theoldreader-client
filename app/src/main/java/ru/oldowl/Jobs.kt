@@ -15,10 +15,13 @@ import org.koin.standalone.inject
 import ru.oldowl.api.TheOldReaderApi
 import ru.oldowl.dao.ArticleDao
 import ru.oldowl.dao.CategoryDao
+import ru.oldowl.dao.EventDao
 import ru.oldowl.dao.SubscriptionDao
 import ru.oldowl.extension.afterOrEquals
+import ru.oldowl.extension.exists
 import ru.oldowl.model.Article
 import ru.oldowl.model.Category
+import ru.oldowl.model.EventType
 import ru.oldowl.model.Subscription
 import ru.oldowl.service.AccountService
 import ru.oldowl.service.SettingsService
@@ -80,6 +83,7 @@ class AutoUpdateJob : JobService(), KoinComponent, CoroutineScope {
     private val subscriptionDao: SubscriptionDao by inject()
     private val categoryDao: CategoryDao by inject()
     private val articleDao: ArticleDao by inject()
+    private val eventDao: EventDao by inject()
 
     override fun onStartJob(params: JobParameters?): Boolean {
         launch {
@@ -104,20 +108,23 @@ class AutoUpdateJob : JobService(), KoinComponent, CoroutineScope {
                 val authToken = account?.authToken ?: ""
 
                 // Sync events
-                // TODO Implement events table
+                synchronization(authToken)
 
                 // Sync subscriptions
                 syncSubscriptions(authToken)
 
+                // Sync favorites
+                syncFavorites(authToken)
+
+                // Downloading new articles
                 val subscriptions: List<Subscription> = if (subscriptionId > 0)
                     listOf(subscriptionDao.findById(subscriptionId))
                 else subscriptionDao.findAll()
 
-                // Downloading new articles
                 for (subscription in subscriptions) {
                     val feedId = subscription.feedId ?: ""
 
-                    val itemIds = theOldReaderApi.getItemIds(feedId, authToken, true, lastSyncDate)
+                    val itemIds = theOldReaderApi.getItemIds(feedId, authToken, newerThan = lastSyncDate)
                     if (itemIds.isNotEmpty()) {
                         val contents = theOldReaderApi.getContents(itemIds, authToken)
 
@@ -162,25 +169,91 @@ class AutoUpdateJob : JobService(), KoinComponent, CoroutineScope {
         return true
     }
 
-    //FIXME Update subscription
-    //FIXME Delete subscription
-    private fun syncSubscriptions(authToken: String) {
-        val subscriptions = subscriptionDao.findAll()
-        val feedIds = subscriptions.map { it.feedId }
+    private fun synchronization(authToken: String) {
+        val events = eventDao.findAll()
+        for (event in events) {
+            when (event.eventType) {
+                EventType.UPDATE_READ -> event.payload?.let {
+                    val article = articleDao.findByOriginalId(it)
+                    theOldReaderApi.updateReadState(article!!.originalId, article.read, authToken)
+                }
 
-        val subscriptionResponses = theOldReaderApi.getSubscriptions(authToken)
-        for (subscriptionResponse in subscriptionResponses) {
-            if (feedIds.contains(subscriptionResponse.id)) {
-                continue
+                EventType.UPDATE_FAVORITE -> event.payload?.let {
+                    val article = articleDao.findByOriginalId(it)
+                    theOldReaderApi.updateFavoriteState(article!!.originalId, article.favorite, authToken)
+                }
+
+                EventType.MARK_ALL_READ -> {
+                    theOldReaderApi.markAllRead(event.payload, authToken, event.createdDate)
+                }
+
+                EventType.UNSUBSCRIBE -> event.payload?.let {
+                    theOldReaderApi.unsubscribe(it, authToken)
+                }
+            }
+        }
+    }
+
+    private fun syncFavorites(authToken: String) {
+        val favoriteIds = theOldReaderApi.getFavoriteIds(authToken)
+        val favorites = articleDao.findFavorite()
+
+        /*if (favorites.isEmpty()) {
+            val contents = theOldReaderApi.getContents(favoriteIds, authToken)
+
+            val articles = contents.map {
+                Article(
+                        originalId = it.itemId,
+                        title = it.title,
+                        description = it.description,
+                        subscriptionId = subscription.id,
+                        url = it.link,
+                        publishDate = it.publishDate
+                )
             }
 
-            val category = subscriptionResponse.categories.map {
-                Category(labelId = it.id, title = it.label)
-            }.getOrElse(0) { Category(1, "default", "Default") }
+            articles.forEach {
+                if (!articleDao.exists(it.originalId)) {
+                    articleDao.save(it)
+                }
+            }
+        }*/
 
-            val categoryId = if (categoryDao.exists(category.labelId))
-                categoryDao.findIdByLabelId(category.labelId)
-            else categoryDao.save(category)
+        // Delete favorite
+        for (favorite in favorites) {
+            if (!favoriteIds.exists { it == favorite.article.originalId }) {
+                articleDao.delete(favorite.article)
+            }
+        }
+
+        // Update favorite
+        for (favoriteId in favoriteIds) {
+            val article = articleDao.findByOriginalId(favoriteId)
+            article?.let {
+                articleDao.updateFavoriteState(it.id, true)
+            }
+        }
+    }
+
+    private fun syncSubscriptions(authToken: String) {
+        val subscriptions = subscriptionDao.findAll()
+        val subscriptionResponses = theOldReaderApi.getSubscriptions(authToken)
+
+        // Delete subscriptions
+        for (subscription in subscriptions) {
+            if (subscriptionResponses.exists { subscription.feedId == it.id }) {
+                subscriptionDao.delete(subscription)
+            }
+        }
+
+        // Adds or update subscriptions
+        for (subscriptionResponse in subscriptionResponses) {
+            val categories = subscriptionResponse.categories
+            val category = categories
+                    .map { Category(labelId = it.id, title = it.label) }
+                    .getOrElse(0) { Category(1, "default", "Default") }
+
+            val categoryId = findCategoryOrSave(category)
 
             val subscription = Subscription(
                     categoryId = categoryId,
@@ -190,8 +263,20 @@ class AutoUpdateJob : JobService(), KoinComponent, CoroutineScope {
                     htmlUrl = subscriptionResponse.htmlUrl
             )
 
-            val subscriptionId = subscriptionDao.save(subscription)
-            subscription.id = subscriptionId
+            val oldSubscription = subscriptions.singleOrNull { it.feedId == subscriptionResponse.id }
+            if (oldSubscription != null) {
+                subscription.id = oldSubscription.id
+                subscriptionDao.update(subscription)
+            } else {
+                val subscriptionId = subscriptionDao.save(subscription)
+                subscription.id = subscriptionId
+            }
         }
+    }
+
+    private fun findCategoryOrSave(category: Category): Long {
+        return if (categoryDao.exists(category.labelId))
+            categoryDao.findIdByLabelId(category.labelId)
+        else categoryDao.save(category)
     }
 }

@@ -64,6 +64,7 @@ class ArticleListFragment : BaseFragment() {
 
             R.id.delete_all_read -> viewModel.deleteAllRead()
 
+            // FIXME Close Fragment
             R.id.unsubscribe -> viewModel.unsubscribe()
 
             R.id.read_all -> viewModel.markReadAll()

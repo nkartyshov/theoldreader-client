@@ -9,6 +9,7 @@ import ru.oldowl.api.model.*
 import java.io.IOException
 import java.io.StringReader
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 class TheOldReaderApi : AnkoLogger {
 
@@ -81,6 +82,37 @@ class TheOldReaderApi : AnkoLogger {
             }
         } catch (e: IOException) {
             error("Error getting subscription list", e)
+        }
+
+        return emptyList()
+    }
+
+    fun getFavoriteIds(token: String): List<String> {
+        try {
+            val httpUrl = HttpUrl.Builder()
+                    .scheme(SCHEMA)
+                    .host(ENDPOINT)
+                    .addPathSegments(ITEM_IDS_LIST)
+                    .addEncodedQueryParameter(OUTPUT_PARAM, OUTPUT_JSON)
+                    .addEncodedQueryParameter("s", "user/-/state/com.google/starred")
+                    .build()
+
+            val request = Request.Builder()
+                    .url(httpUrl)
+                    .get()
+                    .build()
+
+            val response = httpClient.newCall(request).execute()
+            if (response.isSuccessful) {
+                response.body()?.let { responseBody ->
+                    val adapter = JsonHelper.adapter(ItemsRefResponse::class.java)
+                    val itemsRefResponse = adapter.fromJson(responseBody.string())
+
+                    return itemsRefResponse?.itemRefs?.map { it.id } ?: emptyList()
+                }
+            }
+        } catch (e: IOException) {
+            error("Error getting a favorites")
         }
 
         return emptyList()
@@ -218,7 +250,7 @@ class TheOldReaderApi : AnkoLogger {
             val httpUrl = HttpUrl.Builder()
                     .scheme(SCHEMA)
                     .host(ENDPOINT)
-                    .addPathSegment(MARK_ALL_READ)
+                    .addPathSegment(UPDATE_ITEMS)
                     .build()
 
             val parameterName = if (state) "a" else "r"
@@ -257,7 +289,7 @@ class TheOldReaderApi : AnkoLogger {
             val httpUrl = HttpUrl.Builder()
                     .scheme(SCHEMA)
                     .host(ENDPOINT)
-                    .addPathSegment(MARK_ALL_READ)
+                    .addPathSegment(UPDATE_ITEMS)
                     .build()
 
             val parameterName = if (state) "a" else "r"
@@ -291,7 +323,7 @@ class TheOldReaderApi : AnkoLogger {
         return false
     }
 
-    fun markAllRead(feedId: String = "", token: String): Boolean {
+    fun markAllRead(feedId: String?, token: String, olderThen: Date = Date()): Boolean {
         try {
             val httpUrl = HttpUrl.Builder()
                     .scheme(SCHEMA)
@@ -299,9 +331,9 @@ class TheOldReaderApi : AnkoLogger {
                     .addPathSegment(MARK_ALL_READ)
                     .build()
 
-            val formParamValue = if (feedId.isNotBlank()) feedId else "user/-/state/com.google/reading-list"
             val formBody = FormBody.Builder()
-                    .addEncoded("s", formParamValue)
+                    .addEncoded("s", feedId ?: "user/-/state/com.google/reading-list")
+                    .addEncoded("ts", TimeUnit.MILLISECONDS.toNanos(olderThen.time).toString())
                     .build()
 
             val request = Request.Builder()
