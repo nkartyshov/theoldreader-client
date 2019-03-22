@@ -17,6 +17,7 @@ val serviceModule = module {
     single { get<AppDatabase>().subscriptionDao() }
     single { get<AppDatabase>().categoryDao() }
     single { get<AppDatabase>().articleDao() }
+    single { get<AppDatabase>().eventDao() }
 
     // API
     single { TheOldReaderApi() }
@@ -29,5 +30,5 @@ val serviceModule = module {
     viewModel { (appName : String) -> LoginViewModel(appName, get(), get()) }
     viewModel { MainViewModel(get(), get(), get()) }
     viewModel { ArticleListViewModel(get(), get(), get(), get(), get()) }
-    viewModel { ArticleViewModel(get()) }
+    viewModel { ArticleViewModel(get(), get()) }
 }

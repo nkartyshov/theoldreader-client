@@ -196,6 +196,7 @@ class TheOldReaderApi : AnkoLogger {
                                 title = entry.title,
                                 description = description,
                                 link = entry.link,
+                                feedId = entry.source.uri.removePrefix(READER_PREFIX),
                                 publishDate = entry.publishedDate
                         )
                     }
@@ -390,6 +391,7 @@ class TheOldReaderApi : AnkoLogger {
         private const val OUTPUT_ATOM = "atom"
 
         private const val ITEM_PREFIX = "tag:google.com,2005:reader/item/"
+        private const val READER_PREFIX = "tag:google.com,2005:reader/"
     }
 }
 

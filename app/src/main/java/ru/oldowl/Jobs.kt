@@ -198,26 +198,30 @@ class AutoUpdateJob : JobService(), KoinComponent, CoroutineScope {
         val favoriteIds = theOldReaderApi.getFavoriteIds(authToken)
         val favorites = articleDao.findFavorite()
 
-        /*if (favorites.isEmpty()) {
+        if (favorites.isEmpty()) {
+            val subscriptions = subscriptionDao.findAll()
             val contents = theOldReaderApi.getContents(favoriteIds, authToken)
 
             val articles = contents.map {
+                val subscription = subscriptions.singleOrNull { subscription -> subscription.feedId == it.feedId }
+
                 Article(
                         originalId = it.itemId,
                         title = it.title,
                         description = it.description,
-                        subscriptionId = subscription.id,
+                        subscriptionId = subscription?.id,
                         url = it.link,
                         publishDate = it.publishDate
                 )
             }
 
             articles.forEach {
-                if (!articleDao.exists(it.originalId)) {
+                if (!articleDao.exists(it.originalId)
+                        && it.subscriptionId != null) {
                     articleDao.save(it)
                 }
             }
-        }*/
+        }
 
         // Delete favorite
         for (favorite in favorites) {
@@ -241,7 +245,7 @@ class AutoUpdateJob : JobService(), KoinComponent, CoroutineScope {
 
         // Delete subscriptions
         for (subscription in subscriptions) {
-            if (subscriptionResponses.exists { subscription.feedId == it.id }) {
+            if (!subscriptionResponses.exists { subscription.feedId == it.id }) {
                 subscriptionDao.delete(subscription)
             }
         }
