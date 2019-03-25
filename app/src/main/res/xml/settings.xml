@@ -2,15 +2,32 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory android:title="@string/settings_general">
 
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/key_hide_read"
+            android:summary="@string/hide_read_summary"
+            android:title="@string/hide_read" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/key_auto_update"
+            android:summary="@string/auto_update_summary"
+            android:title="@string/auto_update" />
+
+        <ListPreference
+            android:defaultValue="1"
+            android:dependency="@string/key_auto_update"
+            android:entries="@array/auto_update_period_title"
+            android:entryValues="@array/auto_update_period_value"
+            android:key="key_auto_update_period"
+            android:summary="@string/auto_update_period_summary"
+            android:title="@string/auto_update_period" />
+
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/settings_notification">
+    <!-- Add notification settings -->
 
-    </PreferenceCategory>
-
-    <PreferenceCategory android:title="@string/settings_storage">
-
-    </PreferenceCategory>
+    <!-- Add storage settings -->
 
     <!-- Add version name -->
 

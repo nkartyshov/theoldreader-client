@@ -51,4 +51,19 @@
     <string name="open_in_browser">Open in browser</string>
     <string name="favorite_article">Favorite article</string>
     <string name="unread_more_hundred">99+</string>
+
+    <string name="auto_update">Auto update</string>
+    <string name="auto_update_period">Auto update period</string>
+
+    <string name="hide_read_summary">If this options is enabled, the read articles won\'t be displayed</string>
+
+    <string name="auto_update_summary">The subscriptions will update automatically</string>
+    <string name="auto_update_period_summary">Current: %s</string>
+
+    <string name="one_hour">1 hour</string>
+    <string name="two_hours">2 hours</string>
+    <string name="four_hours">4 hours</string>
+    <string name="eight_hours">8 hours</string>
+    <string name="twelve_hours">12 hours</string>
+    <string name="twenty_four_hours">24 hours</string>
 </resources>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="key_hide_read">key_hide_read</string>
+    <string name="key_auto_update">key_auto_update</string>
+    <string name="key_auto_update_period">key_auto_update_period</string>
+
+    <string-array name="auto_update_period_title">
+        <item>@string/one_hour</item>
+        <item>@string/two_hours</item>
+        <item>@string/four_hours</item>
+        <item>@string/eight_hours</item>
+        <item>@string/twelve_hours</item>
+        <item>@string/twenty_four_hours</item>
+    </string-array>
+
+    <string-array name="auto_update_period_value">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>8</item>
+        <item>12</item>
+        <item>24</item>
+    </string-array>
+</resources>
