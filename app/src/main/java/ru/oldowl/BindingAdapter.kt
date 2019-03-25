@@ -20,6 +20,8 @@ import java.util.*
 
 object BindingAdapter {
 
+    private val HTML_TAGS_REGEX = Regex("(<.*?>|<\\/.*?>)")
+
     private const val MIME_TYPE = "text/html"
     private const val ENCODING = "UTF-8"
 
@@ -85,6 +87,14 @@ object BindingAdapter {
             } else {
                 Html.fromHtml(html)
             }
+        }
+    }
+
+    @JvmStatic
+    @BindingAdapter("escapeText")
+    fun escapeText(textView: TextView, text: String?) {
+        text?.let {
+            textView.text = it.replace(HTML_TAGS_REGEX, "")
         }
     }
 

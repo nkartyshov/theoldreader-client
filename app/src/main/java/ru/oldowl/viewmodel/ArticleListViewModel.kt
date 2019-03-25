@@ -1,13 +1,12 @@
 package ru.oldowl.viewmodel
 
 import android.app.Application
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.Observer
+import android.arch.lifecycle.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.oldowl.*
+import ru.oldowl.R
 import ru.oldowl.dao.ArticleDao
 import ru.oldowl.dao.EventDao
 import ru.oldowl.dao.SubscriptionDao
@@ -21,7 +20,7 @@ class ArticleListViewModel(private val application: Application,
                            private val articleDao: ArticleDao,
                            private val subscriptionDao: SubscriptionDao,
                            private val eventDao: EventDao,
-                           private val settingsService: SettingsService) : BaseViewModel() {
+                           private val settingsService: SettingsService) : BaseViewModel(), LifecycleObserver {
 
 
     private val articleLiveData: MutableLiveData<List<ArticleAndSubscriptionTitle>> = MutableLiveData()
@@ -65,7 +64,6 @@ class ArticleListViewModel(private val application: Application,
 
     val articles: LiveData<List<ArticleAndSubscriptionTitle>>
         get() {
-            loadArticles()
             return articleLiveData
         }
 
@@ -122,27 +120,30 @@ class ArticleListViewModel(private val application: Application,
         }
     }
 
-    private fun loadArticles() = launch {
-        val articles = when (mode) {
-            ArticleListMode.FAVORITE -> articleDao.findFavorite()
+    @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
+    fun loadArticles() {
+        launch {
+            val articles = when (mode) {
+                ArticleListMode.FAVORITE -> articleDao.findFavorite()
 
-            ArticleListMode.ALL -> {
-                if (hideRead)
-                    articleDao.findUnread()
-                else
-                    articleDao.findAll()
+                ArticleListMode.ALL -> {
+                    if (hideRead)
+                        articleDao.findUnread()
+                    else
+                        articleDao.findAll()
+                }
+
+                ArticleListMode.SUBSCRIPTION -> {
+                    if (hideRead)
+                        articleDao.findUnread(subscription?.id)
+                    else
+                        articleDao.findAll(subscription?.id)
+                }
             }
 
-            ArticleListMode.SUBSCRIPTION -> {
-                if (hideRead)
-                    articleDao.findUnread(subscription?.id)
-                else
-                    articleDao.findAll(subscription?.id)
+            withContext(Dispatchers.Main) {
+                articleLiveData.value = articles
             }
-        }
-
-        withContext(Dispatchers.Main) {
-            articleLiveData.value = articles
         }
     }
 }

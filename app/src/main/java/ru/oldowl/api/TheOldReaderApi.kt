@@ -6,7 +6,6 @@ import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.error
 import ru.oldowl.JsonHelper
 import ru.oldowl.api.model.*
-import java.io.IOException
 import java.io.StringReader
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -45,7 +44,7 @@ class TheOldReaderApi : AnkoLogger {
                     return authResponse?.auth
                 }
             }
-        } catch (e: IOException) {
+        } catch (e: Exception) {
             error("Error authentication in TheOldReader", e)
         }
 
@@ -80,7 +79,7 @@ class TheOldReaderApi : AnkoLogger {
                     }
                 }
             }
-        } catch (e: IOException) {
+        } catch (e: Exception) {
             error("Error getting subscription list", e)
         }
 
@@ -100,6 +99,7 @@ class TheOldReaderApi : AnkoLogger {
             val request = Request.Builder()
                     .url(httpUrl)
                     .get()
+                    .addHeader("Authorization", "GoogleLogin auth=$token")
                     .build()
 
             val response = httpClient.newCall(request).execute()
@@ -111,8 +111,8 @@ class TheOldReaderApi : AnkoLogger {
                     return itemsRefResponse?.itemRefs?.map { it.id } ?: emptyList()
                 }
             }
-        } catch (e: IOException) {
-            error("Error getting a favorites")
+        } catch (e: Exception) {
+            error("Error getting a favorites", e)
         }
 
         return emptyList()
@@ -151,7 +151,7 @@ class TheOldReaderApi : AnkoLogger {
                     return itemsRefResponse?.itemRefs?.map { it.id } ?: emptyList()
                 }
             }
-        } catch (e: IOException) {
+        } catch (e: Exception) {
             error("Error getting items ids for $feedId")
         }
 
@@ -202,7 +202,7 @@ class TheOldReaderApi : AnkoLogger {
                     }
                 }
             }
-        } catch (e: IOException) {
+        } catch (e: Exception) {
             error("Error getting content for items $itemIds", e)
         }
 
@@ -239,7 +239,7 @@ class TheOldReaderApi : AnkoLogger {
 
                 return true
             }
-        } catch (e: IOException) {
+        } catch (e: Exception) {
             error("Error unsubscribe from $feedId", e)
         }
 
@@ -278,7 +278,7 @@ class TheOldReaderApi : AnkoLogger {
 
                 return true
             }
-        } catch (e: IOException) {
+        } catch (e: Exception) {
             error("Error mark read item $itemId", e)
         }
 
@@ -317,7 +317,7 @@ class TheOldReaderApi : AnkoLogger {
 
                 return true
             }
-        } catch (e: IOException) {
+        } catch (e: Exception) {
             error("Error mark favorite item $itemId", e)
         }
 
@@ -354,7 +354,7 @@ class TheOldReaderApi : AnkoLogger {
 
                 return true
             }
-        } catch (e: IOException) {
+        } catch (e: Exception) {
             error("Error mark all read", e)
         }
 

@@ -24,7 +24,7 @@ class SubscriptionAndUnreadCountAdapter(private val context: Context,
         val layoutInflater = LayoutInflater.from(context)
         val dataBinding: ViewSubscriptionItemBinding = DataBindingUtil.inflate(layoutInflater, R.layout.view_subscription_item, viewGroup, false)
 
-        return SubscriptionViewHolder(dataBinding)
+        return SubscriptionViewHolder(context, dataBinding)
     }
 
     override fun onBindViewHolder(viewHolder: SubscriptionViewHolder, position: Int) {
@@ -46,7 +46,8 @@ class SubscriptionAndUnreadCountAdapter(private val context: Context,
     }
 }
 
-class SubscriptionViewHolder(private val dataBinding: ViewSubscriptionItemBinding)
+class SubscriptionViewHolder(private val context: Context,
+                             private val dataBinding: ViewSubscriptionItemBinding)
     : RecyclerView.ViewHolder(dataBinding.root) {
 
     fun bind(subscriptionWithUnread: SubscriptionAndUnreadCount) {
@@ -54,6 +55,10 @@ class SubscriptionViewHolder(private val dataBinding: ViewSubscriptionItemBindin
         val unread = subscriptionWithUnread.unread
 
         dataBinding.subscription = subscription
-        dataBinding.unread = if (unread > 0) unread.toString() else ""
+        dataBinding.unread = when {
+            unread in 1..98 -> unread.toString()
+            unread > 99 -> context.getString(R.string.unread_more_hundred)
+            else -> context.getString(R.string.empty)
+        }
     }
 }

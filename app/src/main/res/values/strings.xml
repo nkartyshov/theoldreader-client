@@ -50,4 +50,5 @@
     <string name="copy_url_to_clipboard">Copy url to clipboard</string>
     <string name="open_in_browser">Open in browser</string>
     <string name="favorite_article">Favorite article</string>
+    <string name="unread_more_hundred">99+</string>
 </resources>

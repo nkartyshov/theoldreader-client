@@ -45,6 +45,8 @@ class ArticleListFragment : BaseFragment() {
         viewModel.mode = arguments?.getSerializable(ARTICLE_LIST_MODE) as ArticleListMode
         viewModel.subscription = arguments?.getSerializable(SUBSCRIPTION) as Subscription?
 
+        lifecycle.addObserver(viewModel)
+
         articleListBinding?.viewModel = viewModel
         articleListBinding?.setLifecycleOwner(this)
 
@@ -55,6 +57,7 @@ class ArticleListFragment : BaseFragment() {
         super.onCreateOptionsMenu(menu, inflater)
         inflater?.inflate(R.menu.menu_articles_list, menu)
 
+        menu?.findItem(R.id.hide_read)?.isChecked = viewModel.hideRead
         menu?.findItem(R.id.unsubscribe)?.isVisible = viewModel.subscription != null
     }
 

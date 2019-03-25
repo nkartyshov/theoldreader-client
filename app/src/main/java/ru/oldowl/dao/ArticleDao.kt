@@ -34,6 +34,9 @@ interface ArticleDao {
     @Query("update articles set favorite = :favorite where id = :id")
     fun updateFavoriteState(id: Long, favorite: Boolean)
 
+    @Query("update articles set favorite = :favorite where original_id = :originalId")
+    fun updateFavoriteState(originalId: String, favorite: Boolean)
+
     @Query("update articles set read = :read where id = :id")
     fun updateReadState(id: Long, read: Boolean)
 

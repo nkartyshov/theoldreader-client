@@ -49,7 +49,7 @@
         <TextView
             android:id="@+id/article_summary"
             style="@style/TextSummary"
-            html="@{article.description}"
+            escapeText="@{article.description}"
             android:layout_below="@+id/article_title_wrapper"
             android:layout_marginTop="@dimen/indent_small"
             tools:text="Article description" />
