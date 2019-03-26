@@ -1,10 +1,9 @@
 package ru.oldowl.extension
 
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
-import android.content.Intent
+import android.app.job.JobScheduler
+import android.content.*
 import android.net.Uri
+import android.os.Build
 import android.support.v4.app.Fragment
 import ru.oldowl.ui.BaseActivity
 
@@ -21,17 +20,46 @@ fun BaseActivity.replaceFragment(id: Int, fragment: Fragment, addToBackStack: Bo
     beginTransaction.commit()
 }
 
-fun Context.openUrl(url: String?) {
-    url?.let {
+fun Context.browse(url: String? = ""): Boolean {
+    return try {
         val intent = Intent(Intent.ACTION_VIEW).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK
             data = Uri.parse(url)
         }
         startActivity(intent)
+        true
+    } catch(e: ActivityNotFoundException) {
+        e.printStackTrace()
+        false
+    }
+}
+
+fun Context.share(text: String? = "", subject: String = ""): Boolean {
+    return try {
+        val intent = Intent(android.content.Intent.ACTION_SEND).apply {
+            type = "text/plain"
+            putExtra(android.content.Intent.EXTRA_SUBJECT, subject)
+            putExtra(android.content.Intent.EXTRA_TEXT, text)
+        }
+        startActivity(Intent.createChooser(intent, null))
+        true
+    } catch (e: ActivityNotFoundException) {
+        e.printStackTrace()
+        false
     }
 }
 
 fun Context.copyToClipboard(url: String) {
     val clipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager?
     clipboardManager?.primaryClip = ClipData.newRawUri(url, Uri.parse(url))
+}
+
+fun JobScheduler.isScheduled(jobId: Int): Boolean {
+    val job = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        this.getPendingJob(jobId)
+    } else {
+        this.allPendingJobs.singleOrNull { it.id == jobId }
+    }
+
+    return job != null
 }

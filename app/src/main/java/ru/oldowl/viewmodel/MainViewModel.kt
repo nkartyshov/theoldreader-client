@@ -6,9 +6,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import ru.oldowl.dao.SubscriptionDao
-import ru.oldowl.model.Account
-import ru.oldowl.model.SubscriptionAndUnreadCount
+import ru.oldowl.db.dao.SubscriptionDao
+import ru.oldowl.db.model.Account
+import ru.oldowl.db.model.SubscriptionAndUnreadCount
 import ru.oldowl.service.AccountService
 import ru.oldowl.service.SettingsService
 import java.text.DateFormat

@@ -1,12 +1,12 @@
-package ru.oldowl
+package ru.oldowl.db
 
 import android.arch.persistence.room.*
 import android.content.Context
-import ru.oldowl.dao.ArticleDao
-import ru.oldowl.dao.CategoryDao
-import ru.oldowl.dao.EventDao
-import ru.oldowl.dao.SubscriptionDao
-import ru.oldowl.model.*
+import ru.oldowl.db.dao.ArticleDao
+import ru.oldowl.db.dao.CategoryDao
+import ru.oldowl.db.dao.EventDao
+import ru.oldowl.db.dao.SubscriptionDao
+import ru.oldowl.db.model.*
 import java.util.*
 
 @Database(entities = [ Subscription::class, Article::class, Category::class, Event::class ],

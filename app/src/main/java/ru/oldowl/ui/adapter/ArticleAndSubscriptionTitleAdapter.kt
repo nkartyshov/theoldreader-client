@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import ru.oldowl.R
 import ru.oldowl.databinding.ViewArticleItemBinding
-import ru.oldowl.model.ArticleAndSubscriptionTitle
+import ru.oldowl.db.model.ArticleAndSubscriptionTitle
 
 class ArticleAndSubscriptionTitleAdapter(private val context: Context?,
                                          var articles: List<ArticleAndSubscriptionTitle> = emptyList())

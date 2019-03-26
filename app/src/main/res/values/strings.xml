@@ -2,21 +2,27 @@
     <string name="empty" translatable="false" />
     <string name="item_sep" translatable="false">|</string>
 
+    <!-- Common -->
     <string name="app_name">Old owl</string>
 
-    <string name="sing_in">Sing in</string>
+    <string name="favorite_title">Favorite</string>
+    <string name="all_title">All</string>
 
+    <string name="favorite_article">Favorite article</string>
+    <string name="unread_more_hundred">99+</string>
+    <string name="never">Never</string>
+
+    <!-- Login -->
+    <string name="sing_in">Sing in</string>
     <string name="email">Email</string>
     <string name="email_error">Email is required</string>
-
     <string name="password">Password</string>
     <string name="password_error">Password is required</string>
-
     <string name="authentication_error">Email or password isn\'t valid</string>
-
     <string name="forgot_your_password">Forgot your password?</string>
     <string name="sign_up">Sign up to TheOldReader</string>
 
+    <!-- Navigation -->
     <string name="open_drawer">Open</string>
     <string name="close_drawer">Close</string>
 
@@ -29,9 +35,7 @@
     <string name="nav_last_sync_date">Last sync date: %s</string>
     <string name="nav_last_sync_date_not_sync">Last sync date: not sync yet</string>
 
-    <string name="favorite_title">Favorite</string>
-    <string name="all_title">All</string>
-
+    <!-- Article list -->
     <string name="hide_read">Hide read</string>
     <string name="delete_all">Delete all</string>
     <string name="delete_all_read">Delete all read</string>
@@ -39,24 +43,29 @@
     <string name="unsubscribe">Unsubscribe</string>
     <string name="sync">Sync</string>
 
+    <!-- Article detail -->
     <string name="mark_favorite">Mark favorite</string>
     <string name="unmark_favorite">Unmark favorite</string>
     <string name="copy_url_to_clipboard">Copy url to clipboard</string>
+    <string name="copy_url_to_clipboard_snackbar">The url copied to clipboard</string>
     <string name="open_in_browser">Open in browser</string>
-    <string name="favorite_article">Favorite article</string>
-    <string name="unread_more_hundred">99+</string>
+    <string name="share">Share</string>
 
+    <!-- Settings -->
     <string name="settings_general">General</string>
-    <string name="settings_notification">Notification</string>
     <string name="settings_storage">Storage</string>
+    <string name="settings_other">Other</string>
 
     <string name="auto_update">Auto update</string>
     <string name="auto_update_period">Auto update period</string>
-
     <string name="hide_read_summary">If this options is enabled, the read articles won\'t be displayed</string>
-
     <string name="auto_update_summary">The subscriptions will update automatically</string>
-    <string name="auto_update_period_summary">Current: %s</string>
+    <string name="auto_cleanup_read_articles">Auto cleanup a read articles</string>
+    <string name="auto_cleanup_unread_articles">Auto cleanup a unread articles</string>
+    <string name="current_summary">Current: %s</string>
+
+    <string name="version_name">Version name</string>
+    <string name="send_feedback">Send feedback</string>
 
     <string name="one_hour">1 hour</string>
     <string name="two_hours">2 hours</string>
@@ -64,4 +73,12 @@
     <string name="eight_hours">8 hours</string>
     <string name="twelve_hours">12 hours</string>
     <string name="twenty_four_hours">24 hours</string>
+
+    <string name="one_day">One day</string>
+    <string name="two_days">Two days</string>
+    <string name="three_days">Three days</string>
+    <string name="one_week">One week</string>
+    <string name="two_weeks">Two weeks</string>
+    <string name="three_weeks">Three weeks</string>
+    <string name="one_month">One month</string>
 </resources>

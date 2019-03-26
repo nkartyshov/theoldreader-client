@@ -1,4 +1,4 @@
-package ru.oldowl.ui
+package ru.oldowl.ui.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater

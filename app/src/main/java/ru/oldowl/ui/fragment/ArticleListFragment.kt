@@ -1,4 +1,4 @@
-package ru.oldowl.ui
+package ru.oldowl.ui.fragment
 
 import android.databinding.DataBindingUtil
 import android.os.Bundle
@@ -9,7 +9,8 @@ import kotlinx.android.synthetic.main.fragment_article_list.*
 import org.koin.standalone.inject
 import ru.oldowl.R
 import ru.oldowl.databinding.FragmentArticleListBinding
-import ru.oldowl.model.Subscription
+import ru.oldowl.db.model.Subscription
+import ru.oldowl.ui.ArticleActivity
 import ru.oldowl.ui.adapter.ArticleAndSubscriptionTitleAdapter
 import ru.oldowl.viewmodel.ArticleListMode
 import ru.oldowl.viewmodel.ArticleListViewModel

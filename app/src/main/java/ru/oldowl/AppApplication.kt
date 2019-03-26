@@ -10,6 +10,8 @@ class AppApplication : Application() {
         super.onCreate()
         startKoin(this, listOf(serviceModule))
 
+        Jobs.scheduleUpdate(applicationContext)
+
         WebView.setWebContentsDebuggingEnabled(BuildConfig.DEBUG)
     }
 }

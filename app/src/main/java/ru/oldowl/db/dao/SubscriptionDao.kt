@@ -1,8 +1,8 @@
-package ru.oldowl.dao
+package ru.oldowl.db.dao
 
 import android.arch.persistence.room.*
-import ru.oldowl.model.Subscription
-import ru.oldowl.model.SubscriptionAndUnreadCount
+import ru.oldowl.db.model.Subscription
+import ru.oldowl.db.model.SubscriptionAndUnreadCount
 
 @Dao
 interface SubscriptionDao {

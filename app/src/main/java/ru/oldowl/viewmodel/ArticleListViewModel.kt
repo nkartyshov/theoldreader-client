@@ -7,13 +7,13 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.oldowl.*
 import ru.oldowl.R
-import ru.oldowl.dao.ArticleDao
-import ru.oldowl.dao.EventDao
-import ru.oldowl.dao.SubscriptionDao
-import ru.oldowl.model.ArticleAndSubscriptionTitle
-import ru.oldowl.model.Event
-import ru.oldowl.model.EventType
-import ru.oldowl.model.Subscription
+import ru.oldowl.db.dao.ArticleDao
+import ru.oldowl.db.dao.EventDao
+import ru.oldowl.db.dao.SubscriptionDao
+import ru.oldowl.db.model.ArticleAndSubscriptionTitle
+import ru.oldowl.db.model.Event
+import ru.oldowl.db.model.EventType
+import ru.oldowl.db.model.Subscription
 import ru.oldowl.service.SettingsService
 
 class ArticleListViewModel(private val application: Application,

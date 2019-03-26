@@ -1,8 +1,8 @@
-package ru.oldowl.dao
+package ru.oldowl.db.dao
 
 import android.arch.persistence.room.*
-import ru.oldowl.model.Article
-import ru.oldowl.model.ArticleAndSubscriptionTitle
+import ru.oldowl.db.model.Article
+import ru.oldowl.db.model.ArticleAndSubscriptionTitle
 
 @Dao
 interface ArticleDao {

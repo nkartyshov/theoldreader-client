@@ -7,8 +7,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import ru.oldowl.R
 import ru.oldowl.databinding.ViewSubscriptionItemBinding
-import ru.oldowl.model.Subscription
-import ru.oldowl.model.SubscriptionAndUnreadCount
+import ru.oldowl.db.model.Subscription
+import ru.oldowl.db.model.SubscriptionAndUnreadCount
 
 class SubscriptionAndUnreadCountAdapter(private val context: Context,
                                         var subscriptions: List<SubscriptionAndUnreadCount> = emptyList())

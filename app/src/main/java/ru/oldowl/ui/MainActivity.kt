@@ -15,6 +15,9 @@ import ru.oldowl.R
 import ru.oldowl.databinding.ActivityMainBinding
 import ru.oldowl.extension.replaceFragment
 import ru.oldowl.ui.adapter.SubscriptionAndUnreadCountAdapter
+import ru.oldowl.ui.fragment.AddSubscriptionFragment
+import ru.oldowl.ui.fragment.ArticleListFragment
+import ru.oldowl.ui.fragment.SettingsFragment
 import ru.oldowl.viewmodel.MainViewModel
 
 class MainActivity : BaseActivity() {

@@ -1,4 +1,4 @@
-package ru.oldowl.ui
+package ru.oldowl.ui.fragment
 
 import android.support.v4.app.Fragment
 import kotlinx.coroutines.CoroutineScope

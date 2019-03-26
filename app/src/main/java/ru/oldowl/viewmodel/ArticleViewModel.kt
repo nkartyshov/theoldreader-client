@@ -3,11 +3,11 @@ package ru.oldowl.viewmodel
 import android.arch.lifecycle.MutableLiveData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import ru.oldowl.dao.ArticleDao
-import ru.oldowl.dao.EventDao
-import ru.oldowl.model.ArticleAndSubscriptionTitle
-import ru.oldowl.model.Event
-import ru.oldowl.model.EventType
+import ru.oldowl.db.dao.ArticleDao
+import ru.oldowl.db.dao.EventDao
+import ru.oldowl.db.model.ArticleAndSubscriptionTitle
+import ru.oldowl.db.model.Event
+import ru.oldowl.db.model.EventType
 import java.util.*
 
 class ArticleViewModel(private val articleDao: ArticleDao,
@@ -70,7 +70,7 @@ class ArticleViewModel(private val articleDao: ArticleDao,
         item?.article?.let {
             it.read = true
             articleDao.updateReadState(it.id, it.read)
-            
+
             eventDao.save(Event(eventType = EventType.UPDATE_READ, payload = it.originalId))
         }
     }

@@ -2,7 +2,7 @@ package ru.oldowl.viewmodel
 
 import kotlinx.coroutines.async
 import ru.oldowl.api.TheOldReaderApi
-import ru.oldowl.model.Account
+import ru.oldowl.db.model.Account
 import ru.oldowl.service.AccountService
 
 class LoginViewModel(private val appName: String,

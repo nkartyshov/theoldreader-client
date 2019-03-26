@@ -11,8 +11,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.amulyakhare.textdrawable.TextDrawable
 import com.amulyakhare.textdrawable.util.ColorGenerator
-import ru.oldowl.model.ArticleAndSubscriptionTitle
-import ru.oldowl.model.SubscriptionAndUnreadCount
+import ru.oldowl.db.model.ArticleAndSubscriptionTitle
+import ru.oldowl.db.model.SubscriptionAndUnreadCount
 import ru.oldowl.ui.adapter.ArticleAndSubscriptionTitleAdapter
 import ru.oldowl.ui.adapter.SubscriptionAndUnreadCountAdapter
 import java.text.DateFormat

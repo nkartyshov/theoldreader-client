@@ -4,6 +4,7 @@ import org.koin.android.ext.koin.androidApplication
 import org.koin.android.viewmodel.ext.koin.viewModel
 import org.koin.dsl.module.module
 import ru.oldowl.api.TheOldReaderApi
+import ru.oldowl.db.AppDatabase
 import ru.oldowl.service.AccountService
 import ru.oldowl.service.SettingsService
 import ru.oldowl.viewmodel.ArticleListViewModel

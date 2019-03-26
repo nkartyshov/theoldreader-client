@@ -20,9 +20,10 @@ import org.jetbrains.anko.startActivity
 import org.koin.standalone.inject
 import ru.oldowl.R
 import ru.oldowl.databinding.ActivityArticleBinding
+import ru.oldowl.db.model.ArticleAndSubscriptionTitle
+import ru.oldowl.extension.browse
 import ru.oldowl.extension.copyToClipboard
-import ru.oldowl.extension.openUrl
-import ru.oldowl.model.ArticleAndSubscriptionTitle
+import ru.oldowl.extension.share
 import ru.oldowl.viewmodel.ArticleViewModel
 
 class ArticleActivity : BaseActivity() {
@@ -54,7 +55,7 @@ class ArticleActivity : BaseActivity() {
         article_content.webViewClient = webViewClient
 
         open_in_browser.setOnClickListener {
-            openUrl(viewModel.url)
+            browse(viewModel.url)
         }
 
         viewModel.updateUi.observe(this, Observer {
@@ -75,16 +76,18 @@ class ArticleActivity : BaseActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
-            R.id.mark_favorite, R.id.unmark_favorite -> {
-                viewModel.toggleFavorite()
-            }
+            R.id.mark_favorite, R.id.unmark_favorite -> viewModel.toggleFavorite()
 
-            R.id.open_in_browser -> openUrl(viewModel.url)
+            R.id.open_in_browser -> browse(viewModel.url)
+
+            R.id.share -> viewModel.url?.let {
+                share(it)
+            }
 
             R.id.copy_url -> viewModel.url?.let {
                 copyToClipboard(it)
 
-                Snackbar.make(article_content, "The url copied to clipboard", Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(article_content, R.string.copy_url_to_clipboard_snackbar, Snackbar.LENGTH_SHORT).show()
             }
         }
 
@@ -107,12 +110,12 @@ private class WebViewClientImpl(private val context: Context,
     private var onPageFinishedListener: (() -> Unit)? = null
 
     override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
-        context.openUrl(url)
+        context.browse(url)
         return true
     }
 
     override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
-        context.openUrl(request?.url.toString())
+        context.browse(request?.url.toString())
         return true
     }
 

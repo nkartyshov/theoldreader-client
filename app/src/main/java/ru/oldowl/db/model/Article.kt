@@ -1,4 +1,4 @@
-package ru.oldowl.model
+package ru.oldowl.db.model
 
 import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Entity

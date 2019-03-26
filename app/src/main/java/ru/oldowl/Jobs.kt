@@ -13,19 +13,20 @@ import kotlinx.coroutines.*
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
 import ru.oldowl.api.TheOldReaderApi
-import ru.oldowl.dao.ArticleDao
-import ru.oldowl.dao.CategoryDao
-import ru.oldowl.dao.EventDao
-import ru.oldowl.dao.SubscriptionDao
-import ru.oldowl.extension.afterOrEquals
+import ru.oldowl.db.dao.ArticleDao
+import ru.oldowl.db.dao.CategoryDao
+import ru.oldowl.db.dao.EventDao
+import ru.oldowl.db.dao.SubscriptionDao
+import ru.oldowl.db.model.Article
+import ru.oldowl.db.model.Category
+import ru.oldowl.db.model.EventType
+import ru.oldowl.db.model.Subscription
 import ru.oldowl.extension.exists
-import ru.oldowl.model.Article
-import ru.oldowl.model.Category
-import ru.oldowl.model.EventType
-import ru.oldowl.model.Subscription
+import ru.oldowl.extension.isScheduled
 import ru.oldowl.service.AccountService
 import ru.oldowl.service.SettingsService
 import java.util.*
+import java.util.concurrent.TimeUnit
 import kotlin.coroutines.CoroutineContext
 
 const val FORCED_UPDATE_ID = 1
@@ -38,8 +39,30 @@ private val observeJobStatus: MutableLiveData<JobStatus> = MutableLiveData()
 
 data class JobStatus(val jobId: Int?, val finished: Boolean)
 
-object Jobs {
+object Jobs : KoinComponent {
+    private val settingsService: SettingsService by inject()
+
     val observeJobStatus: LiveData<JobStatus> = ru.oldowl.observeJobStatus
+
+    fun scheduleUpdate(context: Context) {
+        val jobScheduler = context.getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
+
+        if (settingsService.autoUpdate) {
+            val componentName = ComponentName(context, AutoUpdateJob::class.java)
+            val job = JobInfo.Builder(FORCED_UPDATE_ID, componentName)
+                    .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+                    .setPeriodic(TimeUnit.MINUTES.toMillis(30))
+                    .setRequiresDeviceIdle(true)
+                    .setPersisted(true)
+                    .build()
+
+            if (!jobScheduler.isScheduled(AUTO_UPDATE_ID)) {
+                jobScheduler.schedule(job)
+            }
+        } else {
+            jobScheduler.cancel(AUTO_UPDATE_ID)
+        }
+    }
 
     fun forceUpdate(context: Context) {
         Jobs.forceUpdate(context, null)
@@ -87,19 +110,17 @@ class AutoUpdateJob : JobService(), KoinComponent, CoroutineScope {
 
     override fun onStartJob(params: JobParameters?): Boolean {
         launch {
-            val extras = params?.extras
-
-            val subscriptionId = extras?.getLong(SUBSCRIPTION_ID) ?: -1
-            val forced: Boolean = extras?.getInt(FORCE) == 1
-
-            //FIXME Add update period
-            val lastSyncDate = settingsService.lastSyncDate
-            if (!forced && lastSyncDate.afterOrEquals(Date())) {
-                return@launch
-            }
-
             try {
                 sendJobStatus(params?.jobId, false)
+                val extras = params?.extras
+
+                val subscriptionId = extras?.getLong(SUBSCRIPTION_ID) ?: -1
+                val force: Boolean = extras?.getInt(FORCE) == 1
+
+                val lastSyncDate = settingsService.lastSyncDate
+                if (shouldUpdateSubscription(force, lastSyncDate)) {
+                    return@launch
+                }
 
                 // TODO update auth token
                 val account = accountService.getAccount()
@@ -161,6 +182,13 @@ class AutoUpdateJob : JobService(), KoinComponent, CoroutineScope {
         jobFinished(params, false)
 
         return true
+    }
+
+    private fun shouldUpdateSubscription(force: Boolean, lastSyncDate: Date?): Boolean {
+        val updatePeriodTime = TimeUnit.HOURS.toMillis(settingsService.autoUpdatePeriod)
+        val minimumUpdateTime = System.currentTimeMillis() - updatePeriodTime
+
+        return force || lastSyncDate == null || lastSyncDate.time < minimumUpdateTime
     }
 
     private fun synchronization(authToken: String) {

@@ -3,6 +3,10 @@
     <string name="key_hide_read">key_hide_read</string>
     <string name="key_auto_update">key_auto_update</string>
     <string name="key_auto_update_period">key_auto_update_period</string>
+    <string name="key_auto_cleanup_unread_period">key_auto_cleanup_unread_period</string>
+    <string name="key_auto_cleanup_read_period">key_auto_cleanup_read_period</string>
+    <string name="key_version_name">key_version_name</string>
+    <string name="key_send_feedback">key_send_feedback</string>
 
     <string-array name="auto_update_period_title">
         <item>@string/one_hour</item>
@@ -20,5 +24,27 @@
         <item>8</item>
         <item>12</item>
         <item>24</item>
+    </string-array>
+
+    <string-array name="auto_cleanup_period_title">
+        <item>@string/never</item>
+        <item>@string/one_day</item>
+        <item>@string/two_days</item>
+        <item>@string/three_days</item>
+        <item>@string/one_week</item>
+        <item>@string/two_weeks</item>
+        <item>@string/three_weeks</item>
+        <item>@string/one_month</item>
+    </string-array>
+
+    <string-array name="auto_cleanup_period_value">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>7</item>
+        <item>14</item>
+        <item>21</item>
+        <item>30</item>
     </string-array>
 </resources>

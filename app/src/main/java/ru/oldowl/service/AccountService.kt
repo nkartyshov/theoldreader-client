@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import ru.oldowl.JsonHelper
-import ru.oldowl.model.Account
+import ru.oldowl.db.model.Account
 
 class AccountService(private val context: Context) {
     private val sharedPreferences: SharedPreferences

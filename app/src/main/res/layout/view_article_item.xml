@@ -12,7 +12,7 @@
 
         <variable
             name="article"
-            type="ru.oldowl.model.Article" />
+            type="ru.oldowl.db.model.Article" />
 
         <variable
             name="subscriptionTitle"
