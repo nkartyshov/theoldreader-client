@@ -71,17 +71,17 @@ object Jobs : KoinComponent {
     fun forceUpdate(context: Context, subscription: Subscription?) {
         val jobScheduler = context.getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
 
-        val intent = PersistableBundle()
-        intent.putInt(FORCE, 1)
+        val extras = PersistableBundle()
+        extras.putInt(FORCE, 1)
 
         subscription?.let {
-            intent.putLong(SUBSCRIPTION_ID, it.id)
+            extras.putLong(SUBSCRIPTION_ID, it.id)
         }
 
         val componentName = ComponentName(context, AutoUpdateJob::class.java)
         val job = JobInfo.Builder(FORCED_UPDATE_ID, componentName)
                 .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
-                .setExtras(PersistableBundle())
+                .setExtras(extras)
                 .build()
 
         jobScheduler.schedule(job)
@@ -118,7 +118,7 @@ class AutoUpdateJob : JobService(), KoinComponent, CoroutineScope {
                 val force: Boolean = extras?.getInt(FORCE) == 1
 
                 val lastSyncDate = settingsService.lastSyncDate
-                if (shouldUpdateSubscription(force, lastSyncDate)) {
+                if (!shouldUpdateSubscription(force, lastSyncDate)) {
                     return@launch
                 }
 

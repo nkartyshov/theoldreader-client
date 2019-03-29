@@ -6,6 +6,7 @@ import android.support.v7.preference.PreferenceManager
 import ru.oldowl.R
 import java.util.*
 
+// FIXME Rework to PropertyDelegate
 class SettingsService(private val context: Context) {
     private val sharedPreferences: SharedPreferences by lazy { PreferenceManager.getDefaultSharedPreferences(context) }
 
@@ -61,4 +62,6 @@ class SettingsService(private val context: Context) {
     companion object {
         private const val LAST_SYNC_DATE = "key_last_sync_date"
     }
+
+
 }
