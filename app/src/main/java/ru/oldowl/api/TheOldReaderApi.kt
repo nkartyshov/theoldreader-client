@@ -324,7 +324,6 @@ class TheOldReaderApi : AnkoLogger {
         return false
     }
 
-    //FIXME it won't work
     fun markAllRead(feedId: String?, token: String, olderThen: Date = Date()): Boolean {
         try {
             val httpUrl = HttpUrl.Builder()
@@ -334,8 +333,8 @@ class TheOldReaderApi : AnkoLogger {
                     .build()
 
             val formBody = FormBody.Builder()
-                    .addEncoded("s", feedId ?: "user/-/state/com.google/reading-list")
-                    //.addEncoded("ts", TimeUnit.MILLISECONDS.toNanos(olderThen.time).toString())
+                    .add("s", feedId ?: "user/-/state/com.google/reading-list")
+                    .addEncoded("ts", TimeUnit.MILLISECONDS.toNanos(olderThen.time).toString())
                     .build()
 
             val request = Request.Builder()
