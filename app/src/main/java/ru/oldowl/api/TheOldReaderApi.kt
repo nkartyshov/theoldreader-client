@@ -251,7 +251,7 @@ class TheOldReaderApi : AnkoLogger {
             val httpUrl = HttpUrl.Builder()
                     .scheme(SCHEMA)
                     .host(ENDPOINT)
-                    .addPathSegment(UPDATE_ITEMS)
+                    .addPathSegments(UPDATE_ITEMS)
                     .build()
 
             val parameterName = if (state) "a" else "r"
@@ -271,7 +271,7 @@ class TheOldReaderApi : AnkoLogger {
             if (response.isSuccessful) {
                 val body = response.body()?.string() ?: ""
 
-                if (body.isNotBlank()) {
+                if (body.isBlank()) {
                     error("Error mark read item $itemId\n$body")
                     return false
                 }
@@ -290,14 +290,14 @@ class TheOldReaderApi : AnkoLogger {
             val httpUrl = HttpUrl.Builder()
                     .scheme(SCHEMA)
                     .host(ENDPOINT)
-                    .addPathSegment(UPDATE_ITEMS)
+                    .addPathSegments(UPDATE_ITEMS)
                     .build()
 
             val parameterName = if (state) "a" else "r"
 
             val formBody = FormBody.Builder()
                     .addEncoded("i", ITEM_PREFIX + itemId)
-                    .add(parameterName, "user/-/state/com.google/starred")
+                    .addEncoded(parameterName, "user/-/state/com.google/starred")
                     .build()
 
             val request = Request.Builder()
@@ -310,7 +310,7 @@ class TheOldReaderApi : AnkoLogger {
             if (response.isSuccessful) {
                 val body = response.body()?.string() ?: ""
 
-                if (body.isNotBlank()) {
+                if (body.isBlank()) {
                     error("Error mark favorite item $itemId\n$body")
                     return false
                 }
@@ -329,11 +329,11 @@ class TheOldReaderApi : AnkoLogger {
             val httpUrl = HttpUrl.Builder()
                     .scheme(SCHEMA)
                     .host(ENDPOINT)
-                    .addPathSegment(MARK_ALL_READ)
+                    .addPathSegments(MARK_ALL_READ)
                     .build()
 
             val formBody = FormBody.Builder()
-                    .add("s", feedId ?: "user/-/state/com.google/reading-list")
+                    .addEncoded("s", feedId ?: "user/-/state/com.google/reading-list")
                     .addEncoded("ts", TimeUnit.MILLISECONDS.toNanos(olderThen.time).toString())
                     .build()
 
@@ -347,7 +347,7 @@ class TheOldReaderApi : AnkoLogger {
             if (response.isSuccessful) {
                 val body = response.body()?.string() ?: ""
 
-                if (body.isNotBlank()) {
+                if (body.isBlank()) {
                     error("Error mark all read\n$body")
                     return false
                 }
