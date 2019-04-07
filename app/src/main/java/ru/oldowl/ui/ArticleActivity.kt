@@ -37,7 +37,7 @@ class ArticleActivity : BaseActivity() {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        viewModel.item = intent.getSerializableExtra(ARTICLE) as ArticleAndSubscriptionTitle
+        viewModel.item = intent.getParcelableExtra(ARTICLE) as ArticleAndSubscriptionTitle
         title = getString(R.string.empty)
 
         dataBinding.viewModel = viewModel

@@ -1,19 +1,19 @@
 package ru.oldowl.db.model
 
-import android.arch.persistence.room.ColumnInfo
-import android.arch.persistence.room.Entity
-import android.arch.persistence.room.ForeignKey
-import android.arch.persistence.room.PrimaryKey
-import java.io.Serializable
+import android.arch.persistence.room.*
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 import java.util.*
 
+@Parcelize
 @Entity(tableName = "articles",
         foreignKeys = [
             ForeignKey(entity = Subscription::class,
                     parentColumns = ["id"],
                     childColumns = ["subscription_id"],
                     onDelete = ForeignKey.CASCADE)
-        ])
+        ],
+        indices = [Index("subscription_id")])
 data class Article(
         @PrimaryKey(autoGenerate = true)
         var id: Long = 0,
@@ -33,4 +33,4 @@ data class Article(
         var favorite: Boolean = false,
         @ColumnInfo(name = "publish_date")
         var publishDate: Date = Date()
-) : Serializable
+) : Parcelable
