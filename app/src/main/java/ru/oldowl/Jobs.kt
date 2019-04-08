@@ -12,7 +12,7 @@ import android.os.PersistableBundle
 import kotlinx.coroutines.*
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
-import ru.oldowl.api.TheOldReaderApi
+import ru.oldowl.api.theoldreader.TheOldReaderApi
 import ru.oldowl.db.dao.ArticleDao
 import ru.oldowl.db.dao.CategoryDao
 import ru.oldowl.db.dao.EventDao

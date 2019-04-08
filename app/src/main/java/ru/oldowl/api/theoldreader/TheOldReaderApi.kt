@@ -1,11 +1,11 @@
-package ru.oldowl.api
+package ru.oldowl.api.theoldreader
 
 import com.rometools.rome.io.SyndFeedInput
 import okhttp3.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.error
 import ru.oldowl.JsonHelper
-import ru.oldowl.api.model.*
+import ru.oldowl.api.theoldreader.model.*
 import java.io.StringReader
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -294,9 +294,10 @@ class TheOldReaderApi : AnkoLogger {
                     .build()
 
             val parameterName = if (state) "a" else "r"
+            val paramValue = if (itemId.startsWith(ITEM_PREFIX)) itemId else ITEM_PREFIX + itemId
 
             val formBody = FormBody.Builder()
-                    .addEncoded("i", ITEM_PREFIX + itemId)
+                    .addEncoded("i", paramValue)
                     .addEncoded(parameterName, "user/-/state/com.google/starred")
                     .build()
 
@@ -394,4 +395,5 @@ class TheOldReaderApi : AnkoLogger {
         private const val READER_PREFIX = "tag:google.com,2005:reader/"
     }
 }
+
 

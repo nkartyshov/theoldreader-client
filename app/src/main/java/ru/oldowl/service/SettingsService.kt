@@ -5,63 +5,87 @@ import android.content.SharedPreferences
 import android.support.v7.preference.PreferenceManager
 import ru.oldowl.R
 import java.util.*
+import kotlin.properties.ReadWriteProperty
+import kotlin.reflect.KProperty
 
-// FIXME Rework to PropertyDelegate
 class SettingsService(private val context: Context) {
-    private val sharedPreferences: SharedPreferences by lazy { PreferenceManager.getDefaultSharedPreferences(context) }
+    private val sharedPreferences: SharedPreferences
+            by lazy { PreferenceManager.getDefaultSharedPreferences(context) }
 
     var lastSyncDate: Date?
-        get() {
-            val timestamp: Long = sharedPreferences.getLong(LAST_SYNC_DATE, -1)
-            return if (timestamp > -1) Date(timestamp) else null
-        }
-        set(value) {
-            value?.let {
-                val editor = sharedPreferences.edit()
-                editor.putLong(LAST_SYNC_DATE, it.time)
-                editor.apply()
-            }
-        }
+            by DatePreferenceDelegate(sharedPreferences, LAST_SYNC_DATE)
 
     var hideRead: Boolean
-        get() {
-            val key = context.getString(R.string.key_hide_read)
-            return sharedPreferences.getBoolean(key, false)
-        }
-        set(value) {
-            val key = context.getString(R.string.key_hide_read)
-            val editor = sharedPreferences.edit()
-            editor.putBoolean(key, value)
-            editor.apply()
-        }
+            by BooleanPreferenceDelegate(sharedPreferences,
+                    context.getString(R.string.key_hide_read), false)
 
     val autoUpdate: Boolean
-        get() {
-            val key = context.getString(R.string.key_auto_update)
-            return sharedPreferences.getBoolean(key, true)
-        }
+            by BooleanPreferenceDelegate(sharedPreferences,
+                    context.getString(R.string.key_auto_update), true)
 
     val autoUpdatePeriod: Long
-        get() {
-            val key = context.getString(R.string.key_auto_update_period)
-            return sharedPreferences.getString(key, null)?.toLongOrNull() ?: 1
-        }
+            by LongPreferenceDelegate(sharedPreferences,
+                    context.getString(R.string.key_auto_update_period), -1)
 
     val autoCleanupUnreadPeriod: Long
-        get() {
-            val key = context.getString(R.string.key_auto_cleanup_unread_period)
-            return sharedPreferences.getString(key, null)?.toLongOrNull() ?: 1
-        }
+            by LongPreferenceDelegate(sharedPreferences,
+                    context.getString(R.string.key_auto_cleanup_unread_period), -1)
 
     val autoCleanupReadPeriod: Long
-        get() {
-            val key = context.getString(R.string.key_auto_cleanup_read_period)
-            return sharedPreferences.getString(key, null)?.toLongOrNull() ?: 1
-        }
+            by LongPreferenceDelegate(sharedPreferences,
+                    context.getString(R.string.key_auto_cleanup_read_period), -1)
 
     companion object {
         private const val LAST_SYNC_DATE = "key_last_sync_date"
     }
 
+    class LongPreferenceDelegate(
+            private val sharedPreferences: SharedPreferences,
+            private val key: String,
+            private val defaultValue: Long
+    ) : ReadWriteProperty<Any, Long> {
+        override fun getValue(thisRef: Any, property: KProperty<*>): Long = sharedPreferences.getLong(key, defaultValue)
 
+        override fun setValue(thisRef: Any, property: KProperty<*>, value: Long) {
+            with(sharedPreferences.edit()) {
+                putLong(key, value)
+                apply()
+            }
+        }
+    }
+
+    class BooleanPreferenceDelegate(
+            private val sharedPreferences: SharedPreferences,
+            private val key: String,
+            private val defaultValue: Boolean
+    ) : ReadWriteProperty<Any, Boolean> {
+        override fun getValue(thisRef: Any, property: KProperty<*>): Boolean = sharedPreferences.getBoolean(key, defaultValue)
+
+        override fun setValue(thisRef: Any, property: KProperty<*>, value: Boolean) {
+            with(sharedPreferences.edit()) {
+                putBoolean(key, value)
+                apply()
+            }
+        }
+    }
+
+    class DatePreferenceDelegate(
+            private val sharedPreferences: SharedPreferences,
+            private val key: String
+    ) : ReadWriteProperty<Any, Date?> {
+        override fun getValue(thisRef: Any, property: KProperty<*>): Date? {
+            val timestamp: Long = sharedPreferences.getLong(key, -1)
+            return if (timestamp > -1) Date(timestamp) else null
+        }
+
+        override fun setValue(thisRef: Any, property: KProperty<*>, value: Date?) {
+            value?.let {
+                with(sharedPreferences.edit()) {
+                    val editor = sharedPreferences.edit()
+                    editor.putLong(key, value.time)
+                    editor.apply()
+                }
+            }
+        }
+    }
 }

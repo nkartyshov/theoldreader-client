@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="subscription"
+            type="ru.oldowl.db.model.Subscription" />
+    </data>
+
+    <LinearLayout style="@style/NavItem">
+
+        <ImageView
+            style="@style/NavImageItem"
+            text="@{subscription.title}"
+            android:contentDescription="@string/app_name" />
+
+        <TextView
+            style="@style/TextNormal"
+            android:text="@{subscription.title}"
+            tools:text="Subscription text" />
+    </LinearLayout>
+</layout>

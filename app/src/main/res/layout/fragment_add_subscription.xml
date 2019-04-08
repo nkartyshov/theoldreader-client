@@ -1,10 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.fragment.AddSubscriptionFragment">
+<layout>
 
-    <!-- TODO: Update blank fragment layout -->
+    <data>
 
-</FrameLayout>
+        <variable
+            name="viewModel"
+            type="ru.oldowl.viewmodel.AddSubscriptionViewModel" />
+
+        <variable
+            name="recyclerConfig"
+            type="ru.oldowl.binding.RecyclerConfig" />
+    </data>
+
+    <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.fragment.AddSubscriptionFragment">
+
+        <android.support.v7.widget.RecyclerView
+            config="@{recyclerConfig}"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </android.support.design.widget.CoordinatorLayout>
+</layout>

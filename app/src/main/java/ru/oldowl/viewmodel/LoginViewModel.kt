@@ -1,7 +1,7 @@
 package ru.oldowl.viewmodel
 
 import kotlinx.coroutines.async
-import ru.oldowl.api.TheOldReaderApi
+import ru.oldowl.api.theoldreader.TheOldReaderApi
 import ru.oldowl.db.model.Account
 import ru.oldowl.service.AccountService
 

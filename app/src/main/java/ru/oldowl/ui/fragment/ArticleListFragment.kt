@@ -29,6 +29,9 @@ class ArticleListFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
 
+        viewModel.mode = arguments?.getSerializable(ARTICLE_LIST_MODE) as ArticleListMode
+        viewModel.subscription = arguments?.getSerializable(SUBSCRIPTION) as Subscription?
+
         val adapter = ArticleAndSubscriptionTitleAdapter(context)
         adapter.setOnItemClickListener {
             ArticleActivity.openArticle(context, it)
@@ -38,13 +41,15 @@ class ArticleListFragment : BaseFragment() {
         val distanceToTriggerSync = 256 * density.toInt()
 
         sync_list.setDistanceToTriggerSync(distanceToTriggerSync)
+        sync_list.isEnabled = viewModel.mode != ArticleListMode.FAVORITE
 
         article_list.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         article_list.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
         article_list.adapter = adapter
 
-        viewModel.mode = arguments?.getSerializable(ARTICLE_LIST_MODE) as ArticleListMode
-        viewModel.subscription = arguments?.getSerializable(SUBSCRIPTION) as Subscription?
+        make_all_read.setOnClickListener {
+            viewModel.markReadAll()
+        }
 
         lifecycle.addObserver(viewModel)
 

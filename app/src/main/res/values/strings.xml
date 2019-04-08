@@ -12,6 +12,8 @@
     <string name="unread_more_hundred">99+</string>
     <string name="never">Never</string>
 
+    <string name="search">Search</string>
+
     <!-- Login -->
     <string name="sing_in">Sing in</string>
     <string name="email">Email</string>

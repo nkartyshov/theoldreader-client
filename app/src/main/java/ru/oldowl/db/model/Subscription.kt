@@ -18,7 +18,7 @@ data class Subscription(
         @ColumnInfo(name = "category_id")
         var categoryId: Long?,
         @ColumnInfo(name = "feed_id")
-        var feedId: String?,
+        var feedId: String? = null,
         @ColumnInfo(name = "title")
         var title: String?,
         @ColumnInfo(name = "url")

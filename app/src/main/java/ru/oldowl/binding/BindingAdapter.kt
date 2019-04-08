@@ -1,4 +1,4 @@
-package ru.oldowl
+package ru.oldowl.binding
 
 import android.databinding.BindingAdapter
 import android.os.Build
@@ -119,6 +119,21 @@ object BindingAdapter {
     fun setHtmlData(webView: WebView, html: String?) {
         html?.let {
             webView.loadDataWithBaseURL("", html, MIME_TYPE, ENCODING, null)
+        }
+    }
+
+    @JvmStatic
+    @BindingAdapter("config")
+    fun configRecyclerView(recyclerView: RecyclerView, config: RecyclerConfig?) {
+        if (config == null) {
+            return
+        }
+
+        recyclerView.adapter = config.adapter
+        recyclerView.layoutManager = config.layoutManager
+
+        config.dividerItemDecoration?.let {
+            recyclerView.addItemDecoration(it)
         }
     }
 }

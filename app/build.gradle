@@ -75,6 +75,10 @@ dependencies {
     implementation "com.rometools:rome:$rome_version"
     implementation "com.rometools:rome-opml:$rome_version"
 
+    def retrofit_version = '2.5.0'
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-moshi:$retrofit_version"
+
     testImplementation 'junit:junit:4.12'
 
     androidTestImplementation 'com.android.support.test:runner:1.0.2'

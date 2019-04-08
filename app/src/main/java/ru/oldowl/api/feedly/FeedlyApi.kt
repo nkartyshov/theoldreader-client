@@ -1,0 +1,39 @@
+package ru.oldowl.api.feedly
+
+import org.jetbrains.anko.AnkoLogger
+import retrofit2.Call
+import retrofit2.Retrofit
+import retrofit2.converter.moshi.MoshiConverterFactory
+import retrofit2.http.GET
+import retrofit2.http.Query
+import ru.oldowl.api.feedly.model.SubscriptionResponse
+import ru.oldowl.api.feedly.model.SubscriptionResponses
+import ru.oldowl.db.model.Subscription
+import java.util.*
+
+interface FeedlyWebService {
+
+    @GET("/v3/search/feeds")
+    fun searchSubscription(@Query("query", encoded = true) query: String,
+                           @Query("locale") locale: String,
+                           @Query("count") count: Int = 20): Call<SubscriptionResponses>
+
+    companion object {
+        const val BASE_URL = "https://cloud.feedly.com"
+    }
+}
+
+class FeedlyApi(private val feedlyWebService: FeedlyWebService) : AnkoLogger {
+
+    fun searchSubscription(query: String): List<Subscription> {
+        val locale = Locale.getDefault().language
+
+        val body = feedlyWebService.searchSubscription(query, locale).execute().body()
+        return body?.results?.map {
+                    Subscription(title = it.title,
+                            htmlUrl = it.website,
+                            url = it.feedId.removePrefix("feed/"),
+                            categoryId = 1)
+                } ?: emptyList()
+    }
+}

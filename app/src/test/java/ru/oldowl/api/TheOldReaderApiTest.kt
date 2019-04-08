@@ -4,6 +4,7 @@ import org.junit.After
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
+import ru.oldowl.api.theoldreader.TheOldReaderApi
 
 class TheOldReaderApiTest {
     private var theOldReaderApi: TheOldReaderApi? = null

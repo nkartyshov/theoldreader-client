@@ -1,4 +1,4 @@
-package ru.oldowl.api.model
+package ru.oldowl.api.theoldreader.model
 
 import com.squareup.moshi.Json
 
