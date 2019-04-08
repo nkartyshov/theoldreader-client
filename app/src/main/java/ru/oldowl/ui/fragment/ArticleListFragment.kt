@@ -110,7 +110,7 @@ class ArticleListFragment : BaseFragment() {
             bundle.putSerializable(ARTICLE_LIST_MODE, articleListMode)
 
             subscription?.let {
-                bundle.putSerializable(SUBSCRIPTION, it)
+                bundle.putParcelable(SUBSCRIPTION, it)
             }
 
             val articleListFragment = ArticleListFragment()

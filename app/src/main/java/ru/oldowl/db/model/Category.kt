@@ -3,8 +3,10 @@ package ru.oldowl.db.model
 import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
-import java.io.Serializable
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 @Entity(tableName = "category")
 data class Category(
         @PrimaryKey(autoGenerate = true)
@@ -13,4 +15,4 @@ data class Category(
         var labelId: String,
         @ColumnInfo(name = "title")
         var title: String
-) : Serializable
+) : Parcelable
