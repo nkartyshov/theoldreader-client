@@ -68,12 +68,20 @@ class AddSubscriptionFragment : BaseFragment() {
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         inflater?.inflate(R.menu.menu_add_subscription, menu)
         with(menu?.findItem(R.id.search_view)) {
-            val searchView = this?.actionView as SearchView?
 
-            searchView?.setOnCloseListener {
-                activity?.onBackPressed()
-                true
-            }
+            this?.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
+                override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
+                    return true
+                }
+
+                override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
+                    activity?.onBackPressed()
+                    return true
+                }
+
+            })
+
+            val searchView = this?.actionView as SearchView?
 
             searchView?.setIconifiedByDefault(true)
             searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
