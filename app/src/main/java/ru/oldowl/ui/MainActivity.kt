@@ -42,6 +42,7 @@ class MainActivity : BaseActivity() {
             override fun onDrawerOpened(drawerView: View) {
                 super.onDrawerOpened(drawerView)
 
+                mainViewModel.updateLastSyncDate()
                 mainViewModel.updateSubscriptions()
             }
         })

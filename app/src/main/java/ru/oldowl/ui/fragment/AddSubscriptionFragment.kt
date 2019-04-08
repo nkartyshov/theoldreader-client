@@ -33,7 +33,7 @@ class AddSubscriptionFragment : BaseFragment() {
             )
 
             it.viewModel = viewModel
-            it.setLifecycleOwner(this)
+            it.lifecycleOwner = this
         }.root
     }
 

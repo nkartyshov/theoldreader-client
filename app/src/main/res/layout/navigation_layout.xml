@@ -5,100 +5,110 @@
     <data>
 
         <variable
+            name="view"
+            type="android.view.View" />
+
+        <variable
             name="viewModel"
             type="ru.oldowl.viewmodel.MainViewModel" />
 
-        <variable
-            name="view"
-            type="android.view.View" />
     </data>
 
-    <LinearLayout
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="300dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:background="@color/white"
-        android:fitsSystemWindows="true"
-        android:orientation="vertical">
-
-        <include
-            android:id="@+id/navigation_header"
-            layout="@layout/navigation_header" />
-
-        <View style="@style/VerticalDivider" />
-
-        <LinearLayout style="@style/NavItem"
-            android:id="@+id/all_articles">
-
-            <ImageView
-                style="@style/NavImageItem"
-                android:src="@drawable/ic_home"
-                android:contentDescription="@string/nav_all" />
-
-            <TextView
-                style="@style/TextNormal"
-                android:text="@string/nav_all" />
-        </LinearLayout>
-
-        <LinearLayout style="@style/NavItem"
-            android:id="@+id/favorite_articles">
-
-            <ImageView
-                style="@style/NavImageItem"
-                android:src="@drawable/ic_bookmark"
-                android:contentDescription="@string/nav_favorite"/>
-
-            <TextView
-                style="@style/TextNormal"
-                android:text="@string/nav_favorite" />
-        </LinearLayout>
+        android:fitsSystemWindows="true">
 
         <LinearLayout
-            style="@style/ContentFullWidth.Vertical"
-            android:visibility="@{viewModel.hasItems ? view.VISIBLE : view.GONE}">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <include
+                android:id="@+id/navigation_header"
+                layout="@layout/navigation_header" />
 
             <View style="@style/VerticalDivider" />
 
-            <TextView
-                style="@style/TextNormal"
-                android:padding="@dimen/indent_default"
-                android:text="@string/nav_subscriptions" />
+            <LinearLayout
+                android:id="@+id/all_articles"
+                style="@style/NavItem">
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/subscription_list"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:nestedScrollingEnabled="false"
-                app:subscriptionWithUnread="@{viewModel.subscriptions}"/>
+                <ImageView
+                    style="@style/NavImageItem"
+                    android:contentDescription="@string/nav_all"
+                    android:src="@drawable/ic_home" />
 
+                <TextView
+                    style="@style/TextNormal"
+                    android:text="@string/nav_all" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/favorite_articles"
+                style="@style/NavItem">
+
+                <ImageView
+                    style="@style/NavImageItem"
+                    android:contentDescription="@string/nav_favorite"
+                    android:src="@drawable/ic_bookmark" />
+
+                <TextView
+                    style="@style/TextNormal"
+                    android:text="@string/nav_favorite" />
+            </LinearLayout>
+
+            <LinearLayout
+                style="@style/ContentFullWidth.Vertical"
+                android:visibility="@{viewModel.hasItems ? view.VISIBLE : view.GONE}">
+
+                <View style="@style/VerticalDivider" />
+
+                <TextView
+                    style="@style/TextNormal"
+                    android:padding="@dimen/indent_default"
+                    android:text="@string/nav_subscriptions" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/subscription_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false"
+                    app:subscriptionWithUnread="@{viewModel.subscriptions}" />
+
+            </LinearLayout>
+
+            <View style="@style/VerticalDivider" />
+
+            <LinearLayout
+                android:id="@+id/add_subscription"
+                style="@style/NavItem">
+
+                <ImageView
+                    style="@style/NavImageItem"
+                    android:contentDescription="@string/nav_add_subscription"
+                    android:src="@drawable/ic_rss_feed" />
+
+                <TextView
+                    style="@style/TextNormal"
+                    android:text="@string/nav_add_subscription" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/settings"
+                style="@style/NavItem">
+
+                <ImageView
+                    style="@style/NavImageItem"
+                    android:contentDescription="@string/nav_settings"
+                    android:src="@drawable/ic_settings" />
+
+                <TextView
+                    style="@style/TextNormal"
+                    android:text="@string/nav_settings" />
+            </LinearLayout>
         </LinearLayout>
-
-        <View style="@style/VerticalDivider" />
-
-        <LinearLayout style="@style/NavItem"
-            android:id="@+id/add_subscription">
-
-            <ImageView
-                style="@style/NavImageItem"
-                android:src="@drawable/ic_rss_feed"
-                android:contentDescription="@string/nav_add_subscription" />
-
-            <TextView
-                style="@style/TextNormal"
-                android:text="@string/nav_add_subscription" />
-        </LinearLayout>
-
-        <LinearLayout style="@style/NavItem"
-            android:id="@+id/settings">
-
-            <ImageView
-                style="@style/NavImageItem"
-                android:src="@drawable/ic_settings"
-                android:contentDescription="@string/nav_settings" />
-
-            <TextView
-                style="@style/TextNormal"
-                android:text="@string/nav_settings" />
-        </LinearLayout>
-    </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
 </layout>

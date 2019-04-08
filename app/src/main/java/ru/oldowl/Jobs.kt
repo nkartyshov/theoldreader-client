@@ -251,9 +251,10 @@ class AutoUpdateJob : JobService(), KoinComponent, CoroutineScope {
                     .forEach {
                         if (!articleDao.exists(it.originalId)) {
                             articleDao.save(it)
-                        } else {
-                            articleDao.updateFavoriteState(it.originalId, true)
                         }
+
+                        articleDao.updateReadState(it.originalId, true)
+                        articleDao.updateFavoriteState(it.originalId, true)
                     }
         }
     }

@@ -40,6 +40,9 @@ interface ArticleDao {
     @Query("update articles set read = :read where id = :id")
     fun updateReadState(id: Long, read: Boolean)
 
+    @Query("update articles set read = :read where original_id = :originalId")
+    fun updateReadState(originalId: String, read: Boolean)
+
     @Query("update articles set read = 1")
     fun markAllRead()
 

@@ -23,15 +23,16 @@ class MainViewModel(private val subscriptionDao: SubscriptionDao,
     val email: String by lazy { account?.email ?: "" }
     val hasItems: ObservableBoolean = ObservableBoolean(false)
     val subscriptions: MutableLiveData<List<SubscriptionAndUnreadCount>> = MutableLiveData()
+    val lastSyncDate: MutableLiveData<String> = MutableLiveData()
 
-    fun getLastSyncDate(): String? {
-        return if (settingsService.lastSyncDate != null)
-            dateTimeFormat.format(settingsService.lastSyncDate)
-        else null
+    fun updateLastSyncDate() {
+        settingsService.lastSyncDate?.let {
+            lastSyncDate.value = dateTimeFormat.format(settingsService.lastSyncDate)
+        }
     }
 
     fun updateSubscriptions() = launch {
-        val deferred = async {  subscriptionDao.findAllWithUnread() }
+        val deferred = async { subscriptionDao.findAllWithUnread() }
 
         withContext(Dispatchers.Main) {
             val list = deferred.await()

@@ -20,6 +20,10 @@ class ArticleListFragment : BaseFragment() {
 
     private var articleListBinding: FragmentArticleListBinding? = null
 
+    init {
+        setHasOptionsMenu(true)
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         articleListBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_article_list, container, false)
         return articleListBinding?.root
@@ -27,7 +31,6 @@ class ArticleListFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setHasOptionsMenu(true)
 
         viewModel.mode = arguments?.getSerializable(ARTICLE_LIST_MODE) as ArticleListMode
         viewModel.subscription = arguments?.getParcelable(SUBSCRIPTION) as Subscription?
@@ -54,7 +57,7 @@ class ArticleListFragment : BaseFragment() {
         lifecycle.addObserver(viewModel)
 
         articleListBinding?.viewModel = viewModel
-        articleListBinding?.setLifecycleOwner(this)
+        articleListBinding?.lifecycleOwner = this
 
         activity?.title = viewModel.title
     }

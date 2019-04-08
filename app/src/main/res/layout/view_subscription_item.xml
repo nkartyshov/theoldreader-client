@@ -24,10 +24,12 @@
             style="@style/TextNormal.SingleLine"
             android:layout_weight="1"
             android:text="@{subscription.title}"
+
             tools:text="Subscription name" />
 
         <TextView
-            style="@style/TextNormal"
+            style="@style/TextNormal.Bold"
+            android:layout_marginStart="@dimen/indent_default"
             android:text="@{unread}"
             tools:text="200" />
     </LinearLayout>
