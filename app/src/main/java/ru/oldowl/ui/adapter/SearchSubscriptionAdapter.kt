@@ -10,9 +10,11 @@ import ru.oldowl.ui.adapter.diff.SubscriptionDiffCallback
 
 class SearchSubscriptionAdapter : ListAdapter<Subscription, SearchSubscriptionViewHolder>(SubscriptionDiffCallback()) {
 
+    var onItemClick: ((Subscription) -> Unit)? = null
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchSubscriptionViewHolder {
         val dataBinding = ViewSearchSubscriptionItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return SearchSubscriptionViewHolder(dataBinding)
+        return SearchSubscriptionViewHolder(dataBinding, onItemClick)
     }
 
     override fun onBindViewHolder(viewHolder: SearchSubscriptionViewHolder, position: Int) {
@@ -22,11 +24,14 @@ class SearchSubscriptionAdapter : ListAdapter<Subscription, SearchSubscriptionVi
 }
 
 class SearchSubscriptionViewHolder(
-        private val dataBinding: ViewSearchSubscriptionItemBinding
+        private val dataBinding: ViewSearchSubscriptionItemBinding,
+        private val onItemClick: ((Subscription) -> Unit)?
 ) : RecyclerView.ViewHolder(dataBinding.root) {
 
     fun bind(subscription: Subscription) {
         dataBinding.subscription = subscription
+        dataBinding.setOnItemClick {
+            onItemClick?.invoke(subscription)
+        }
     }
 }
-

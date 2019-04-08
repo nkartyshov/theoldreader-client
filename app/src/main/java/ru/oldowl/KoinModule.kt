@@ -43,5 +43,5 @@ val serviceModule = module {
     viewModel { MainViewModel(get(), get(), get()) }
     viewModel { ArticleListViewModel(get(), get(), get(), get(), get()) }
     viewModel { ArticleViewModel(get(), get()) }
-    viewModel { AddSubscriptionViewModel(get()) }
+    viewModel { AddSubscriptionViewModel(get(), get()) }
 }

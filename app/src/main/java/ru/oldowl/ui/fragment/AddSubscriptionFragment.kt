@@ -2,6 +2,7 @@ package ru.oldowl.ui.fragment
 
 import android.arch.lifecycle.Observer
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.SearchView
@@ -40,13 +41,39 @@ class AddSubscriptionFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         activity?.title = getString(R.string.nav_add_subscription)
 
-        viewModel.searchResult.observe(this, Observer { list -> listAdapter.submitList(list) })
+        listAdapter.onItemClick = {
+            viewModel.save(it)
+
+        }
+
+        viewModel
+                .searchResult
+                .observe(this, Observer { list ->
+                    listAdapter.submitList(list)
+                })
+
+        viewModel
+                .saveResult
+                .observe(this, Observer {
+                    val message = when (it?.success) {
+                        true -> getString(R.string.add_subscription_success, it.subscription.title)
+                        false -> getString(R.string.add_subscription_error, it.subscription.title)
+                        null -> getString(R.string.add_subscription_unknown_error)
+                    }
+
+                    Snackbar.make(view, message, Snackbar.LENGTH_LONG).show()
+                })
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         inflater?.inflate(R.menu.menu_add_subscription, menu)
         with(menu?.findItem(R.id.search_view)) {
             val searchView = this?.actionView as SearchView?
+
+            searchView?.setOnCloseListener {
+                activity?.onBackPressed()
+                true
+            }
 
             searchView?.setIconifiedByDefault(true)
             searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {

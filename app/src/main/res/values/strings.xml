@@ -53,6 +53,11 @@
     <string name="open_in_browser">Open in browser</string>
     <string name="share">Share</string>
 
+    <!-- Add subscription -->
+    <string name="add_subscription_success">The %s was added</string>
+    <string name="add_subscription_error">The %s wasn\'t added</string>
+    <string name="add_subscription_unknown_error">Unknown error when saving subscription</string>
+
     <!-- Settings -->
     <string name="settings_general">General</string>
     <string name="settings_storage">Storage</string>

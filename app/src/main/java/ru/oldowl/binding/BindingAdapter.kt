@@ -5,6 +5,7 @@ import android.os.Build
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.RecyclerView
 import android.text.Html
+import android.view.View
 import android.webkit.WebView
 import android.widget.EditText
 import android.widget.ImageView
@@ -28,13 +29,13 @@ object BindingAdapter {
     @JvmStatic
     @BindingAdapter("text")
     fun setText(imageView: ImageView, text: String) {
-        val chars = if (text.isNotBlank()) text.substring(0, 1) else text
+        val chars = if (text.length > 1) text.substring(0, 1) else text
 
         val drawable = TextDrawable.builder()
                 .beginConfig()
                 .bold()
                 .endConfig()
-                .buildRound(chars, ColorGenerator.MATERIAL.getColor(chars))
+                .buildRound(chars.toUpperCase(), ColorGenerator.MATERIAL.getColor(chars))
 
         imageView.setImageDrawable(drawable)
     }
@@ -134,6 +135,17 @@ object BindingAdapter {
 
         config.dividerItemDecoration?.let {
             recyclerView.addItemDecoration(it)
+        }
+    }
+
+    @JvmStatic
+    @BindingAdapter("android:onClick")
+    fun setOnClickListener(view: View, runnable: Runnable?) {
+        view.setOnClickListener(null)
+        runnable?.let {
+            view.setOnClickListener {
+                runnable.run()
+            }
         }
     }
 }

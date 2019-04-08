@@ -30,7 +30,7 @@ class ArticleListFragment : BaseFragment() {
         setHasOptionsMenu(true)
 
         viewModel.mode = arguments?.getSerializable(ARTICLE_LIST_MODE) as ArticleListMode
-        viewModel.subscription = arguments?.getSerializable(SUBSCRIPTION) as Subscription?
+        viewModel.subscription = arguments?.getParcelable(SUBSCRIPTION) as Subscription?
 
         val adapter = ArticleAndSubscriptionTitleAdapter(context)
         adapter.setOnItemClickListener {

@@ -5,11 +5,16 @@
     <data>
 
         <variable
+            name="onItemClick"
+            type="Runnable"/>
+
+        <variable
             name="subscription"
             type="ru.oldowl.db.model.Subscription" />
     </data>
 
-    <LinearLayout style="@style/NavItem">
+    <LinearLayout style="@style/NavItem"
+        android:onClick="@{onItemClick}">
 
         <ImageView
             style="@style/NavImageItem"

@@ -255,9 +255,10 @@ class TheOldReaderApi : AnkoLogger {
                     .build()
 
             val parameterName = if (state) "a" else "r"
+            val paramValue = if (itemId.startsWith(ITEM_PREFIX)) itemId else ITEM_PREFIX + itemId
 
             val formBody = FormBody.Builder()
-                    .addEncoded("i", ITEM_PREFIX + itemId)
+                    .addEncoded("i", paramValue)
                     .add(parameterName, "user/-/state/com.google/read")
                     .build()
 
