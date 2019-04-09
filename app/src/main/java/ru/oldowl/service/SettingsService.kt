@@ -44,11 +44,11 @@ class SettingsService(private val context: Context) {
             private val key: String,
             private val defaultValue: Long
     ) : ReadWriteProperty<Any, Long> {
-        override fun getValue(thisRef: Any, property: KProperty<*>): Long = sharedPreferences.getLong(key, defaultValue)
+        override fun getValue(thisRef: Any, property: KProperty<*>): Long = sharedPreferences.getString(key, null)?.toLong() ?: defaultValue
 
         override fun setValue(thisRef: Any, property: KProperty<*>, value: Long) {
             with(sharedPreferences.edit()) {
-                putLong(key, value)
+                putString(key, value.toString())
                 apply()
             }
         }
