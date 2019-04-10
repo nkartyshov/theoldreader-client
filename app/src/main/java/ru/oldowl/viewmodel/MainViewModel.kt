@@ -32,11 +32,14 @@ class MainViewModel(private val subscriptionDao: SubscriptionDao,
     }
 
     fun updateSubscriptions() = launch {
-        val deferred = async { subscriptionDao.findAllWithUnread() }
+        val deferred = async {
+            subscriptionDao
+                    .findAllWithUnread()
+                    .sortedByDescending { it.unread }
+        }
 
+        val list = deferred.await()
         withContext(Dispatchers.Main) {
-            val list = deferred.await()
-
             subscriptions.value = list
             hasItems.set(list.isNotEmpty())
         }

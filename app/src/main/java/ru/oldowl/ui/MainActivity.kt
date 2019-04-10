@@ -7,6 +7,7 @@ import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
+import com.crashlytics.android.Crashlytics
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.navigation_layout.*
 import kotlinx.android.synthetic.main.toolbar.*

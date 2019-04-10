@@ -17,7 +17,7 @@ class SettingsService(private val context: Context) {
 
     var hideRead: Boolean
             by BooleanPreferenceDelegate(sharedPreferences,
-                    context.getString(R.string.key_hide_read), false)
+                    context.getString(R.string.key_hide_read), true)
 
     val autoUpdate: Boolean
             by BooleanPreferenceDelegate(sharedPreferences,
