@@ -10,16 +10,16 @@ interface ArticleDao {
     @Query("select a.*, s.title as subscription_title from articles a inner join subscriptions s on a.subscription_id = s.id order by a.publish_date desc")
     fun findAll(): List<ArticleAndSubscriptionTitle>
 
-    @Query("select a.*, s.title as subscription_title from articles a inner join subscriptions s on a.subscription_id = s.id where subscription_id = :subscriptionId order by a.publish_date desc")
+    @Query("select a.*, s.title as subscription_title from articles a inner join subscriptions s on a.subscription_id = s.id where a.subscription_id = :subscriptionId order by a.publish_date desc")
     fun findAll(subscriptionId: Long?): List<ArticleAndSubscriptionTitle>
 
-    @Query("select a.*, s.title as subscription_title from articles a inner join subscriptions s on a.subscription_id = s.id where read = 0 order by a.publish_date desc")
+    @Query("select a.*, s.title as subscription_title from articles a inner join subscriptions s on a.subscription_id = s.id where a.read = 0 order by a.publish_date desc")
     fun findUnread(): List<ArticleAndSubscriptionTitle>
 
-    @Query("select a.*, s.title as subscription_title from articles a inner join subscriptions s on a.subscription_id = s.id where subscription_id = :subscriptionId and read = 0 order by a.publish_date desc")
+    @Query("select a.*, s.title as subscription_title from articles a inner join subscriptions s on a.subscription_id = s.id where a.subscription_id = :subscriptionId and a.read = 0 order by a.publish_date desc")
     fun findUnread(subscriptionId: Long?): List<ArticleAndSubscriptionTitle>
 
-    @Query("select a.*, s.title as subscription_title from articles a inner join subscriptions s on a.subscription_id = s.id where favorite = 1 order by a.publish_date desc")
+    @Query("select a.*, s.title as subscription_title from articles a inner join subscriptions s on a.subscription_id = s.id where a.favorite = 1 order by a.publish_date desc")
     fun findFavorite(): List<ArticleAndSubscriptionTitle>
 
     @Query("select * from articles where original_id = :originalId")

@@ -60,27 +60,27 @@ class MainActivity : BaseActivity() {
         }
 
         favorite_articles.setOnClickListener {
-            openFragment(ArticleListFragment.openFavorites())
+            openFragment(ArticleListFragment.openFavorites(), addToBackStack = true)
         }
 
         add_subscription.setOnClickListener {
-            openFragment(AddSubscriptionFragment())
+            openFragment(AddSubscriptionFragment(), addToBackStack = true)
         }
 
         settings.setOnClickListener {
-            openFragment(SettingsFragment())
+            openFragment(SettingsFragment(), addToBackStack = true)
         }
 
         dataBinding.viewModel = mainViewModel
         dataBinding.navigationView.viewModel = mainViewModel
         dataBinding.navigationView.navigationHeader.viewModel = mainViewModel
-        dataBinding.setLifecycleOwner(this)
+        dataBinding.lifecycleOwner = this
 
-        replaceFragment(R.id.fragment_container, ArticleListFragment.openAllArticles(), addToBackStack = false)
+        openFragment(ArticleListFragment.openAllArticles())
     }
 
-    private fun openFragment(fragment: Fragment) {
-        replaceFragment(R.id.fragment_container, fragment)
+    private fun openFragment(fragment: Fragment, addToBackStack: Boolean = false) {
+        replaceFragment(R.id.fragment_container, fragment, addToBackStack)
 
         drawer_view.closeDrawers()
     }

@@ -12,13 +12,13 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="130dp"
         android:padding="@dimen/indent_default">
 
         <ImageView
             android:id="@+id/account_icon"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             app:text="@{viewModel.email}"
             tools:src="@drawable/ic_account_circle"/>
 

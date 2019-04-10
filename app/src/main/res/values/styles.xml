@@ -19,7 +19,7 @@
     <style name="TextNormal" parent="TextAppearance.AppCompat.Body1">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:textSize">16sp</item>
+        <!--<item name="android:textSize">16sp</item>-->
     </style>
 
     <style name="TextNormal.Bold">
@@ -43,8 +43,10 @@
         <item name="android:singleLine">true</item>
     </style>
 
-    <style name="TextHeader" parent="TextNormal">
-        <item name="android:textSize">20sp</item>
+    <style name="TextHeader" parent="Base.TextAppearance.AppCompat.Subhead">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <!--<item name="android:textSize">20sp</item>-->
     </style>
 
     <style name="TextSummary" parent="TextCaption">
