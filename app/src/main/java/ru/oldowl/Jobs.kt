@@ -51,7 +51,7 @@ object Jobs : KoinComponent {
             val componentName = ComponentName(context, AutoUpdateJob::class.java)
             val job = JobInfo.Builder(FORCED_UPDATE_ID, componentName)
                     .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
-                    .setPeriodic(TimeUnit.MINUTES.toMillis(30))
+                    .setPeriodic(TimeUnit.MINUTES.toMillis(15))
                     .setRequiresDeviceIdle(true)
                     .setPersisted(true)
                     .build()

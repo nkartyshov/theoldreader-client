@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1083382416214",
+    "firebase_url": "https://old-owl.firebaseio.com",
+    "project_id": "old-owl",
+    "storage_bucket": "old-owl.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1083382416214:android:4f2c993811afb22b",
+        "android_client_info": {
+          "package_name": "ru.oldowl"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1083382416214-64r368spb4l5blja6sgj5chtp149e7me.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ru.oldowl",
+            "certificate_hash": "0088538d0f56124778077a1256e235e5ca3c88d4"
+          }
+        },
+        {
+          "client_id": "1083382416214-vui32iohtn13ajkl6neoicvf0mbgt3v8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBMA24rHp8kLMN0-fBvdA7OrvkBmAm-vVc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1083382416214-vui32iohtn13ajkl6neoicvf0mbgt3v8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
