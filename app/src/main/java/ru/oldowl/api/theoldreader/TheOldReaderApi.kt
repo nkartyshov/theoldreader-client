@@ -6,6 +6,7 @@ import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.error
 import ru.oldowl.JsonHelper
 import ru.oldowl.api.theoldreader.model.*
+import ru.oldowl.extension.epochTime
 import java.io.StringReader
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -129,7 +130,7 @@ class TheOldReaderApi : AnkoLogger {
                     .addEncodedQueryParameter(COUNT_PARAM, COUNT_VALUE)
 
             newerThan?.let {
-                httpUrl.addEncodedQueryParameter(NEWER_THAN_PARAM, it.time.toString())
+                httpUrl.addEncodedQueryParameter(NEWER_THAN_PARAM, it.epochTime.toString())
             }
 
             if (onlyUnread) {
@@ -396,5 +397,3 @@ class TheOldReaderApi : AnkoLogger {
         private const val READER_PREFIX = "tag:google.com,2005:reader/"
     }
 }
-
-
