@@ -186,9 +186,8 @@ class AutoUpdateJob : JobService(), KoinComponent, CoroutineScope {
 
     private fun shouldUpdateSubscription(force: Boolean, lastSyncDate: Date?): Boolean {
         val updatePeriodTime = TimeUnit.HOURS.toMillis(settingsService.autoUpdatePeriod)
-        val minimumUpdateTime = System.currentTimeMillis() - updatePeriodTime
 
-        return force || lastSyncDate == null || lastSyncDate.time < minimumUpdateTime
+        return force || lastSyncDate == null || (System.currentTimeMillis() - lastSyncDate.time) > updatePeriodTime
     }
 
     private fun synchronization(authToken: String) {
