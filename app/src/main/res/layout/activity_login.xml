@@ -77,8 +77,6 @@
                 android:layout_height="wrap_content"
                 android:onClick="@{onSingIn}"
                 android:layout_gravity="center"
-                app:icon="@drawable/ic_search_black_24dp"
-                app:iconGravity="textStart"
                 android:text="@string/sing_in" />
 
             <TextView
