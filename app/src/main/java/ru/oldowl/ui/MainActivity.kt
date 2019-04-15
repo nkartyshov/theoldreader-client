@@ -7,11 +7,11 @@ import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
-import com.crashlytics.android.Crashlytics
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.navigation_layout.*
 import kotlinx.android.synthetic.main.toolbar.*
 import org.koin.standalone.inject
+import ru.oldowl.Jobs
 import ru.oldowl.R
 import ru.oldowl.databinding.ActivityMainBinding
 import ru.oldowl.extension.replaceFragment
@@ -78,6 +78,8 @@ class MainActivity : BaseActivity() {
         dataBinding.lifecycleOwner = this
 
         openFragment(ArticleListFragment.openAllArticles())
+
+        Jobs.scheduleUpdate(this)
     }
 
     private fun openFragment(fragment: Fragment, addToBackStack: Boolean = false) {

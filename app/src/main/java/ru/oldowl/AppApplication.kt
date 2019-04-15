@@ -15,8 +15,6 @@ class AppApplication : Application() {
 
         PreferenceManager.setDefaultValues(this, R.xml.settings, true)
 
-        Jobs.scheduleUpdate(applicationContext)
-
         WebView.setWebContentsDebuggingEnabled(BuildConfig.DEBUG)
 
         Fabric.with(Fabric.Builder(this)

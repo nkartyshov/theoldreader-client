@@ -49,7 +49,7 @@ object Jobs : KoinComponent {
 
         if (settingsService.autoUpdate) {
             val componentName = ComponentName(context, AutoUpdateJob::class.java)
-            val job = JobInfo.Builder(FORCED_UPDATE_ID, componentName)
+            val job = JobInfo.Builder(AUTO_UPDATE_ID, componentName)
                     .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
                     .setPeriodic(TimeUnit.MINUTES.toMillis(15))
                     .setRequiresDeviceIdle(true)
@@ -65,7 +65,7 @@ object Jobs : KoinComponent {
     }
 
     fun forceUpdate(context: Context) {
-        Jobs.forceUpdate(context, null)
+        forceUpdate(context, null)
     }
 
     fun forceUpdate(context: Context, subscription: Subscription?) {
