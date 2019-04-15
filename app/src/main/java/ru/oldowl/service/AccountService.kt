@@ -12,11 +12,12 @@ class AccountService(private val context: Context) {
 
     val adapter = JsonHelper.adapter(Account::class.java)
 
-    fun saveAccount(account: Account) {
-        val json = adapter.nullSafe().toJson(account)
+    fun saveAccount(email: String, password: String, authToken: String) {
+        val account = Account(email, password, authToken)
+
         sharedPreferences.edit()
                 .remove(KEY_ACCOUNT)
-                .putString(KEY_ACCOUNT, json)
+                .putString(KEY_ACCOUNT, account.toJson())
                 .apply()
     }
 

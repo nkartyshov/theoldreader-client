@@ -1,22 +1,52 @@
 package ru.oldowl.viewmodel
 
-import kotlinx.coroutines.async
+import android.arch.lifecycle.MutableLiveData
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import ru.oldowl.R
 import ru.oldowl.api.theoldreader.TheOldReaderApi
-import ru.oldowl.db.model.Account
 import ru.oldowl.service.AccountService
 
 class LoginViewModel(private val appName: String,
                      private val theOldReaderApi: TheOldReaderApi,
                      private val accountService: AccountService) : BaseViewModel() {
 
-    suspend fun authentication(email: String, password: String): String? = async {
-        theOldReaderApi.authentication(email, password, appName)
+    val email: MutableLiveData<String> = MutableLiveData()
+    val emailError: MutableLiveData<Int> = MutableLiveData()
 
-        return@async theOldReaderApi.authentication(email, password, appName)
-    }.await()
+    val password: MutableLiveData<String> = MutableLiveData()
+    val passwordError: MutableLiveData<Int> = MutableLiveData()
 
-    fun saveAccount(email: String, password: String, authToken: String) {
-        val account = Account(email, password, authToken)
-        accountService.saveAccount(account)
+    val authenticationResult: MutableLiveData<Boolean> = MutableLiveData()
+
+    fun authentication() = launch(Dispatchers.Main) {
+        val email = email.value ?: ""
+        val password = password.value ?: ""
+
+        emailError.value = null
+        if (email.isBlank()) {
+            emailError.value = R.string.email_error
+        }
+
+        passwordError.value = null
+        if (password.isBlank()) {
+            passwordError.value = R.string.password_error
+        }
+
+        if (emailError.value != null || passwordError.value != null) {
+            return@launch
+        }
+
+        val authToken = withContext(Dispatchers.Default) {
+            theOldReaderApi.authentication(email, password, appName) ?: ""
+        }
+
+        if (authToken.isNotBlank()) {
+            accountService.saveAccount(email, password, authToken)
+            authenticationResult.value = true
+        } else {
+            authenticationResult.value = false
+        }
     }
 }

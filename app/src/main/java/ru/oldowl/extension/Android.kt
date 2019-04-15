@@ -1,13 +1,14 @@
 package ru.oldowl.extension
 
+import android.app.Activity
 import android.app.job.JobScheduler
 import android.content.*
+import android.hardware.input.InputManager
 import android.net.Uri
 import android.os.Build
 import android.support.v4.app.Fragment
+import android.view.inputmethod.InputMethodManager
 import ru.oldowl.ui.BaseActivity
-
-fun BaseActivity.openWebsite(url: String) = startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
 
 fun BaseActivity.replaceFragment(id: Int, fragment: Fragment, addToBackStack: Boolean = true) {
     val beginTransaction = supportFragmentManager.beginTransaction()
@@ -52,6 +53,13 @@ fun Context.share(text: String? = "", subject: String = ""): Boolean {
 fun Context.copyToClipboard(url: String) {
     val clipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager?
     clipboardManager?.primaryClip = ClipData.newRawUri(url, Uri.parse(url))
+}
+
+fun Activity.hideSoftKeyboard() {
+    val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
+    currentFocus?.let {
+        imm?.hideSoftInputFromWindow(it.windowToken, 0)
+    }
 }
 
 fun JobScheduler.isScheduled(jobId: Int): Boolean {

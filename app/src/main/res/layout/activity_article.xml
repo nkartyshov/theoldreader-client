@@ -77,7 +77,7 @@
                 <WebView
                     android:id="@+id/article_content"
                     style="@style/ContentFullParent"
-                    setHtml="@{viewModel.pageContent}" />
+                    app:html="@{viewModel.pageContent}" />
 
             </LinearLayout>
         </ScrollView>

@@ -1,68 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="@dimen/indent_default">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <LinearLayout
+    <data>
+
+        <variable
+            name="viewModel"
+            type="ru.oldowl.viewmodel.LoginViewModel" />
+
+        <variable
+            name="onResetPassword"
+            type="Runnable" />
+
+        <variable
+            name="onSingUp"
+            type="Runnable" />
+
+        <variable
+            name="onSingIn"
+            type="Runnable" />
+    </data>
+
+    <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="@dimen/indent_default">
 
-        <android.support.design.widget.TextInputLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/indent_default">
+            android:layout_gravity="center"
+            android:orientation="vertical">
 
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/email"
-                style="@style/TextNormal"
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/email"
-                android:inputType="textEmailAddress" />
+                android:layout_marginTop="@dimen/indent_default"
+                app:error="@{viewModel.emailError}"
+                app:errorEnabled="true">
 
-        </android.support.design.widget.TextInputLayout>
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/email"
+                    style="@style/TextNormal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/email"
+                    android:inputType="textEmailAddress"
+                    android:text="@={viewModel.email}" />
 
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/indent_default"
-            app:passwordToggleEnabled="true">
+            </android.support.design.widget.TextInputLayout>
 
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/password"
-                style="@style/TextNormal"
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/password"
-                android:inputType="textPassword" />
+                android:layout_marginTop="@dimen/indent_default"
+                app:error="@{viewModel.passwordError}"
+                app:errorEnabled="true"
+                app:passwordToggleEnabled="true">
 
-        </android.support.design.widget.TextInputLayout>
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/password"
+                    style="@style/TextNormal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/password"
+                    android:inputType="textPassword"
+                    android:text="@={viewModel.password}" />
 
-        <Button
-            android:id="@+id/sign_in"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/indent_default"
-            android:text="@string/sing_in" />
+            </android.support.design.widget.TextInputLayout>
 
-        <TextView
-            android:id="@+id/reset_password"
-            style="@style/TextNormal.Bold"
-            android:layout_gravity="center"
-            android:layout_marginTop="@dimen/indent_default"
-            android:text="@string/forgot_your_password" />
+            <android.support.design.button.MaterialButton
+                android:id="@+id/sign_in"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="@{onSingIn}"
+                android:layout_gravity="center"
+                app:icon="@drawable/ic_search_black_24dp"
+                app:iconGravity="textStart"
+                android:text="@string/sing_in" />
 
-        <TextView
-            android:id="@+id/sing_up"
-            style="@style/TextNormal"
-            android:layout_gravity="center"
-            android:layout_marginTop="@dimen/indent_default"
-            android:text="@string/sign_up" />
+            <TextView
+                android:id="@+id/reset_password"
+                style="@style/TextNormal.Bold"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/indent_default"
+                android:onClick="@{onResetPassword}"
+                android:text="@string/forgot_your_password" />
 
-    </LinearLayout>
-</android.support.design.widget.CoordinatorLayout>
+            <TextView
+                android:id="@+id/sing_up"
+                style="@style/TextNormal"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/indent_default"
+                android:onClick="@{onSingUp}"
+                android:text="@string/sign_up" />
+
+        </LinearLayout>
+    </android.support.design.widget.CoordinatorLayout>
+</layout>

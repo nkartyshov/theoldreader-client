@@ -1,15 +1,17 @@
 package ru.oldowl.ui
 
+import android.arch.lifecycle.Observer
+import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.design.widget.Snackbar
-import kotlinx.android.synthetic.main.activity_login.*
-import kotlinx.coroutines.launch
 import org.jetbrains.anko.startActivity
 import org.koin.core.parameter.parametersOf
 import org.koin.standalone.inject
 import ru.oldowl.Jobs
 import ru.oldowl.R
-import ru.oldowl.extension.openWebsite
+import ru.oldowl.databinding.ActivityLoginBinding
+import ru.oldowl.extension.browse
+import ru.oldowl.extension.hideSoftKeyboard
 import ru.oldowl.viewmodel.LoginViewModel
 
 class LoginActivity : BaseActivity() {
@@ -17,42 +19,40 @@ class LoginActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login)
+        val databinding: ActivityLoginBinding = DataBindingUtil.setContentView(this, R.layout.activity_login)
 
-        sign_in.setOnClickListener {
-            val emailValue = email.text?.toString() ?: ""
-            val passwordValue = password.text?.toString() ?: ""
-
-            if (emailValue.isBlank()) {
-                email.error = getString(R.string.email_error)
-            }
-
-            if (passwordValue.isBlank()) {
-                password.error = getString(R.string.password_error)
-            }
-
-            launch {
-                val authToken = loginViewModel.authentication(emailValue, passwordValue)
-
-                if (authToken.isNullOrBlank()) {
-                    Snackbar.make(it, getString(R.string.authentication_error), Snackbar.LENGTH_LONG).show()
-                } else {
-                    loginViewModel.saveAccount(emailValue, passwordValue, authToken)
-                    Jobs.forceUpdate(this@LoginActivity)
-
-                    startActivity<MainActivity>()
-                    finish()
-                }
-            }
+        databinding.setOnResetPassword {
+            browse(RESET_PASSWORD_URL)
         }
 
-        reset_password.setOnClickListener {
-            openWebsite(RESET_PASSWORD_URL)
+        databinding.setOnSingUp {
+            browse(SING_UP_URL)
         }
 
-        sing_up.setOnClickListener {
-            openWebsite(SING_UP_URL)
+        databinding.setOnSingIn {
+            hideSoftKeyboard()
+            loginViewModel.authentication()
         }
+
+        loginViewModel
+                .authenticationResult
+                .observe(this, Observer { result ->
+                    result?.let {
+                        if (result) {
+                            Jobs.forceUpdate(this@LoginActivity)
+
+                            startActivity<MainActivity>()
+                            finish()
+                        } else {
+                            Snackbar.make(databinding.root,
+                                    R.string.authentication_error,
+                                    Snackbar.LENGTH_LONG).show()
+                        }
+                    }
+                })
+
+        databinding.viewModel = loginViewModel
+        databinding.lifecycleOwner = this
     }
 
     companion object {

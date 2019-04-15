@@ -1,13 +1,12 @@
 package ru.oldowl.binding
 
 import android.databinding.BindingAdapter
-import android.os.Build
+import android.support.annotation.StringRes
+import android.support.design.widget.TextInputLayout
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.RecyclerView
-import android.text.Html
 import android.view.View
 import android.webkit.WebView
-import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import com.amulyakhare.textdrawable.TextDrawable
@@ -65,9 +64,13 @@ object BindingAdapter {
     }
 
     @JvmStatic
-    @BindingAdapter("error")
-    fun setError(editText: EditText, text: String?) {
-        editText.error = text
+    @BindingAdapter("app:error")
+    fun setError(textInputLayout: TextInputLayout, @StringRes errorRes: Int?) {
+        textInputLayout.error = null
+        errorRes?.let {
+            val context = textInputLayout.context
+            textInputLayout.error = context.getString(errorRes)
+        }
     }
 
     @JvmStatic
@@ -76,18 +79,6 @@ object BindingAdapter {
         date?.let {
             val dateTimeInstance = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT)
             textView.text = dateTimeInstance.format(it)
-        }
-    }
-
-    @JvmStatic
-    @BindingAdapter("html")
-    fun setHtml(textView: TextView, html: String?) {
-        html?.let {
-            textView.text = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                Html.fromHtml(html, Html.FROM_HTML_MODE_COMPACT)
-            } else {
-                Html.fromHtml(html)
-            }
         }
     }
 
@@ -116,7 +107,7 @@ object BindingAdapter {
     }
 
     @JvmStatic
-    @BindingAdapter("setHtml")
+    @BindingAdapter("app:html")
     fun setHtmlData(webView: WebView, html: String?) {
         html?.let {
             webView.loadDataWithBaseURL("", html, MIME_TYPE, ENCODING, null)
