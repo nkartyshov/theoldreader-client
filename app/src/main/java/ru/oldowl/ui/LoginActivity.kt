@@ -7,7 +7,6 @@ import android.support.design.widget.Snackbar
 import org.jetbrains.anko.startActivity
 import org.koin.core.parameter.parametersOf
 import org.koin.standalone.inject
-import ru.oldowl.Jobs
 import ru.oldowl.R
 import ru.oldowl.databinding.ActivityLoginBinding
 import ru.oldowl.extension.browse
@@ -39,8 +38,6 @@ class LoginActivity : BaseActivity() {
                 .observe(this, Observer { result ->
                     result?.let {
                         if (result) {
-                            Jobs.forceUpdate(this@LoginActivity)
-
                             startActivity<MainActivity>()
                             finish()
                         } else {

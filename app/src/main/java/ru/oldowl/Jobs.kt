@@ -9,6 +9,7 @@ import android.arch.lifecycle.MutableLiveData
 import android.content.ComponentName
 import android.content.Context
 import android.os.PersistableBundle
+import android.util.Log
 import kotlinx.coroutines.*
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
@@ -52,7 +53,6 @@ object Jobs : KoinComponent {
             val job = JobInfo.Builder(AUTO_UPDATE_ID, componentName)
                     .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
                     .setPeriodic(TimeUnit.MINUTES.toMillis(15))
-                    .setRequiresDeviceIdle(true)
                     .setPersisted(true)
                     .build()
 
@@ -119,6 +119,7 @@ class AutoUpdateJob : JobService(), KoinComponent, CoroutineScope {
 
                 val lastSyncDate = settingsService.lastSyncDate
                 if (!shouldUpdateSubscription(force, lastSyncDate)) {
+                    Log.d(AutoUpdateJob::class.simpleName, "Autoupdate the subscriptions has been skip, last update date $lastSyncDate")
                     return@launch
                 }
 
@@ -145,6 +146,8 @@ class AutoUpdateJob : JobService(), KoinComponent, CoroutineScope {
 
                     val itemIds = theOldReaderApi.getItemIds(feedId, authToken, newerThan = lastSyncDate)
                     if (itemIds.isNotEmpty()) {
+                        Log.d(AutoUpdateJob::class.simpleName, "Downloading content for subscription $feedId, item size ${itemIds.size}")
+
                         val contents = theOldReaderApi.getContents(itemIds, authToken)
                         if (contents.isNotEmpty()) {
                             contents
@@ -204,8 +207,8 @@ class AutoUpdateJob : JobService(), KoinComponent, CoroutineScope {
                             theOldReaderApi.updateFavoriteState(article!!.originalId, article.favorite, authToken)
                         }
 
-                        EventType.MARK_ALL_READ -> {
-                            theOldReaderApi.markAllRead(event.payload, authToken, event.createdDate)
+                        EventType.MARK_ALL_READ -> event.payload?.let {
+                            theOldReaderApi.markAllRead(it, authToken, event.createdDate)
                         }
 
                         EventType.UNSUBSCRIBE -> event.payload?.let {
