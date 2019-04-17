@@ -19,34 +19,40 @@ class LoginViewModel(private val appName: String,
     val passwordError: MutableLiveData<Int> = MutableLiveData()
 
     val authenticationResult: MutableLiveData<Boolean> = MutableLiveData()
+    val progress: MutableLiveData<Boolean> = MutableLiveData()
 
     fun authentication() = launch(Dispatchers.Main) {
         val email = email.value ?: ""
         val password = password.value ?: ""
 
-        emailError.value = null
-        if (email.isBlank()) {
-            emailError.value = R.string.email_error
-        }
+        progress.value = true
+        try {
+            emailError.value = null
+            if (email.isBlank()) {
+                emailError.value = R.string.email_error
+            }
 
-        passwordError.value = null
-        if (password.isBlank()) {
-            passwordError.value = R.string.password_error
-        }
+            passwordError.value = null
+            if (password.isBlank()) {
+                passwordError.value = R.string.password_error
+            }
 
-        if (emailError.value != null || passwordError.value != null) {
-            return@launch
-        }
+            if (emailError.value != null || passwordError.value != null) {
+                return@launch
+            }
 
-        val authToken = withContext(Dispatchers.Default) {
-            theOldReaderApi.authentication(email, password, appName) ?: ""
-        }
+            val authToken = withContext(Dispatchers.Default) {
+                theOldReaderApi.authentication(email, password, appName) ?: ""
+            }
 
-        if (authToken.isNotBlank()) {
-            accountService.saveAccount(email, password, authToken)
-            authenticationResult.value = true
-        } else {
-            authenticationResult.value = false
+            if (authToken.isNotBlank()) {
+                accountService.saveAccount(email, password, authToken)
+                authenticationResult.value = true
+            } else {
+                authenticationResult.value = false
+            }
+        } finally {
+            progress.value = false
         }
     }
 }

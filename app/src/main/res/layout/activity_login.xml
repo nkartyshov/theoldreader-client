@@ -71,13 +71,14 @@
             </android.support.design.widget.TextInputLayout>
 
             <!-- TODO Implement progress button -->
-            <android.support.design.button.MaterialButton
+            <ru.oldowl.ui.view.ProgressButton
                 android:id="@+id/sign_in"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:onClick="@{onSingIn}"
                 android:layout_gravity="center"
-                android:text="@string/sing_in" />
+                android:text="@string/sing_in"
+                app:showProgress="@{viewModel.progress}" />
 
             <TextView
                 android:id="@+id/reset_password"

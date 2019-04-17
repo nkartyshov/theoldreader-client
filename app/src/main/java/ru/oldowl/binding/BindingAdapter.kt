@@ -13,6 +13,7 @@ import com.amulyakhare.textdrawable.TextDrawable
 import com.amulyakhare.textdrawable.util.ColorGenerator
 import ru.oldowl.db.model.ArticleAndSubscriptionTitle
 import ru.oldowl.db.model.SubscriptionAndUnreadCount
+import ru.oldowl.ui.view.ProgressButton
 import ru.oldowl.ui.adapter.ArticleAndSubscriptionTitleAdapter
 import ru.oldowl.ui.adapter.SubscriptionAndUnreadCountAdapter
 import java.text.DateFormat
@@ -138,6 +139,12 @@ object BindingAdapter {
                 runnable.run()
             }
         }
+    }
+
+    @JvmStatic
+    @BindingAdapter("showProgress")
+    fun setShowProgress(progressButton: ProgressButton, progress: Boolean?) {
+        progressButton.setProgress(progress ?: false)
     }
 }
 

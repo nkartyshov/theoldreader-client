@@ -31,9 +31,7 @@ class AccountService(private val context: Context) {
         return null
     }
 
-    fun hasAccount(): Boolean {
-        return sharedPreferences.contains(KEY_ACCOUNT)
-    }
+    fun hasAccount(): Boolean = sharedPreferences.contains(KEY_ACCOUNT)
 
     companion object {
         private const val KEY_ACCOUNT = "key_account"

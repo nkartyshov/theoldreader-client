@@ -88,4 +88,5 @@
     <string name="two_weeks">Two weeks</string>
     <string name="three_weeks">Three weeks</string>
     <string name="one_month">One month</string>
+    <string name="nav_exit">Exit</string>
 </resources>
