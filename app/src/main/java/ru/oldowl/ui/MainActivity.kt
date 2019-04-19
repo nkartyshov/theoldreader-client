@@ -1,5 +1,6 @@
 package ru.oldowl.ui
 
+import android.arch.lifecycle.Observer
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -13,6 +14,7 @@ import kotlinx.android.synthetic.main.toolbar.*
 import org.koin.standalone.inject
 import ru.oldowl.Jobs
 import ru.oldowl.R
+import ru.oldowl.binding.RecyclerConfig
 import ru.oldowl.databinding.ActivityMainBinding
 import ru.oldowl.extension.replaceFragment
 import ru.oldowl.ui.adapter.SubscriptionAndUnreadCountAdapter
@@ -48,13 +50,21 @@ class MainActivity : BaseActivity() {
             }
         })
 
-        val adapter = SubscriptionAndUnreadCountAdapter(this)
-        adapter.setOnItemClickListener {
+        val adapter = SubscriptionAndUnreadCountAdapter()
+        adapter.onItemClick = {
             openFragment(ArticleListFragment.openSubscription(it))
         }
 
-        subscription_list.adapter = adapter
-        subscription_list.layoutManager = LinearLayoutManager(this)
+        dataBinding.viewModel = mainViewModel
+        dataBinding.navigationView.viewModel = mainViewModel
+        dataBinding.navigationView.recyclerConfig = RecyclerConfig(adapter, LinearLayoutManager(this))
+
+        dataBinding.navigationView.navigationHeader.viewModel = mainViewModel
+        dataBinding.lifecycleOwner = this
+
+        mainViewModel.subscriptions.observe(this, Observer {
+            adapter.submitList(it)
+        })
 
         all_articles.setOnClickListener {
             openFragment(ArticleListFragment.openAllArticles())
@@ -71,11 +81,6 @@ class MainActivity : BaseActivity() {
         settings.setOnClickListener {
             openFragment(SettingsFragment(), addToBackStack = true)
         }
-
-        dataBinding.viewModel = mainViewModel
-        dataBinding.navigationView.viewModel = mainViewModel
-        dataBinding.navigationView.navigationHeader.viewModel = mainViewModel
-        dataBinding.lifecycleOwner = this
 
         openFragment(ArticleListFragment.openAllArticles())
 

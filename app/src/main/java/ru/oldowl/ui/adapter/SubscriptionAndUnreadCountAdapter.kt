@@ -1,7 +1,7 @@
 package ru.oldowl.ui.adapter
 
 import android.content.Context
-import android.databinding.DataBindingUtil
+import android.support.v7.recyclerview.extensions.ListAdapter
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -9,46 +9,37 @@ import ru.oldowl.R
 import ru.oldowl.databinding.ViewSubscriptionItemBinding
 import ru.oldowl.db.model.Subscription
 import ru.oldowl.db.model.SubscriptionAndUnreadCount
+import ru.oldowl.ui.adapter.diff.SimpleDiff
 
-class SubscriptionAndUnreadCountAdapter(private val context: Context,
-                                        var subscriptions: List<SubscriptionAndUnreadCount> = emptyList())
-    : RecyclerView.Adapter<SubscriptionViewHolder>() {
+class SubscriptionAndUnreadCountAdapter
+    : ListAdapter<SubscriptionAndUnreadCount, SubscriptionViewHolder>(
+        SimpleDiff(
+                { new, old -> new.subscription.id == old.subscription.id && new.unread == old.unread }
+        )
+) {
 
-    private var onItemClickListener: ((Subscription) -> Unit)? = null
-
-    override fun getItemCount(): Int {
-        return subscriptions.size
-    }
+    var onItemClick: ((Subscription) -> Unit)? = null
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): SubscriptionViewHolder {
-        val layoutInflater = LayoutInflater.from(context)
-        val dataBinding: ViewSubscriptionItemBinding = DataBindingUtil.inflate(layoutInflater, R.layout.view_subscription_item, viewGroup, false)
-
-        return SubscriptionViewHolder(context, dataBinding)
+        val dataBinding = ViewSubscriptionItemBinding.inflate(LayoutInflater.from(viewGroup.context), viewGroup, false)
+        return SubscriptionViewHolder(dataBinding)
     }
 
     override fun onBindViewHolder(viewHolder: SubscriptionViewHolder, position: Int) {
-        val subscriptionWithUnread = subscriptions[position]
+        val subscriptionWithUnread = getItem(position)
         viewHolder.bind(subscriptionWithUnread)
 
         viewHolder.itemView.setOnClickListener {
-            onItemClickListener?.invoke(subscriptionWithUnread.subscription)
+            onItemClick?.invoke(subscriptionWithUnread.subscription)
         }
-    }
-
-    fun update(items: List<SubscriptionAndUnreadCount>) {
-        this.subscriptions = items
-        notifyDataSetChanged()
-    }
-
-    fun setOnItemClickListener(onItemClickListener: (subscription: Subscription) -> Unit) {
-        this.onItemClickListener = onItemClickListener
     }
 }
 
-class SubscriptionViewHolder(private val context: Context,
-                             private val dataBinding: ViewSubscriptionItemBinding)
-    : RecyclerView.ViewHolder(dataBinding.root) {
+class SubscriptionViewHolder(
+        private val dataBinding: ViewSubscriptionItemBinding
+) : RecyclerView.ViewHolder(dataBinding.root) {
+
+    private val context: Context = dataBinding.root.context
 
     fun bind(subscriptionWithUnread: SubscriptionAndUnreadCount) {
         val subscription = subscriptionWithUnread.subscription

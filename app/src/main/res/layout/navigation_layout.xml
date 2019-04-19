@@ -12,6 +12,9 @@
             name="viewModel"
             type="ru.oldowl.viewmodel.MainViewModel" />
 
+        <variable
+            name="recyclerConfig"
+            type="ru.oldowl.binding.RecyclerConfig" />
     </data>
 
     <android.support.v4.widget.NestedScrollView
@@ -76,7 +79,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:nestedScrollingEnabled="false"
-                    app:subscriptionWithUnread="@{viewModel.subscriptions}" />
+                    config="@{recyclerConfig}" />
 
             </LinearLayout>
 

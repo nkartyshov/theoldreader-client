@@ -7,6 +7,10 @@
         <variable
             name="viewModel"
             type="ru.oldowl.viewmodel.ArticleListViewModel" />
+
+        <variable
+            name="recyclerConfig"
+            type="ru.oldowl.binding.RecyclerConfig" />
     </data>
 
     <android.support.design.widget.CoordinatorLayout style="@style/ContentFullParent">
@@ -20,7 +24,7 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/article_list"
                 style="@style/ContentFullParent"
-                articles="@{viewModel.articles}" />
+                config="@{recyclerConfig}" />
 
         </android.support.v4.widget.SwipeRefreshLayout>
 

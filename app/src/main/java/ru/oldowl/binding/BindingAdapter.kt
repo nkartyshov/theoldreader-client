@@ -41,30 +41,6 @@ object BindingAdapter {
     }
 
     @JvmStatic
-    @BindingAdapter("subscriptionWithUnread")
-    fun setItems(recyclerView: RecyclerView, items: List<SubscriptionAndUnreadCount>?) {
-        items?.let {
-            val adapter = recyclerView.adapter as SubscriptionAndUnreadCountAdapter
-
-            if (adapter.subscriptions != items) {
-                adapter.update(items)
-            }
-        }
-    }
-
-    @JvmStatic
-    @BindingAdapter("articles")
-    fun setArticles(recyclerView: RecyclerView, items: List<ArticleAndSubscriptionTitle>?) {
-        items?.let {
-            val adapter = recyclerView.adapter as ArticleAndSubscriptionTitleAdapter
-
-            if (adapter.articles != items) {
-                adapter.update(items)
-            }
-        }
-    }
-
-    @JvmStatic
     @BindingAdapter("app:error")
     fun setError(textInputLayout: TextInputLayout, @StringRes errorRes: Int?) {
         textInputLayout.error = null

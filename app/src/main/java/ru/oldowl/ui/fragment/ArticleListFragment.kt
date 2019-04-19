@@ -1,13 +1,13 @@
 package ru.oldowl.ui.fragment
 
-import android.databinding.DataBindingUtil
+import android.arch.lifecycle.Observer
 import android.os.Bundle
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.view.*
-import kotlinx.android.synthetic.main.fragment_article_list.*
 import org.koin.standalone.inject
 import ru.oldowl.R
+import ru.oldowl.binding.RecyclerConfig
 import ru.oldowl.databinding.FragmentArticleListBinding
 import ru.oldowl.db.model.Subscription
 import ru.oldowl.ui.ArticleActivity
@@ -16,17 +16,15 @@ import ru.oldowl.viewmodel.ArticleListMode
 import ru.oldowl.viewmodel.ArticleListViewModel
 
 class ArticleListFragment : BaseFragment() {
-    private val viewModel: ArticleListViewModel by inject()
 
-    private var articleListBinding: FragmentArticleListBinding? = null
+    private val viewModel: ArticleListViewModel by inject()
 
     init {
         setHasOptionsMenu(true)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        articleListBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_article_list, container, false)
-        return articleListBinding?.root
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        return inflater.inflate(R.layout.fragment_article_list, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -35,31 +33,41 @@ class ArticleListFragment : BaseFragment() {
         viewModel.mode = arguments?.getSerializable(ARTICLE_LIST_MODE) as ArticleListMode
         viewModel.subscription = arguments?.getParcelable(SUBSCRIPTION) as Subscription?
 
-        val adapter = ArticleAndSubscriptionTitleAdapter(context)
-        adapter.setOnItemClickListener {
+        val adapter = ArticleAndSubscriptionTitleAdapter()
+        adapter.onItemClick = {
             ArticleActivity.openArticle(context, it)
         }
 
         val density = resources.displayMetrics.density
         val distanceToTriggerSync = 256 * density.toInt()
 
-        sync_list.setDistanceToTriggerSync(distanceToTriggerSync)
-        sync_list.isEnabled = viewModel.mode != ArticleListMode.FAVORITE
+        FragmentArticleListBinding.bind(view).also {
 
-        article_list.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        article_list.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
-        article_list.adapter = adapter
+            it.syncList.setDistanceToTriggerSync(distanceToTriggerSync)
+            it.syncList.isEnabled = viewModel.mode != ArticleListMode.FAVORITE
 
-        make_all_read.setOnClickListener {
-            viewModel.markReadAll()
+            it.makeAllRead.setOnClickListener {
+                viewModel.markReadAll()
+            }
+
+            it.recyclerConfig = RecyclerConfig(
+                    adapter,
+                    LinearLayoutManager(context),
+                    DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
+            )
+
+            it.viewModel = viewModel
+            it.lifecycleOwner = this
+
         }
 
         lifecycle.addObserver(viewModel)
 
-        articleListBinding?.viewModel = viewModel
-        articleListBinding?.lifecycleOwner = this
-
         activity?.title = viewModel.title
+
+        viewModel.articles.observe(this, Observer {
+            adapter.submitList(it)
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {

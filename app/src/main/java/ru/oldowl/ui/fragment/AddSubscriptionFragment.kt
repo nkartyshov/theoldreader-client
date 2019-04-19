@@ -43,7 +43,6 @@ class AddSubscriptionFragment : BaseFragment() {
 
         listAdapter.onItemClick = {
             viewModel.save(it)
-
         }
 
         viewModel

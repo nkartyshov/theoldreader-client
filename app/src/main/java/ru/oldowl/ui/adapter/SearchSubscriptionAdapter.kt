@@ -6,9 +6,12 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import ru.oldowl.databinding.ViewSearchSubscriptionItemBinding
 import ru.oldowl.db.model.Subscription
-import ru.oldowl.ui.adapter.diff.SubscriptionDiffCallback
+import ru.oldowl.ui.adapter.diff.SimpleDiff
 
-class SearchSubscriptionAdapter : ListAdapter<Subscription, SearchSubscriptionViewHolder>(SubscriptionDiffCallback()) {
+class SearchSubscriptionAdapter
+    : ListAdapter<Subscription, SearchSubscriptionViewHolder>(
+        SimpleDiff<Subscription>({ old, new -> old.id == new.id })
+) {
 
     var onItemClick: ((Subscription) -> Unit)? = null
 
