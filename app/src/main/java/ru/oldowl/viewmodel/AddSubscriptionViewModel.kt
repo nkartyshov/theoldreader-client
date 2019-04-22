@@ -25,6 +25,7 @@ class AddSubscriptionViewModel(private val feedlyApi: FeedlyApi,
         }
     }
 
+    // TODO Sync from server
     fun save(value: Subscription) = launch {
         val success = subscriptionDao.save(value) > 0
 

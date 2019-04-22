@@ -11,17 +11,14 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.amulyakhare.textdrawable.TextDrawable
 import com.amulyakhare.textdrawable.util.ColorGenerator
-import ru.oldowl.db.model.ArticleAndSubscriptionTitle
-import ru.oldowl.db.model.SubscriptionAndUnreadCount
 import ru.oldowl.ui.view.ProgressButton
-import ru.oldowl.ui.adapter.ArticleAndSubscriptionTitleAdapter
-import ru.oldowl.ui.adapter.SubscriptionAndUnreadCountAdapter
 import java.text.DateFormat
 import java.util.*
 
 object BindingAdapter {
 
     private val HTML_TAGS_REGEX = Regex("(<.*?>|<\\/.*?>)")
+    private val CONTROL_CHARS_REGEX = Regex("[\\t\\n]")
 
     private const val MIME_TYPE = "text/html"
     private const val ENCODING = "UTF-8"
@@ -61,23 +58,25 @@ object BindingAdapter {
 
     @JvmStatic
     @BindingAdapter("escapeText")
-    fun escapeText(textView: TextView, text: String?) {
-        text?.let {
-            textView.text = it.replace(HTML_TAGS_REGEX, "")
-        }
-    }
+    fun escapeText(textView: TextView, text: String?) =
+            text?.let {
+                textView.text = it
+                        .replace(HTML_TAGS_REGEX, "")
+                        .replace(CONTROL_CHARS_REGEX, "")
+            }
 
     @JvmStatic
     @BindingAdapter("refreshing")
-    fun setRefreshing(swipeRefreshLayout: SwipeRefreshLayout, refreshing: Boolean?) {
-        refreshing?.let {
-            swipeRefreshLayout.isRefreshing = it
-        }
-    }
+    fun setRefreshing(swipeRefreshLayout: SwipeRefreshLayout, refreshing: Boolean?) =
+            refreshing?.let {
+                swipeRefreshLayout.isRefreshing = it
+            }
+
 
     @JvmStatic
     @BindingAdapter("onRefresh")
-    fun setOnRefreshListener(swipeRefreshLayout: SwipeRefreshLayout, onRefreshListener: SwipeRefreshLayout.OnRefreshListener?) {
+    fun setOnRefreshListener(swipeRefreshLayout: SwipeRefreshLayout,
+                             onRefreshListener: SwipeRefreshLayout.OnRefreshListener?) {
         onRefreshListener?.let {
             swipeRefreshLayout.setOnRefreshListener(onRefreshListener)
         }
