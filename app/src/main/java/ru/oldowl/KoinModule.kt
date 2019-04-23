@@ -12,6 +12,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import ru.oldowl.api.feedly.FeedlyApi
 import ru.oldowl.api.feedly.FeedlyWebService
 import ru.oldowl.api.theoldreader.TheOldReaderApi
+import ru.oldowl.api.theoldreader.TheOldReaderWebService
 import ru.oldowl.db.AppDatabase
 import ru.oldowl.service.AccountService
 import ru.oldowl.service.SettingsService
@@ -50,6 +51,15 @@ val serviceModule = module {
                 .client(get())
                 .build()
                 .create(FeedlyWebService::class.java)
+    }
+
+    single {
+        Retrofit.Builder()
+                .baseUrl(TheOldReaderWebService.BASE_URL)
+                .addConverterFactory(MoshiConverterFactory.create(get()).asLenient())
+                .client(get())
+                .build()
+                .create(TheOldReaderWebService::class.java)
     }
 
     // API
