@@ -9,32 +9,34 @@ import ru.oldowl.db.model.Subscription
 import ru.oldowl.ui.adapter.diff.SimpleDiff
 
 class SearchSubscriptionAdapter
-    : ListAdapter<Subscription, SearchSubscriptionViewHolder>(
+    : ListAdapter<Subscription, SearchSubscriptionAdapter.ViewHolder>(
         SimpleDiff<Subscription>({ old, new -> old.id == new.id })
 ) {
 
-    var onItemClick: ((Subscription) -> Unit)? = null
+    var onItemClick: (Subscription) -> Unit = {}
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchSubscriptionViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val dataBinding = ViewSearchSubscriptionItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return SearchSubscriptionViewHolder(dataBinding, onItemClick)
+        return ViewHolder(dataBinding, onItemClick)
     }
 
-    override fun onBindViewHolder(viewHolder: SearchSubscriptionViewHolder, position: Int) {
+    override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         val subscription = getItem(position)
         viewHolder.bind(subscription)
     }
-}
 
-class SearchSubscriptionViewHolder(
-        private val dataBinding: ViewSearchSubscriptionItemBinding,
-        private val onItemClick: ((Subscription) -> Unit)?
-) : RecyclerView.ViewHolder(dataBinding.root) {
+    class ViewHolder(
+            private val dataBinding: ViewSearchSubscriptionItemBinding,
+            private val onItemClick: (Subscription) -> Unit
+    ) : RecyclerView.ViewHolder(dataBinding.root) {
 
-    fun bind(subscription: Subscription) {
-        dataBinding.subscription = subscription
-        dataBinding.setOnItemClick {
-            onItemClick?.invoke(subscription)
+        fun bind(subscription: Subscription) {
+            dataBinding.subscription = subscription
+            dataBinding.setOnItemClick {
+                onItemClick.invoke(subscription)
+            }
         }
     }
 }
+
+

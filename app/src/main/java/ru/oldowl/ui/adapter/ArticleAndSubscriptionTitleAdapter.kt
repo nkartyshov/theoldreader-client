@@ -9,34 +9,36 @@ import ru.oldowl.db.model.ArticleAndSubscriptionTitle
 import ru.oldowl.ui.adapter.diff.SimpleDiff
 
 class ArticleAndSubscriptionTitleAdapter
-    : ListAdapter<ArticleAndSubscriptionTitle, ArticleAndSubscriptionTitleViewHolder>(
+    : ListAdapter<ArticleAndSubscriptionTitle, ArticleAndSubscriptionTitleAdapter.ViewHolder>(
         SimpleDiff<ArticleAndSubscriptionTitle>(
                 { old, new -> old.article.id == new.article.id && old.subscriptionTitle == new.subscriptionTitle }
         )
 ) {
 
-    var onItemClick: ((article: ArticleAndSubscriptionTitle) -> Unit)? = null
+    var onItemClick: (article: ArticleAndSubscriptionTitle) -> Unit = {}
 
-    override fun onCreateViewHolder(root: ViewGroup, viewType: Int): ArticleAndSubscriptionTitleViewHolder {
+    override fun onCreateViewHolder(root: ViewGroup, viewType: Int): ViewHolder {
         val dataBinding = ViewArticleItemBinding.inflate(LayoutInflater.from(root.context), root, false)
-        return ArticleAndSubscriptionTitleViewHolder(dataBinding)
+        return ViewHolder(dataBinding)
     }
 
-    override fun onBindViewHolder(viewHolder: ArticleAndSubscriptionTitleViewHolder, position: Int) {
+    override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         val item = getItem(position)
         viewHolder.bind(item)
 
         viewHolder.itemView.setOnClickListener {
-            onItemClick?.invoke(item)
+            onItemClick.invoke(item)
+        }
+    }
+
+    class ViewHolder(private val dataBinding: ViewArticleItemBinding)
+        : RecyclerView.ViewHolder(dataBinding.root) {
+
+        fun bind(item: ArticleAndSubscriptionTitle) {
+            dataBinding.article = item.article
+            dataBinding.subscriptionTitle = item.subscriptionTitle
         }
     }
 }
 
-class ArticleAndSubscriptionTitleViewHolder(private val dataBinding: ViewArticleItemBinding)
-    : RecyclerView.ViewHolder(dataBinding.root) {
 
-    fun bind(item: ArticleAndSubscriptionTitle) {
-        dataBinding.article = item.article
-        dataBinding.subscriptionTitle = item.subscriptionTitle
-    }
-}

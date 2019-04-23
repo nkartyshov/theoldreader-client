@@ -3,10 +3,12 @@ package ru.oldowl.extension
 import android.app.Activity
 import android.app.job.JobScheduler
 import android.content.*
-import android.hardware.input.InputManager
 import android.net.Uri
 import android.os.Build
+import android.support.annotation.StringRes
+import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
+import android.view.View
 import android.view.inputmethod.InputMethodManager
 import ru.oldowl.ui.BaseActivity
 
@@ -29,7 +31,7 @@ fun Context.browse(url: String? = ""): Boolean {
         }
         startActivity(intent)
         true
-    } catch(e: ActivityNotFoundException) {
+    } catch (e: ActivityNotFoundException) {
         e.printStackTrace()
         false
     }
@@ -37,10 +39,10 @@ fun Context.browse(url: String? = ""): Boolean {
 
 fun Context.share(text: String? = "", subject: String = ""): Boolean {
     return try {
-        val intent = Intent(android.content.Intent.ACTION_SEND).apply {
+        val intent = Intent(Intent.ACTION_SEND).apply {
             type = "text/plain"
-            putExtra(android.content.Intent.EXTRA_SUBJECT, subject)
-            putExtra(android.content.Intent.EXTRA_TEXT, text)
+            putExtra(Intent.EXTRA_SUBJECT, subject)
+            putExtra(Intent.EXTRA_TEXT, text)
         }
         startActivity(Intent.createChooser(intent, null))
         true
@@ -70,4 +72,10 @@ fun JobScheduler.isScheduled(jobId: Int): Boolean {
     }
 
     return job != null
+}
+
+fun Snackbar.make(view: View, @StringRes stringRes: Int, duration: Int): Snackbar {
+    val context = view.context
+
+    return Snackbar.make(view, context.getString(stringRes), duration)
 }

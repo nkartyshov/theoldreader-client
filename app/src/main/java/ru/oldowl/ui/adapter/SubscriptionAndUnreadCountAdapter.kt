@@ -12,44 +12,44 @@ import ru.oldowl.db.model.SubscriptionAndUnreadCount
 import ru.oldowl.ui.adapter.diff.SimpleDiff
 
 class SubscriptionAndUnreadCountAdapter
-    : ListAdapter<SubscriptionAndUnreadCount, SubscriptionViewHolder>(
+    : ListAdapter<SubscriptionAndUnreadCount, SubscriptionAndUnreadCountAdapter.ViewHolder>(
         SimpleDiff(
                 { new, old -> new.subscription.id == old.subscription.id && new.unread == old.unread }
         )
 ) {
 
-    var onItemClick: ((Subscription) -> Unit)? = null
+    var onItemClick: (Subscription) -> Unit = {}
 
-    override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): SubscriptionViewHolder {
+    override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
         val dataBinding = ViewSubscriptionItemBinding.inflate(LayoutInflater.from(viewGroup.context), viewGroup, false)
-        return SubscriptionViewHolder(dataBinding)
+        return ViewHolder(dataBinding)
     }
 
-    override fun onBindViewHolder(viewHolder: SubscriptionViewHolder, position: Int) {
+    override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         val subscriptionWithUnread = getItem(position)
         viewHolder.bind(subscriptionWithUnread)
 
         viewHolder.itemView.setOnClickListener {
-            onItemClick?.invoke(subscriptionWithUnread.subscription)
+            onItemClick.invoke(subscriptionWithUnread.subscription)
         }
     }
-}
 
-class SubscriptionViewHolder(
-        private val dataBinding: ViewSubscriptionItemBinding
-) : RecyclerView.ViewHolder(dataBinding.root) {
+    class ViewHolder(
+            private val dataBinding: ViewSubscriptionItemBinding
+    ) : RecyclerView.ViewHolder(dataBinding.root) {
 
-    private val context: Context = dataBinding.root.context
+        private val context: Context = dataBinding.root.context
 
-    fun bind(subscriptionWithUnread: SubscriptionAndUnreadCount) {
-        val subscription = subscriptionWithUnread.subscription
-        val unread = subscriptionWithUnread.unread
+        fun bind(subscriptionWithUnread: SubscriptionAndUnreadCount) {
+            val subscription = subscriptionWithUnread.subscription
+            val unread = subscriptionWithUnread.unread
 
-        dataBinding.subscription = subscription
-        dataBinding.unread = when {
-            unread in 1..98 -> unread.toString()
-            unread > 99 -> context.getString(R.string.unread_more_hundred)
-            else -> context.getString(R.string.empty)
+            dataBinding.subscription = subscription
+            dataBinding.unread = when {
+                unread in 1..98 -> unread.toString()
+                unread > 99 -> context.getString(R.string.unread_more_hundred)
+                else -> context.getString(R.string.empty)
+            }
         }
     }
 }
