@@ -9,6 +9,7 @@ import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
 class SettingsService(private val context: Context) {
+
     private val sharedPreferences: SharedPreferences
             by lazy { PreferenceManager.getDefaultSharedPreferences(context) }
 

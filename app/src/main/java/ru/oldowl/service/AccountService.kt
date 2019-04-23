@@ -3,21 +3,23 @@ package ru.oldowl.service
 import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
-import ru.oldowl.JsonHelper
+import com.squareup.moshi.Moshi
 import ru.oldowl.db.model.Account
 
-class AccountService(private val context: Context) {
+class AccountService(private val context: Context,
+                     private val moshi: Moshi) {
+
     private val sharedPreferences: SharedPreferences
             by lazy { PreferenceManager.getDefaultSharedPreferences(context) }
 
-    val adapter = JsonHelper.adapter(Account::class.java)
+    val accountAdapter by lazy { moshi.adapter(Account::class.java).nullSafe() }
 
     fun saveAccount(email: String, password: String, authToken: String) {
         val account = Account(email, password, authToken)
 
         sharedPreferences.edit()
                 .remove(KEY_ACCOUNT)
-                .putString(KEY_ACCOUNT, account.toJson())
+                .putString(KEY_ACCOUNT, accountAdapter.toJson(account))
                 .apply()
     }
 
@@ -25,7 +27,7 @@ class AccountService(private val context: Context) {
         val json = sharedPreferences.getString(KEY_ACCOUNT, null)
 
         json?.let {
-            return adapter.nullSafe().fromJson(json)
+            return accountAdapter.nullSafe().fromJson(json)
         }
 
         return null
