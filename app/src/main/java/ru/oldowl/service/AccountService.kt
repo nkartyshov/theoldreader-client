@@ -3,6 +3,7 @@ package ru.oldowl.service
 import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
+import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import ru.oldowl.db.model.Account
 
@@ -12,7 +13,7 @@ class AccountService(private val context: Context,
     private val sharedPreferences: SharedPreferences
             by lazy { PreferenceManager.getDefaultSharedPreferences(context) }
 
-    val accountAdapter by lazy { moshi.adapter(Account::class.java).nullSafe() }
+    private val accountAdapter by lazy { moshi.adapter(Account::class.java).nullSafe() }
 
     fun saveAccount(email: String, password: String, authToken: String) {
         val account = Account(email, password, authToken)
