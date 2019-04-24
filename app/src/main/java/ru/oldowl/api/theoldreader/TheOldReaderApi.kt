@@ -1,16 +1,12 @@
 package ru.oldowl.api.theoldreader
 
-import com.rometools.rome.io.SyndFeedInput
-import okhttp3.FormBody
-import okhttp3.OkHttpClient
-import okhttp3.Request
+import com.rometools.rome.feed.synd.SyndFeed
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.error
 import retrofit2.Call
 import retrofit2.http.*
 import ru.oldowl.api.theoldreader.model.*
 import ru.oldowl.extension.epochTime
-import java.io.StringReader
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -67,8 +63,7 @@ interface TheOldReaderWebService {
     @POST(SUBSCRIPTION_UPDATE)
     fun unsubscribe(@Header(AUTHORIZATION_HEADER) token: String,
                     @Field("ac") action: String = "unsubscribe",
-                    @Field(QUERY_PARAM) query: String,
-                    @Query(OUTPUT_PARAM) output: String = OUTPUT_JSON): Call<String>
+                    @Field(QUERY_PARAM) query: String): Call<ErrorResponse>
 
     @GET(ITEM_IDS_LIST)
     fun getItemIds(@Header(AUTHORIZATION_HEADER) token: String,
@@ -79,33 +74,36 @@ interface TheOldReaderWebService {
                    @Query(OUTPUT_PARAM) output: String = OUTPUT_JSON): Call<ItemsRefResponse>
 
     @FormUrlEncoded
+    @POST(CONTENTS_LIST)
+    fun getContents(@Header(AUTHORIZATION_HEADER) token: String,
+                    @Field(ITEMS_PARAM) itemIds: List<String>,
+                    @Field(OUTPUT_PARAM) output: String = OUTPUT_ATOM): Call<SyndFeed>
+
+
+    @FormUrlEncoded
     @POST(UPDATE_ITEMS)
     fun addArticleState(@Header(AUTHORIZATION_HEADER) token: String,
                         @Field(ITEMS_PARAM) itemIds: List<String>,
-                        @Field(ITEMS_ADD_PARAM) state: String,
-                        @Field(OUTPUT_PARAM) output: String = OUTPUT_JSON): Call<String>
+                        @Field(ITEMS_ADD_PARAM) state: String): Call<ErrorResponse>
 
     @FormUrlEncoded
     @POST(UPDATE_ITEMS)
     fun removeArticleState(@Header(AUTHORIZATION_HEADER) token: String,
                            @Field(ITEMS_PARAM) itemIds: List<String>,
-                           @Field(ITEMS_REMOVE_PARAM) state: String,
-                           @Field(OUTPUT_PARAM) output: String = OUTPUT_JSON): Call<String>
+                           @Field(ITEMS_REMOVE_PARAM) state: String): Call<ErrorResponse>
 
     @FormUrlEncoded
     @POST(MARK_ALL_READ)
     fun markAllRead(@Header(AUTHORIZATION_HEADER) token: String,
                     @Field(QUERY_PARAM) query: String,
-                    @Field("ts") olderThen: String? = null,
-                    @Field(OUTPUT_PARAM) output: String = OUTPUT_JSON): Call<String>
+                    @Field("ts") olderThen: String? = null): Call<ErrorResponse>
 
     companion object {
         const val BASE_URL = "https://theoldreader.com"
     }
 }
 
-class TheOldReaderApi(private val theOldReaderWebService: TheOldReaderWebService,
-                      private val httpClient: OkHttpClient) : AnkoLogger {
+class TheOldReaderApi(private val theOldReaderWebService: TheOldReaderWebService) : AnkoLogger {
 
     fun authentication(email: String, password: String, appName: String): String? {
 
@@ -124,7 +122,7 @@ class TheOldReaderApi(private val theOldReaderWebService: TheOldReaderWebService
                 ?.filterNot { it.id.contains("sponsored") } ?: emptyList()
     }
 
-    fun addSubscription(url: String, token: String): String {
+    fun addSubscription(url: String, token: String): String? {
 
         val response = theOldReaderWebService.addSubscription(authorizationHeader(token), url)
                 .execute()
@@ -135,7 +133,7 @@ class TheOldReaderApi(private val theOldReaderWebService: TheOldReaderWebService
         }
 
         error("Error adding the subscription $url, error ${response?.error}")
-        return ""
+        return null
     }
 
     fun unsubscribe(feedId: String, token: String): Boolean {
@@ -144,7 +142,9 @@ class TheOldReaderApi(private val theOldReaderWebService: TheOldReaderWebService
                 authorizationHeader(token),
                 query = feedId)
                 .execute()
-                .body() ?: ""
+                .body()
+                ?.errors
+                ?.joinToString() ?: ""
 
         if (body.isNotBlank()) {
             error("Error unsubscribe from $feedId\n$body")
@@ -177,51 +177,27 @@ class TheOldReaderApi(private val theOldReaderWebService: TheOldReaderWebService
                 ?.itemRefs?.map { it.id } ?: emptyList()
     }
 
-    // TODO Rework on json
     fun getContents(itemIds: List<String>, token: String): List<ContentResponse> {
-        try {
-            val formBody = FormBody.Builder()
-            for (itemId in itemIds) {
-                formBody.addEncoded(ITEMS_PARAM, addItemIdPrefixIfExists(itemId))
-            }
-
-            formBody.addEncoded(OUTPUT_PARAM, OUTPUT_ATOM)
-
-            val url = TheOldReaderWebService.BASE_URL + "/" + CONTENTS_LIST
-            val request = Request.Builder()
-                    .url(url)
-                    .post(formBody.build())
-                    .addHeader(AUTHORIZATION_HEADER, authorizationHeader(token))
-                    .build()
-
-            val response = httpClient.newCall(request).execute()
-            if (response.isSuccessful) {
-                response.body()?.let { responseBody ->
-                    val syndFeed = SyndFeedInput().build(StringReader(responseBody.string()))
-
-                    return syndFeed.entries.map { entry ->
-                        val description = if (entry.contents.isEmpty()) {
-                            entry.description.value ?: ""
-                        } else {
-                            entry.contents.joinToString { content -> content.value }
-                        }
-
-                        ContentResponse(
-                                itemId = entry.uri,
-                                title = entry.title,
-                                description = description,
-                                link = entry.link,
-                                feedId = removeReaderPrefix(entry.source.uri),
-                                publishDate = entry.publishedDate
-                        )
+        return theOldReaderWebService.getContents(authorizationHeader(token), itemIds)
+                .execute()
+                .body()
+                ?.entries
+                ?.map { entry ->
+                    val description = if (entry.contents.isEmpty()) {
+                        entry.description.value ?: ""
+                    } else {
+                        entry.contents.joinToString { content -> content.value }
                     }
-                }
-            }
-        } catch (e: Exception) {
-            error("Error getting content for items $itemIds", e)
-        }
 
-        return emptyList()
+                    ContentResponse(
+                            itemId = entry.uri,
+                            title = entry.title,
+                            description = description,
+                            link = entry.link,
+                            feedId = removeReaderPrefix(entry.source.uri),
+                            publishDate = entry.publishedDate
+                    )
+                } ?: emptyList()
     }
 
     fun markAllRead(feedId: String?, token: String, olderThen: Date = Date()): Boolean {
@@ -230,7 +206,7 @@ class TheOldReaderApi(private val theOldReaderWebService: TheOldReaderWebService
                 authorizationHeader(token),
                 feedId ?: "user/-/state/com.google/reading-list",
                 TimeUnit.MILLISECONDS.toNanos(olderThen.time).toString()
-        ).execute().body()?: ""
+        ).execute().body()?.errors?.joinToString() ?: ""
 
         if (body.isBlank()) {
             error("Error mark all read\n$body")
@@ -250,34 +226,34 @@ class TheOldReaderApi(private val theOldReaderWebService: TheOldReaderWebService
             theOldReaderWebService.addArticleState(authorization, itemIds, readState)
         else theOldReaderWebService.removeArticleState(authorization, itemIds, readState)
 
-        val body = response.execute().body() ?: ""
+        val body = response.execute().body()?.errors?.joinToString()
 
-        if (body.isBlank()) {
-            error("Error mark read item $itemIds, $body")
-            return false
+        if (body.isNullOrBlank()) {
+            return true
         }
 
-        return true
+        error("Error mark read item $itemIds, $body")
+        return false
     }
 
     fun updateFavoriteState(itemId: String, state: Boolean, token: String): Boolean {
 
         val authorization = authorizationHeader(token)
-        val itemIds = arrayListOf(if (itemId.startsWith(ITEM_PREFIX)) itemId else ITEM_PREFIX + itemId)
+        val itemIds = arrayListOf(addItemIdPrefixIfExists(itemId))
         val readState = "user/-/state/com.google/starred"
 
         val response = if (state)
             theOldReaderWebService.addArticleState(authorization, itemIds, readState)
         else theOldReaderWebService.removeArticleState(authorization, itemIds, readState)
 
-        val body = response.execute().body() ?: ""
+        val body = response.execute().body()?.errors?.joinToString()
 
-        if (body.isBlank()) {
-            error("Error mark favorite item $itemIds, $body")
-            return false
+        if (body.isNullOrBlank()) {
+            return true
         }
 
-        return true
+        error("Error mark favorite item $itemIds, $body")
+        return false
     }
 
     companion object {

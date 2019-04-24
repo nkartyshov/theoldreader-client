@@ -7,6 +7,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.oldowl.*
 import ru.oldowl.R
+import ru.oldowl.api.theoldreader.TheOldReaderApi
 import ru.oldowl.db.dao.ArticleDao
 import ru.oldowl.db.dao.EventDao
 import ru.oldowl.db.dao.SubscriptionDao
@@ -14,14 +15,18 @@ import ru.oldowl.db.model.ArticleAndSubscriptionTitle
 import ru.oldowl.db.model.Event
 import ru.oldowl.db.model.EventType
 import ru.oldowl.db.model.Subscription
+import ru.oldowl.service.AccountService
 import ru.oldowl.service.SettingsService
 
 class ArticleListViewModel(private val application: Application,
+                           private val theOldReaderApi: TheOldReaderApi,
+                           private val accountService: AccountService,
                            private val articleDao: ArticleDao,
                            private val subscriptionDao: SubscriptionDao,
                            private val eventDao: EventDao,
                            private val settingsService: SettingsService) : BaseViewModel(), LifecycleObserver {
 
+    private val account by lazy { accountService.getAccount() }
 
     private val articleLiveData: MutableLiveData<List<ArticleAndSubscriptionTitle>> = MutableLiveData()
 
@@ -113,10 +118,13 @@ class ArticleListViewModel(private val application: Application,
         loadArticles()
     }
 
-    fun unsubscribe() {
+    // TODO observe result!
+    fun unsubscribe() = launch {
         subscription?.let {
-            subscriptionDao.delete(it)
-            eventDao.save(Event(eventType = EventType.UNSUBSCRIBE, payload = it.feedId))
+            if (theOldReaderApi.unsubscribe(it.feedId!!, account?.authToken!!)) {
+                subscriptionDao.delete(it)
+                eventDao.save(Event(eventType = EventType.UNSUBSCRIBE, payload = it.feedId))
+            }
         }
     }
 

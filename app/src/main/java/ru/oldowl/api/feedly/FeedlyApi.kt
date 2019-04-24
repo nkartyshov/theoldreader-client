@@ -4,6 +4,7 @@ import org.jetbrains.anko.AnkoLogger
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
+import retrofit2.http.Url
 import ru.oldowl.api.feedly.model.SubscriptionResponses
 import ru.oldowl.db.model.Subscription
 import java.util.*

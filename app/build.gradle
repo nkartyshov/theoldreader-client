@@ -22,8 +22,8 @@ android {
         applicationId "ru.oldowl"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 3
-        versionName "0.9.3-apha1"
+        versionCode 4
+        versionName "0.9.4-apha1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         vectorDrawables.useSupportLibrary = true
@@ -93,12 +93,9 @@ dependencies {
     implementation "org.koin:koin-android:$koin_version"
     implementation "org.koin:koin-android-viewmodel:$koin_version"
 
-    implementation 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
-
-    implementation 'com.squareup.okhttp3:logging-interceptor:3.12.1'
-    implementation 'com.squareup.okhttp3:okhttp:3.12.1'
-
-    implementation 'com.squareup.moshi:moshi-kotlin:1.8.0'
+    def okhttp_version = '3.12.1'
+    implementation "com.squareup.okhttp3:logging-interceptor:$okhttp_version"
+    implementation "com.squareup.okhttp3:okhttp:$okhttp_version"
 
     def rome_version = '1.12.0'
     implementation "com.rometools:rome:$rome_version"
@@ -107,7 +104,9 @@ dependencies {
     def retrofit_version = '2.5.0'
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-moshi:$retrofit_version"
-    implementation "com.squareup.retrofit2:converter-jaxb:$retrofit_version"
+
+    implementation 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
+    implementation 'com.squareup.moshi:moshi-kotlin:1.8.0'
 
     implementation "com.google.firebase:firebase-core:16.0.8"
     implementation 'com.crashlytics.sdk.android:crashlytics:2.9.9'

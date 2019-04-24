@@ -6,11 +6,17 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.oldowl.api.feedly.FeedlyApi
+import ru.oldowl.api.theoldreader.TheOldReaderApi
 import ru.oldowl.db.dao.SubscriptionDao
 import ru.oldowl.db.model.Subscription
+import ru.oldowl.service.AccountService
 
 class AddSubscriptionViewModel(private val feedlyApi: FeedlyApi,
+                               private val accountService: AccountService,
+                               private val theOldReaderApi: TheOldReaderApi,
                                private val subscriptionDao: SubscriptionDao) : BaseViewModel() {
+
+    private val account by lazy { accountService.getAccount() }
 
     val searchResult: MutableLiveData<List<Subscription>> = MutableLiveData()
     val saveResult: MutableLiveData<SaveResult> = MutableLiveData()
@@ -25,9 +31,13 @@ class AddSubscriptionViewModel(private val feedlyApi: FeedlyApi,
         }
     }
 
-    // TODO Sync from server
     fun save(value: Subscription) = launch {
-        val success = subscriptionDao.save(value) > 0
+        val streamId = theOldReaderApi.addSubscription(value.url!!, account?.authToken!!)
+
+        val success = streamId?.run {
+            value.feedId = this
+            subscriptionDao.save(value) > 0
+        } ?: false
 
         withContext(Dispatchers.Main) {
             saveResult.value = SaveResult(success, value)

@@ -9,6 +9,7 @@ import org.koin.android.viewmodel.ext.koin.viewModel
 import org.koin.dsl.module.module
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import ru.oldowl.api.TheOldReaderConverterFactory
 import ru.oldowl.api.feedly.FeedlyApi
 import ru.oldowl.api.feedly.FeedlyWebService
 import ru.oldowl.api.theoldreader.TheOldReaderApi
@@ -56,14 +57,15 @@ val serviceModule = module {
     single {
         Retrofit.Builder()
                 .baseUrl(TheOldReaderWebService.BASE_URL)
-                .addConverterFactory(MoshiConverterFactory.create(get()).asLenient())
+                .addConverterFactory(TheOldReaderConverterFactory())
+                .addConverterFactory(MoshiConverterFactory.create(get()))
                 .client(get())
                 .build()
                 .create(TheOldReaderWebService::class.java)
     }
 
     // API
-    single { TheOldReaderApi(get(), get()) }
+    single { TheOldReaderApi(get()) }
     single { FeedlyApi(get()) }
 
     // Services
@@ -75,5 +77,5 @@ val serviceModule = module {
     viewModel { MainViewModel(get(), get(), get()) }
     viewModel { ArticleListViewModel(get(), get(), get(), get(), get()) }
     viewModel { ArticleViewModel(get(), get()) }
-    viewModel { AddSubscriptionViewModel(get(), get()) }
+    viewModel { AddSubscriptionViewModel(get(), get(), get(), get()) }
 }

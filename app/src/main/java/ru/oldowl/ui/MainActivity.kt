@@ -52,6 +52,7 @@ class MainActivity : BaseActivity() {
 
         val adapter = SubscriptionAndUnreadCountAdapter()
         adapter.onItemClick = {
+            // TODO Why duplication items on list?
             openFragment(ArticleListFragment.openSubscription(it))
         }
 
