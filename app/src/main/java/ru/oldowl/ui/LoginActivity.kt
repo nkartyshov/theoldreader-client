@@ -5,6 +5,7 @@ import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import org.jetbrains.anko.startActivity
+import org.koin.android.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import org.koin.standalone.inject
 import ru.oldowl.R
@@ -14,7 +15,7 @@ import ru.oldowl.extension.hideSoftKeyboard
 import ru.oldowl.viewmodel.LoginViewModel
 
 class LoginActivity : BaseActivity() {
-    private val loginViewModel: LoginViewModel by inject { parametersOf(getString(R.string.app_name)) }
+    private val loginViewModel: LoginViewModel by viewModel { parametersOf(getString(R.string.app_name)) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

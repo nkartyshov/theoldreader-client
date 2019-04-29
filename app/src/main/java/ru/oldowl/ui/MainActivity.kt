@@ -11,7 +11,7 @@ import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.navigation_layout.*
 import kotlinx.android.synthetic.main.toolbar.*
-import org.koin.standalone.inject
+import org.koin.android.viewmodel.ext.android.viewModel
 import ru.oldowl.Jobs
 import ru.oldowl.R
 import ru.oldowl.binding.RecyclerConfig
@@ -24,7 +24,7 @@ import ru.oldowl.ui.fragment.SettingsFragment
 import ru.oldowl.viewmodel.MainViewModel
 
 class MainActivity : BaseActivity() {
-    private val mainViewModel: MainViewModel by inject()
+    private val mainViewModel: MainViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,8 +52,7 @@ class MainActivity : BaseActivity() {
 
         val adapter = SubscriptionAndUnreadCountAdapter()
         adapter.onItemClick = {
-            // TODO Why duplication items on list?
-            openFragment(ArticleListFragment.openSubscription(it))
+            openFragment(ArticleListFragment.openSubscription(it), addToBackStack = true)
         }
 
         dataBinding.viewModel = mainViewModel

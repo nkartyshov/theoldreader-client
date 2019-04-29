@@ -7,6 +7,7 @@ import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.SearchView
 import android.view.*
+import org.koin.android.viewmodel.ext.android.viewModel
 import org.koin.standalone.inject
 import ru.oldowl.R
 import ru.oldowl.binding.RecyclerConfig
@@ -16,7 +17,7 @@ import ru.oldowl.viewmodel.AddSubscriptionViewModel
 
 class AddSubscriptionFragment : BaseFragment() {
 
-    private val viewModel: AddSubscriptionViewModel by inject()
+    private val viewModel: AddSubscriptionViewModel by viewModel()
 
     private val listAdapter = SearchSubscriptionAdapter()
 

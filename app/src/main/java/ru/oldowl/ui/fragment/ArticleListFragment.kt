@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.view.*
+import org.koin.android.viewmodel.ext.android.viewModel
 import org.koin.standalone.inject
 import ru.oldowl.R
 import ru.oldowl.binding.RecyclerConfig
@@ -17,7 +18,7 @@ import ru.oldowl.viewmodel.ArticleListViewModel
 
 class ArticleListFragment : BaseFragment() {
 
-    private val viewModel: ArticleListViewModel by inject()
+    private val viewModel: ArticleListViewModel by viewModel()
 
     init {
         setHasOptionsMenu(true)
