@@ -75,7 +75,7 @@ val serviceModule = module {
     // ViewModels
     viewModel { (appName: String) -> LoginViewModel(appName, get(), get()) }
     viewModel { MainViewModel(get(), get(), get()) }
-    viewModel { ArticleListViewModel(get(), get(), get(), get(), get()) }
+    viewModel { ArticleListViewModel(get(), get(), get(), get(), get(), get(), get()) }
     viewModel { ArticleViewModel(get(), get()) }
     viewModel { AddSubscriptionViewModel(get(), get(), get(), get()) }
 }
