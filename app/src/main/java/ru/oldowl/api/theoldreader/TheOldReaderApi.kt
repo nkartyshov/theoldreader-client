@@ -194,7 +194,7 @@ class TheOldReaderApi(private val theOldReaderWebService: TheOldReaderWebService
                             title = entry.title,
                             description = description,
                             link = entry.link,
-                            feedId = removeReaderPrefix(entry.source.uri),
+                            feedId = entry.source.uri.removePrefix(READER_PREFIX),
                             publishDate = entry.publishedDate
                     )
                 } ?: emptyList()
