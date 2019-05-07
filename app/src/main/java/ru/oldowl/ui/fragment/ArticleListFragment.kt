@@ -6,7 +6,6 @@ import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.view.*
 import org.koin.android.viewmodel.ext.android.viewModel
-import org.koin.standalone.inject
 import ru.oldowl.R
 import ru.oldowl.binding.RecyclerConfig
 import ru.oldowl.databinding.FragmentArticleListBinding
@@ -68,6 +67,10 @@ class ArticleListFragment : BaseFragment() {
 
         viewModel.articles.observe(this, Observer {
             adapter.submitList(it)
+        })
+
+        viewModel.unsubscribe.observe(this, Observer {
+             fragmentManager?.popBackStackImmediate()
         })
     }
 

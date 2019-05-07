@@ -42,6 +42,7 @@ class ArticleListViewModel(private val application: Application,
     }
 
     val dataLoading = MutableLiveData<Boolean>()
+    val unsubscribe = MutableLiveData<Unit>()
 
     var mode: ArticleListMode = ArticleListMode.ALL
     var subscription: Subscription? = null
@@ -114,16 +115,18 @@ class ArticleListViewModel(private val application: Application,
         }
 
         eventDao.save(Event(eventType = EventType.MARK_ALL_READ, payload = subscription?.feedId))
-
         loadArticles()
     }
 
-    // TODO observe result!
     fun unsubscribe() = launch {
         subscription?.let {
             if (theOldReaderApi.unsubscribe(it.feedId!!, account?.authToken!!)) {
                 subscriptionDao.delete(it)
                 eventDao.save(Event(eventType = EventType.UNSUBSCRIBE, payload = it.feedId))
+
+                launch(Dispatchers.Main) {
+                    unsubscribe.value = Unit
+                }
             }
         }
     }
