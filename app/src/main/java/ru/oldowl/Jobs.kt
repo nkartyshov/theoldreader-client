@@ -22,8 +22,8 @@ import ru.oldowl.db.model.Article
 import ru.oldowl.db.model.Category
 import ru.oldowl.db.model.EventType
 import ru.oldowl.db.model.Subscription
-import ru.oldowl.extension.exists
-import ru.oldowl.extension.isScheduled
+import ru.oldowl.core.extension.exists
+import ru.oldowl.core.extension.isScheduled
 import ru.oldowl.service.AccountService
 import ru.oldowl.service.SettingsService
 import java.util.*

@@ -4,6 +4,7 @@ import android.os.Bundle
 import org.jetbrains.anko.startActivity
 import org.koin.standalone.inject
 import ru.oldowl.R
+import ru.oldowl.core.ui.BaseActivity
 import ru.oldowl.service.AccountService
 
 class LaunchActivity : BaseActivity() {

@@ -7,11 +7,11 @@ import android.support.design.widget.Snackbar
 import org.jetbrains.anko.startActivity
 import org.koin.android.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
-import org.koin.standalone.inject
 import ru.oldowl.R
 import ru.oldowl.databinding.ActivityLoginBinding
-import ru.oldowl.extension.browse
-import ru.oldowl.extension.hideSoftKeyboard
+import ru.oldowl.core.extension.browse
+import ru.oldowl.core.extension.hideSoftKeyboard
+import ru.oldowl.core.ui.BaseActivity
 import ru.oldowl.viewmodel.LoginViewModel
 
 class LoginActivity : BaseActivity() {

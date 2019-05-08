@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import ru.oldowl.databinding.ViewArticleItemBinding
 import ru.oldowl.db.model.ArticleAndSubscriptionTitle
-import ru.oldowl.ui.adapter.diff.SimpleDiff
+import ru.oldowl.core.ui.SimpleDiff
 
 class ArticleAndSubscriptionTitleAdapter
     : ListAdapter<ArticleAndSubscriptionTitle, ArticleAndSubscriptionTitleAdapter.ViewHolder>(

@@ -1,4 +1,4 @@
-package ru.oldowl.extension
+package ru.oldowl.core.extension
 
 import java.util.*
 

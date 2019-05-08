@@ -1,4 +1,4 @@
-package ru.oldowl.binding
+package ru.oldowl.core.binding
 
 import android.databinding.BindingAdapter
 import android.support.annotation.StringRes

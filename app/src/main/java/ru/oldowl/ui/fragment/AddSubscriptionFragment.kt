@@ -8,9 +8,9 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.SearchView
 import android.view.*
 import org.koin.android.viewmodel.ext.android.viewModel
-import org.koin.standalone.inject
 import ru.oldowl.R
-import ru.oldowl.binding.RecyclerConfig
+import ru.oldowl.core.binding.RecyclerConfig
+import ru.oldowl.core.ui.BaseFragment
 import ru.oldowl.databinding.FragmentAddSubscriptionBinding
 import ru.oldowl.ui.adapter.SearchSubscriptionAdapter
 import ru.oldowl.viewmodel.AddSubscriptionViewModel

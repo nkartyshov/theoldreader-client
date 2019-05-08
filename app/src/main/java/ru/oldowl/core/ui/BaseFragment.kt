@@ -1,27 +1,17 @@
-package ru.oldowl.ui
+package ru.oldowl.core.ui
 
-import android.support.v7.app.AppCompatActivity
-import android.view.MenuItem
+import android.support.v4.app.Fragment
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import org.koin.standalone.KoinComponent
 import kotlin.coroutines.CoroutineContext
 
-abstract class BaseActivity : AppCompatActivity(), CoroutineScope, KoinComponent {
-
+abstract class BaseFragment : Fragment(), CoroutineScope, KoinComponent {
     private val job: Job = Job()
 
     override val coroutineContext: CoroutineContext
         get() = job + Dispatchers.Main
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
-            android.R.id.home -> onBackPressed()
-        }
-
-        return super.onOptionsItemSelected(item)
-    }
 
     override fun onDestroy() {
         super.onDestroy()

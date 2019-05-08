@@ -9,7 +9,7 @@ import ru.oldowl.R
 import ru.oldowl.databinding.ViewSubscriptionItemBinding
 import ru.oldowl.db.model.Subscription
 import ru.oldowl.db.model.SubscriptionAndUnreadCount
-import ru.oldowl.ui.adapter.diff.SimpleDiff
+import ru.oldowl.core.ui.SimpleDiff
 
 class SubscriptionAndUnreadCountAdapter
     : ListAdapter<SubscriptionAndUnreadCount, SubscriptionAndUnreadCountAdapter.ViewHolder>(

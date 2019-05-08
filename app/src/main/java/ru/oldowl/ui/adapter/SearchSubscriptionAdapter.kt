@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import ru.oldowl.databinding.ViewSearchSubscriptionItemBinding
 import ru.oldowl.db.model.Subscription
-import ru.oldowl.ui.adapter.diff.SimpleDiff
+import ru.oldowl.core.ui.SimpleDiff
 
 class SearchSubscriptionAdapter
     : ListAdapter<Subscription, SearchSubscriptionAdapter.ViewHolder>(

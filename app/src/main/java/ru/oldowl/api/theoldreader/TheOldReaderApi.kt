@@ -6,7 +6,7 @@ import org.jetbrains.anko.error
 import retrofit2.Call
 import retrofit2.http.*
 import ru.oldowl.api.theoldreader.model.*
-import ru.oldowl.extension.epochTime
+import ru.oldowl.core.extension.epochTime
 import java.util.*
 import java.util.concurrent.TimeUnit
 

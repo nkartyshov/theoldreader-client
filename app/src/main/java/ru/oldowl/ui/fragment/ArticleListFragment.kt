@@ -7,7 +7,8 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.*
 import org.koin.android.viewmodel.ext.android.viewModel
 import ru.oldowl.R
-import ru.oldowl.binding.RecyclerConfig
+import ru.oldowl.core.binding.RecyclerConfig
+import ru.oldowl.core.ui.BaseFragment
 import ru.oldowl.databinding.FragmentArticleListBinding
 import ru.oldowl.db.model.Subscription
 import ru.oldowl.ui.ArticleActivity

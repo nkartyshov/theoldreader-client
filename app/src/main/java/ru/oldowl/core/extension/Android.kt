@@ -1,4 +1,4 @@
-package ru.oldowl.extension
+package ru.oldowl.core.extension
 
 import android.app.Activity
 import android.app.job.JobScheduler
@@ -10,7 +10,7 @@ import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import ru.oldowl.ui.BaseActivity
+import ru.oldowl.core.ui.BaseActivity
 
 fun BaseActivity.replaceFragment(id: Int, fragment: Fragment, addToBackStack: Boolean = true) {
     val beginTransaction = supportFragmentManager.beginTransaction()

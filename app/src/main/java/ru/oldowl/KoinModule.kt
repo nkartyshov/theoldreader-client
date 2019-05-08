@@ -14,6 +14,7 @@ import ru.oldowl.api.feedly.FeedlyApi
 import ru.oldowl.api.feedly.FeedlyWebService
 import ru.oldowl.api.theoldreader.TheOldReaderApi
 import ru.oldowl.api.theoldreader.TheOldReaderWebService
+import ru.oldowl.core.ui.MainViewModel
 import ru.oldowl.db.AppDatabase
 import ru.oldowl.service.AccountService
 import ru.oldowl.service.SettingsService

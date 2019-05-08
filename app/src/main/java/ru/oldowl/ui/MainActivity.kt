@@ -14,14 +14,15 @@ import kotlinx.android.synthetic.main.toolbar.*
 import org.koin.android.viewmodel.ext.android.viewModel
 import ru.oldowl.Jobs
 import ru.oldowl.R
-import ru.oldowl.binding.RecyclerConfig
+import ru.oldowl.core.binding.RecyclerConfig
 import ru.oldowl.databinding.ActivityMainBinding
-import ru.oldowl.extension.replaceFragment
+import ru.oldowl.core.extension.replaceFragment
+import ru.oldowl.core.ui.BaseActivity
 import ru.oldowl.ui.adapter.SubscriptionAndUnreadCountAdapter
 import ru.oldowl.ui.fragment.AddSubscriptionFragment
 import ru.oldowl.ui.fragment.ArticleListFragment
 import ru.oldowl.ui.fragment.SettingsFragment
-import ru.oldowl.viewmodel.MainViewModel
+import ru.oldowl.core.ui.MainViewModel
 
 class MainActivity : BaseActivity() {
     private val mainViewModel: MainViewModel by viewModel()

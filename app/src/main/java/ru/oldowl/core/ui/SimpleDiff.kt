@@ -1,4 +1,4 @@
-package ru.oldowl.ui.adapter.diff
+package ru.oldowl.core.ui
 
 import android.support.v7.util.DiffUtil
 

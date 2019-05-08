@@ -21,9 +21,10 @@ import org.koin.standalone.inject
 import ru.oldowl.R
 import ru.oldowl.databinding.ActivityArticleBinding
 import ru.oldowl.db.model.ArticleAndSubscriptionTitle
-import ru.oldowl.extension.browse
-import ru.oldowl.extension.copyToClipboard
-import ru.oldowl.extension.share
+import ru.oldowl.core.extension.browse
+import ru.oldowl.core.extension.copyToClipboard
+import ru.oldowl.core.extension.share
+import ru.oldowl.core.ui.BaseActivity
 import ru.oldowl.viewmodel.ArticleViewModel
 
 class ArticleActivity : BaseActivity() {

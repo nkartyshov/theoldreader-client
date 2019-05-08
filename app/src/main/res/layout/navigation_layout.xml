@@ -10,7 +10,7 @@
 
         <variable
             name="viewModel"
-            type="ru.oldowl.viewmodel.MainViewModel" />
+            type="ru.oldowl.core.ui.MainViewModel" />
 
         <variable
             name="recyclerConfig"

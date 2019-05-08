@@ -1,4 +1,4 @@
-package ru.oldowl.viewmodel
+package ru.oldowl.core.ui
 
 import android.arch.lifecycle.MutableLiveData
 import android.databinding.ObservableBoolean
@@ -11,6 +11,7 @@ import ru.oldowl.db.model.Account
 import ru.oldowl.db.model.SubscriptionAndUnreadCount
 import ru.oldowl.service.AccountService
 import ru.oldowl.service.SettingsService
+import ru.oldowl.viewmodel.BaseViewModel
 import java.text.DateFormat
 
 class MainViewModel(private val subscriptionDao: SubscriptionDao,
