@@ -9,7 +9,7 @@
 
         <variable
             name="recyclerConfig"
-            type="ru.oldowl.binding.RecyclerConfig" />
+            type="ru.oldowl.core.binding.RecyclerConfig" />
     </data>
 
     <android.support.design.widget.CoordinatorLayout
