@@ -4,17 +4,17 @@ import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Delete
 import android.arch.persistence.room.Insert
 import android.arch.persistence.room.Query
-import ru.oldowl.db.model.Event
+import ru.oldowl.db.model.SyncEvent
 
 @Dao
-interface EventDao {
+interface SyncEventDao {
 
-    @Query("select * from event")
-    fun findAll() : List<Event>
+    @Query("select * from sync_event")
+    fun findAll() : List<SyncEvent>
 
     @Insert
-    fun save(event: Event)
+    fun save(event: SyncEvent)
 
     @Delete
-    fun delete(event: Event)
+    fun delete(event: SyncEvent)
 }

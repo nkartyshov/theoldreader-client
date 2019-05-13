@@ -4,14 +4,14 @@ import android.arch.lifecycle.MutableLiveData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ru.oldowl.db.dao.ArticleDao
-import ru.oldowl.db.dao.EventDao
+import ru.oldowl.db.dao.SyncEventDao
 import ru.oldowl.db.model.ArticleAndSubscriptionTitle
-import ru.oldowl.db.model.Event
-import ru.oldowl.db.model.EventType
+import ru.oldowl.db.model.SyncEvent
+import ru.oldowl.db.model.SyncEventType
 import java.util.*
 
 class ArticleViewModel(private val articleDao: ArticleDao,
-                       private val eventDao: EventDao) : BaseViewModel() {
+                       private val syncEventDao: SyncEventDao) : BaseViewModel() {
     var item: ArticleAndSubscriptionTitle? = null
 
     val title: String?
@@ -57,7 +57,7 @@ class ArticleViewModel(private val articleDao: ArticleDao,
             it.favorite = !it.favorite
             articleDao.updateFavoriteState(it.id, it.favorite)
 
-            eventDao.save(Event(eventType = EventType.UPDATE_FAVORITE, payload = it.originalId))
+            syncEventDao.save(SyncEvent(eventType = SyncEventType.UPDATE_FAVORITE, payload = it.originalId))
 
             launch(Dispatchers.Main) {
                 updateUi.value = Unit
@@ -71,7 +71,7 @@ class ArticleViewModel(private val articleDao: ArticleDao,
             it.read = true
             articleDao.updateReadState(it.id, it.read)
 
-            eventDao.save(Event(eventType = EventType.UPDATE_READ, payload = it.originalId))
+            syncEventDao.save(SyncEvent(eventType = SyncEventType.UPDATE_READ, payload = it.originalId))
         }
     }
 

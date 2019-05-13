@@ -18,6 +18,7 @@ import ru.oldowl.core.ui.MainViewModel
 import ru.oldowl.db.AppDatabase
 import ru.oldowl.service.AccountService
 import ru.oldowl.service.SettingsService
+import ru.oldowl.usecase.LoadArticleListUseCase
 import ru.oldowl.viewmodel.*
 
 val serviceModule = module {
@@ -73,10 +74,13 @@ val serviceModule = module {
     single { SettingsService(androidApplication()) }
     single { AccountService(androidApplication(), get()) }
 
+    // Use case
+    single { LoadArticleListUseCase(get()) }
+
     // ViewModels
     viewModel { (appName: String) -> LoginViewModel(appName, get(), get()) }
     viewModel { MainViewModel(get(), get(), get()) }
-    viewModel { ArticleListViewModel(get(), get(), get(), get(), get(), get(), get()) }
+    viewModel { ArticleListViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { ArticleViewModel(get(), get()) }
     viewModel { AddSubscriptionViewModel(get(), get(), get(), get()) }
 }

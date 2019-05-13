@@ -8,23 +8,26 @@ import kotlinx.coroutines.withContext
 import ru.oldowl.*
 import ru.oldowl.R
 import ru.oldowl.api.theoldreader.TheOldReaderApi
+import ru.oldowl.core.onFailure
+import ru.oldowl.core.onSuccess
 import ru.oldowl.db.dao.ArticleDao
-import ru.oldowl.db.dao.EventDao
+import ru.oldowl.db.dao.SyncEventDao
 import ru.oldowl.db.dao.SubscriptionDao
-import ru.oldowl.db.model.ArticleAndSubscriptionTitle
-import ru.oldowl.db.model.Event
-import ru.oldowl.db.model.EventType
-import ru.oldowl.db.model.Subscription
+import ru.oldowl.db.model.*
 import ru.oldowl.service.AccountService
 import ru.oldowl.service.SettingsService
+import ru.oldowl.usecase.LoadArticleListUseCase
+import ru.oldowl.usecase.Param
 
 class ArticleListViewModel(private val application: Application,
                            private val theOldReaderApi: TheOldReaderApi,
                            private val accountService: AccountService,
                            private val articleDao: ArticleDao,
                            private val subscriptionDao: SubscriptionDao,
-                           private val eventDao: EventDao,
-                           private val settingsService: SettingsService) : BaseViewModel(), LifecycleObserver {
+                           private val syncEventDao: SyncEventDao,
+                           private val settingsService: SettingsService,
+
+                           private val loadArticleListUseCase: LoadArticleListUseCase) : BaseViewModel(), LifecycleObserver {
 
     private val account by lazy { accountService.getAccount() }
 
@@ -84,12 +87,6 @@ class ArticleListViewModel(private val application: Application,
             Jobs.forceUpdate(application, subscription)
     }
 
-    override fun onCleared() {
-        super.onCleared()
-
-        Jobs.observeJobStatus.removeObserver(jobStatusObserver)
-    }
-
     fun deleteAll() = launch {
         when (mode) {
             ArticleListMode.SUBSCRIPTION -> articleDao.deleteAll(subscription?.id)
@@ -114,7 +111,7 @@ class ArticleListViewModel(private val application: Application,
             else -> articleDao.markAllRead()
         }
 
-        eventDao.save(Event(eventType = EventType.MARK_ALL_READ, payload = subscription?.feedId))
+        syncEventDao.save(SyncEvent(eventType = SyncEventType.MARK_ALL_READ, payload = subscription?.feedId))
         loadArticles()
     }
 
@@ -122,7 +119,7 @@ class ArticleListViewModel(private val application: Application,
         subscription?.let {
             if (theOldReaderApi.unsubscribe(it.feedId!!, account?.authToken!!)) {
                 subscriptionDao.delete(it)
-                eventDao.save(Event(eventType = EventType.UNSUBSCRIBE, payload = it.feedId))
+                syncEventDao.save(SyncEvent(eventType = SyncEventType.UNSUBSCRIBE, payload = it.feedId))
 
                 launch(Dispatchers.Main) {
                     unsubscribe.value = Unit
@@ -133,29 +130,25 @@ class ArticleListViewModel(private val application: Application,
 
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
     fun loadArticles() {
-        launch {
-            val articles = when (mode) {
-                ArticleListMode.FAVORITE -> articleDao.findFavorite()
 
-                ArticleListMode.ALL -> {
-                    if (hideRead)
-                        articleDao.findUnread()
-                    else
-                        articleDao.findAll()
-                }
-
-                ArticleListMode.SUBSCRIPTION -> {
-                    if (hideRead)
-                        articleDao.findUnread(subscription?.id)
-                    else
-                        articleDao.findAll(subscription?.id)
+        val param = Param(hideRead, mode, subscription?.id)
+        loadArticleListUseCase(param) {
+            it.onSuccess {articles ->
+                launch(Dispatchers.Main) {
+                    articleLiveData.value = articles
                 }
             }
 
-            withContext(Dispatchers.Main) {
-                articleLiveData.value = articles
+            it.onFailure {
+                // TODO show error snackbar
             }
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+
+        Jobs.observeJobStatus.removeObserver(jobStatusObserver)
     }
 }
 

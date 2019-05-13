@@ -5,24 +5,31 @@ import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
 import java.util.*
 
-enum class EventType(val code: Int) {
+enum class SyncEventType(val code: Int) {
     UPDATE_READ(0),
     UPDATE_FAVORITE(1),
     MARK_ALL_READ(2),
     UNSUBSCRIBE(3);
 
     companion object {
-        fun fromInt(code: Int): EventType? = values().singleOrNull { it.code == code }
+        fun fromInt(code: Int): SyncEventType? = values().singleOrNull { it.code == code }
     }
 }
 
-@Entity(tableName = "event")
-data class Event(
+@Entity(tableName = "sync_event")
+data class SyncEvent(
         @PrimaryKey(autoGenerate = true)
         var id: Long = 0,
         @ColumnInfo(name = "event_type")
-        var eventType: EventType,
+        var eventType: SyncEventType,
         @ColumnInfo(name = "payload")
         var payload: String? = "",
         @ColumnInfo(name = "created_date")
-        var createdDate: Date = Date())
+        var createdDate: Date = Date()) {
+
+    companion object {
+
+        fun markAllRead(feedId: String?): SyncEvent = SyncEvent(eventType = SyncEventType.MARK_ALL_READ, payload = feedId)
+
+    }
+}

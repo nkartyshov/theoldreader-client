@@ -16,14 +16,14 @@ import org.koin.standalone.inject
 import ru.oldowl.api.theoldreader.TheOldReaderApi
 import ru.oldowl.db.dao.ArticleDao
 import ru.oldowl.db.dao.CategoryDao
-import ru.oldowl.db.dao.EventDao
+import ru.oldowl.db.dao.SyncEventDao
 import ru.oldowl.db.dao.SubscriptionDao
 import ru.oldowl.db.model.Article
 import ru.oldowl.db.model.Category
-import ru.oldowl.db.model.EventType
 import ru.oldowl.db.model.Subscription
 import ru.oldowl.core.extension.exists
 import ru.oldowl.core.extension.isScheduled
+import ru.oldowl.db.model.SyncEventType
 import ru.oldowl.service.AccountService
 import ru.oldowl.service.SettingsService
 import java.util.*
@@ -106,7 +106,7 @@ class AutoUpdateJob : JobService(), KoinComponent, CoroutineScope {
     private val subscriptionDao: SubscriptionDao by inject()
     private val categoryDao: CategoryDao by inject()
     private val articleDao: ArticleDao by inject()
-    private val eventDao: EventDao by inject()
+    private val syncEventDao: SyncEventDao by inject()
 
     override fun onStartJob(params: JobParameters?): Boolean {
         launch {
@@ -194,29 +194,29 @@ class AutoUpdateJob : JobService(), KoinComponent, CoroutineScope {
     }
 
     private fun synchronization(authToken: String) {
-        eventDao.findAll()
+        syncEventDao.findAll()
                 .forEach { event ->
                     when (event.eventType) {
-                        EventType.UPDATE_READ -> event.payload?.let {
+                        SyncEventType.UPDATE_READ -> event.payload?.let {
                             val article = articleDao.findByOriginalId(it)
                             theOldReaderApi.updateReadState(article!!.originalId, article.read, authToken)
                         }
 
-                        EventType.UPDATE_FAVORITE -> event.payload?.let {
+                        SyncEventType.UPDATE_FAVORITE -> event.payload?.let {
                             val article = articleDao.findByOriginalId(it)
                             theOldReaderApi.updateFavoriteState(article!!.originalId, article.favorite, authToken)
                         }
 
-                        EventType.MARK_ALL_READ -> event.payload?.let {
+                        SyncEventType.MARK_ALL_READ -> event.payload?.let {
                             theOldReaderApi.markAllRead(it, authToken, event.createdDate)
                         }
 
-                        EventType.UNSUBSCRIBE -> event.payload?.let {
+                        SyncEventType.UNSUBSCRIBE -> event.payload?.let {
                             theOldReaderApi.unsubscribe(it, authToken)
                         }
                     }
 
-                    eventDao.delete(event)
+                    syncEventDao.delete(event)
                 }
     }
 
