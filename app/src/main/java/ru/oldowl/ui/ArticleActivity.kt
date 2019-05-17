@@ -26,6 +26,7 @@ import ru.oldowl.core.extension.copyToClipboard
 import ru.oldowl.core.extension.share
 import ru.oldowl.core.ui.BaseActivity
 import ru.oldowl.viewmodel.ArticleViewModel
+import ru.oldowl.viewmodel.ArticleViewModel.Companion.ARTICLE
 
 class ArticleActivity : BaseActivity() {
 
@@ -33,35 +34,36 @@ class ArticleActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val dataBinding: ActivityArticleBinding = DataBindingUtil.setContentView(this, R.layout.activity_article)
+        DataBindingUtil.setContentView<ActivityArticleBinding>(this, R.layout.activity_article).also {
+            it.viewModel = viewModel
+            it.lifecycleOwner = this
 
-        setSupportActionBar(toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+            val webViewClientImpl = WebViewClientImpl(applicationContext, it.loadingProgress, it.articleWrapper).apply {
+                setOnPageFinishedListener {
+                    viewModel.markRead()
+                }
+            }
 
-        viewModel.item = intent.getParcelableExtra(ARTICLE) as ArticleAndSubscriptionTitle
-        title = getString(R.string.empty)
+            with(it.articleContent) {
+                settings.javaScriptEnabled = false
+                settings.cacheMode = WebSettings.LOAD_NO_CACHE
 
-        dataBinding.viewModel = viewModel
+                webViewClient = webViewClientImpl
+            }
 
-        with(article_content.settings) {
-            javaScriptEnabled = false
-            cacheMode = WebSettings.LOAD_NO_CACHE
-        }
-
-        val webViewClient = WebViewClientImpl(applicationContext, loading_progress, article_wrapper)
-        webViewClient.setOnPageFinishedListener {
-            viewModel.markRead()
-        }
-
-        article_content.webViewClient = webViewClient
-
-        open_in_browser.setOnClickListener {
-            browse(viewModel.url)
+            it.setOpenInBrowser {
+                browse(viewModel.url)
+            }
         }
 
         viewModel.updateUi.observe(this, Observer {
             invalidateOptionsMenu()
         })
+
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        viewModel.setArgument(intent.extras)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -87,7 +89,6 @@ class ArticleActivity : BaseActivity() {
 
             R.id.copy_url -> viewModel.url?.let {
                 copyToClipboard(it)
-
                 Snackbar.make(article_content, R.string.copy_url_to_clipboard_snackbar, Snackbar.LENGTH_SHORT).show()
             }
         }
@@ -96,8 +97,6 @@ class ArticleActivity : BaseActivity() {
     }
 
     companion object {
-        private const val ARTICLE = "article"
-
         fun openArticle(context: Context?, article: ArticleAndSubscriptionTitle) {
             context?.startActivity<ArticleActivity>(ARTICLE to article)
         }

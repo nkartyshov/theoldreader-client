@@ -1,38 +1,33 @@
 package ru.oldowl.viewmodel
 
 import android.app.Application
-import android.arch.lifecycle.*
+import android.arch.lifecycle.LifecycleObserver
+import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MutableLiveData
+import android.arch.lifecycle.Observer
+import android.os.Bundle
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import ru.oldowl.*
-import ru.oldowl.R
-import ru.oldowl.api.theoldreader.TheOldReaderApi
-import ru.oldowl.core.onFailure
-import ru.oldowl.core.onSuccess
-import ru.oldowl.db.dao.ArticleDao
-import ru.oldowl.db.dao.SyncEventDao
-import ru.oldowl.db.dao.SubscriptionDao
-import ru.oldowl.db.model.*
-import ru.oldowl.service.AccountService
+import ru.oldowl.core.CloseScreen
+import ru.oldowl.core.Event
+import ru.oldowl.core.ui.BaseViewModel
+import ru.oldowl.db.model.ArticleAndSubscriptionTitle
+import ru.oldowl.db.model.Subscription
 import ru.oldowl.service.SettingsService
-import ru.oldowl.usecase.LoadArticleListUseCase
-import ru.oldowl.usecase.Param
+import ru.oldowl.usecase.*
 
 class ArticleListViewModel(private val application: Application,
-                           private val theOldReaderApi: TheOldReaderApi,
-                           private val accountService: AccountService,
-                           private val articleDao: ArticleDao,
-                           private val subscriptionDao: SubscriptionDao,
-                           private val syncEventDao: SyncEventDao,
                            private val settingsService: SettingsService,
-
-                           private val loadArticleListUseCase: LoadArticleListUseCase) : BaseViewModel(), LifecycleObserver {
-
-    private val account by lazy { accountService.getAccount() }
+                           private val loadArticleListUseCase: LoadArticleListUseCase,
+                           private val deleteAllUseCase: DeleteAllUseCase,
+                           private val deleteAllReadUseCase: DeleteAllReadUseCase,
+                           private val markReadAllUseCase: MarkAllReadUseCase,
+                           private val unsubscribeUseCase: UnsubscribeUseCase) : BaseViewModel(), LifecycleObserver {
 
     private val articleLiveData: MutableLiveData<List<ArticleAndSubscriptionTitle>> = MutableLiveData()
 
+    @Deprecated(message = "")
     private val jobStatusObserver: Observer<JobStatus?> by lazy {
         Observer<JobStatus?> {
             when (it?.jobId) {
@@ -44,11 +39,11 @@ class ArticleListViewModel(private val application: Application,
         }
     }
 
-    val dataLoading = MutableLiveData<Boolean>()
-    val unsubscribe = MutableLiveData<Unit>()
+    private var mode: ArticleListMode = ArticleListMode.ALL
+    private var subscription: Subscription? = null
 
-    var mode: ArticleListMode = ArticleListMode.ALL
-    var subscription: Subscription? = null
+    val dataLoading = MutableLiveData<Boolean>()
+    val event = MutableLiveData<Event>()
 
     var hideRead: Boolean
         get() {
@@ -80,6 +75,15 @@ class ArticleListViewModel(private val application: Application,
         Jobs.observeJobStatus.observeForever(jobStatusObserver)
     }
 
+    fun setArgument(arguments: Bundle?) = arguments?.let {
+        mode = it.getSerializable(ARTICLE_LIST_MODE) as ArticleListMode
+        subscription = it.getParcelable(SUBSCRIPTION) as Subscription?
+    }
+
+    fun isFavoriteMode() = mode == ArticleListMode.FAVORITE
+
+    fun hasSubscription() = subscription != null
+
     fun sync() {
         if (mode == ArticleListMode.ALL)
             Jobs.forceUpdate(application)
@@ -87,59 +91,52 @@ class ArticleListViewModel(private val application: Application,
             Jobs.forceUpdate(application, subscription)
     }
 
-    fun deleteAll() = launch {
-        when (mode) {
-            ArticleListMode.SUBSCRIPTION -> articleDao.deleteAll(subscription?.id)
-            else -> articleDao.deleteAll()
-        }
-
-        loadArticles()
-    }
-
-    fun deleteAllRead() = launch {
-        when (mode) {
-            ArticleListMode.SUBSCRIPTION -> articleDao.deleteAllRead(subscription?.id)
-            else -> articleDao.deleteAllRead()
-        }
-
-        loadArticles()
-    }
-
-    fun markReadAll() = launch {
-        when (mode) {
-            ArticleListMode.SUBSCRIPTION -> articleDao.markAllRead(subscription?.id)
-            else -> articleDao.markAllRead()
-        }
-
-        syncEventDao.save(SyncEvent(eventType = SyncEventType.MARK_ALL_READ, payload = subscription?.feedId))
-        loadArticles()
-    }
-
-    fun unsubscribe() = launch {
-        subscription?.let {
-            if (theOldReaderApi.unsubscribe(it.feedId!!, account?.authToken!!)) {
-                subscriptionDao.delete(it)
-                syncEventDao.save(SyncEvent(eventType = SyncEventType.UNSUBSCRIBE, payload = it.feedId))
-
-                launch(Dispatchers.Main) {
-                    unsubscribe.value = Unit
+    fun deleteAll() =
+            deleteAllUseCase(subscription?.id) {
+                onSuccess { loadArticles() }
+                onFailure {
+                    // TODO show error snackbar
                 }
             }
-        }
-    }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
+    fun deleteAllRead() =
+            deleteAllReadUseCase(subscription?.id) {
+                onSuccess { loadArticles() }
+                onFailure {
+                    // TODO show error snackbar
+                }
+            }
+
+    fun markReadAll() =
+            markReadAllUseCase(subscription) {
+                onSuccess { loadArticles() }
+                onFailure {
+                    // TODO show error snackbar
+                }
+            }
+
+    fun unsubscribe() =
+            subscription?.let {
+                unsubscribeUseCase(it) {
+                    onSuccess { event.value = CloseScreen }
+                    onFailure {
+                        // TODO show error snackbar
+                    }
+                }
+            }
+
+
     fun loadArticles() {
 
-        val param = Param(hideRead, mode, subscription?.id)
+        val param = LoadArticleListUseCase.Param(hideRead, mode, subscription?.id)
         loadArticleListUseCase(param) {
-            it.onSuccess {articles ->
+            onSuccess { articles ->
                 launch(Dispatchers.Main) {
                     articleLiveData.value = articles
                 }
             }
 
-            it.onFailure {
+            onFailure {
                 // TODO show error snackbar
             }
         }
@@ -149,6 +146,11 @@ class ArticleListViewModel(private val application: Application,
         super.onCleared()
 
         Jobs.observeJobStatus.removeObserver(jobStatusObserver)
+    }
+
+    companion object {
+        const val ARTICLE_LIST_MODE = "article_list_mode"
+        const val SUBSCRIPTION = "subscription"
     }
 }
 

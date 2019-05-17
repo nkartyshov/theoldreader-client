@@ -1,35 +1,42 @@
 package ru.oldowl.viewmodel
 
 import android.arch.lifecycle.MutableLiveData
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import ru.oldowl.db.dao.ArticleDao
-import ru.oldowl.db.dao.SyncEventDao
+import android.os.Bundle
+import ru.oldowl.core.Event
+import ru.oldowl.core.RefreshScreen
+import ru.oldowl.core.ui.BaseViewModel
 import ru.oldowl.db.model.ArticleAndSubscriptionTitle
-import ru.oldowl.db.model.SyncEvent
-import ru.oldowl.db.model.SyncEventType
+import ru.oldowl.usecase.MarkReadUseCase
+import ru.oldowl.usecase.ToggleFavoriteUseCase
 import java.util.*
 
-class ArticleViewModel(private val articleDao: ArticleDao,
-                       private val syncEventDao: SyncEventDao) : BaseViewModel() {
-    var item: ArticleAndSubscriptionTitle? = null
+class ArticleViewModel(
+        private val toggleFavoriteUseCase: ToggleFavoriteUseCase,
+        private val markReadUseCase: MarkReadUseCase
+) : BaseViewModel() {
+
+    private lateinit var item: ArticleAndSubscriptionTitle
+
+    val event: MutableLiveData<Event> = MutableLiveData()
 
     val title: String?
-        get() = item?.article?.title
+        get() = item.article.title
 
     val subscriptionTitle: String?
-        get() = item?.subscriptionTitle
+        get() = item.subscriptionTitle
 
     val publishDate: Date?
-        get() = item?.article?.publishDate
+        get() = item.article.publishDate
 
     val favorite: Boolean
-        get() = item?.article?.favorite ?: false
+        get() = item.article.favorite
 
     val url: String?
-        get() = item?.article?.url
+        get() = item.article.url
 
-    val updateUi: MutableLiveData<Unit> = MutableLiveData()
+    fun setArgument(bundle: Bundle?) = bundle?.let {
+        item = bundle.getParcelable(ARTICLE) as ArticleAndSubscriptionTitle
+    }
 
     fun getPageContent(): String {
         return buildString {
@@ -46,33 +53,31 @@ class ArticleViewModel(private val articleDao: ArticleDao,
             append("</style>\n")
             append("</head>\n")
             append("<body>\n")
-            append(item?.article?.description ?: "")
+            append(item.article.description)
             append("</body>\n")
             append("</html>\n")
         }
     }
 
-    fun toggleFavorite() = launch {
-        item?.article?.let {
-            it.favorite = !it.favorite
-            articleDao.updateFavoriteState(it.id, it.favorite)
-
-            syncEventDao.save(SyncEvent(eventType = SyncEventType.UPDATE_FAVORITE, payload = it.originalId))
-
-            launch(Dispatchers.Main) {
-                updateUi.value = Unit
+    fun toggleFavorite() {
+        toggleFavoriteUseCase(item.article) {
+            onSuccess { event.value = RefreshScreen }
+            onFailure {
+                // TODO show snackbar
             }
         }
     }
 
-
-    fun markRead() = launch {
-        item?.article?.let {
-            it.read = true
-            articleDao.updateReadState(it.id, it.read)
-
-            syncEventDao.save(SyncEvent(eventType = SyncEventType.UPDATE_READ, payload = it.originalId))
+    fun markRead() {
+        markReadUseCase(item.article) {
+            onSuccess { event.value = RefreshScreen }
+            onFailure {
+                // TODO show snackbar
+            }
         }
     }
 
+    companion object {
+        const val ARTICLE = "article"
+    }
 }

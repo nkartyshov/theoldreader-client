@@ -8,6 +8,10 @@
         <variable
             name="viewModel"
             type="ru.oldowl.viewmodel.ArticleViewModel" />
+
+        <variable
+            name="openInBrowser"
+            type="Runnable" />
     </data>
 
     <android.support.design.widget.CoordinatorLayout style="@style/ContentFullParent">
@@ -41,19 +45,19 @@
                         android:id="@+id/divider"
                         style="@style/VerticalDivider"
                         android:layout_below="@+id/article_title"
-                        android:layout_marginTop="@dimen/indent_small"
-                        android:layout_marginBottom="@dimen/indent_small" />
+                        android:layout_marginTop="@dimen/indent_xsmall"
+                        android:layout_marginBottom="@dimen/indent_xsmall" />
 
                     <RelativeLayout
                         style="@style/ContentFullWidth.Horizontal"
                         android:layout_below="@+id/divider"
-                        android:paddingBottom="@dimen/indent_small">
+                        android:paddingBottom="@dimen/indent_xsmall">
 
                         <TextView
                             android:id="@+id/article_date"
                             style="@style/TextCaption"
                             android:layout_alignParentStart="true"
-                            android:layout_marginEnd="@dimen/indent_small"
+                            android:layout_marginEnd="@dimen/indent_xsmall"
                             android:text="@{viewModel.publishDate}"
                             tools:text="Today" />
 
@@ -66,7 +70,7 @@
                         <TextView
                             android:id="@+id/subscription_title"
                             style="@style/TextCaption.SingleLine"
-                            android:layout_marginStart="@dimen/indent_small"
+                            android:layout_marginStart="@dimen/indent_xsmall"
                             android:layout_toEndOf="@+id/divider_horizontal"
                             android:text="@{viewModel.subscriptionTitle}"
                             tools:text="4pda" />
@@ -93,6 +97,7 @@
             android:id="@+id/open_in_browser"
             style="@style/FloatingButton"
             android:src="@drawable/ic_open_in_browser_white_24dp"
+            android:onClick="@{openInBrowser}"
             app:fabSize="normal" />
 
     </android.support.design.widget.CoordinatorLayout>

@@ -1,13 +1,18 @@
 package ru.oldowl.ui.fragment
 
-import android.arch.lifecycle.Observer
 import android.os.Bundle
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.view.*
 import org.koin.android.viewmodel.ext.android.viewModel
 import ru.oldowl.R
+import ru.oldowl.core.CloseScreen
+import ru.oldowl.core.Failure
+import ru.oldowl.core.ShowSnackbar
 import ru.oldowl.core.binding.RecyclerConfig
+import ru.oldowl.core.extension.observe
+import ru.oldowl.core.extension.showFailure
+import ru.oldowl.core.extension.showMessage
 import ru.oldowl.core.ui.BaseFragment
 import ru.oldowl.databinding.FragmentArticleListBinding
 import ru.oldowl.db.model.Subscription
@@ -15,6 +20,8 @@ import ru.oldowl.ui.ArticleActivity
 import ru.oldowl.ui.adapter.ArticleAndSubscriptionTitleAdapter
 import ru.oldowl.viewmodel.ArticleListMode
 import ru.oldowl.viewmodel.ArticleListViewModel
+import ru.oldowl.viewmodel.ArticleListViewModel.Companion.ARTICLE_LIST_MODE
+import ru.oldowl.viewmodel.ArticleListViewModel.Companion.SUBSCRIPTION
 
 class ArticleListFragment : BaseFragment() {
 
@@ -31,8 +38,7 @@ class ArticleListFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.mode = arguments?.getSerializable(ARTICLE_LIST_MODE) as ArticleListMode
-        viewModel.subscription = arguments?.getParcelable(SUBSCRIPTION) as Subscription?
+        viewModel.setArgument(arguments)
 
         val adapter = ArticleAndSubscriptionTitleAdapter()
         adapter.onItemClick = {
@@ -45,7 +51,7 @@ class ArticleListFragment : BaseFragment() {
         FragmentArticleListBinding.bind(view).also {
 
             it.syncList.setDistanceToTriggerSync(distanceToTriggerSync)
-            it.syncList.isEnabled = viewModel.mode != ArticleListMode.FAVORITE
+            it.syncList.isEnabled = !viewModel.isFavoriteMode()
 
             it.makeAllRead.setOnClickListener {
                 viewModel.markReadAll()
@@ -62,17 +68,24 @@ class ArticleListFragment : BaseFragment() {
 
         }
 
-        lifecycle.addObserver(viewModel)
-
         activity?.title = viewModel.title
 
-        viewModel.articles.observe(this, Observer {
+        observe(viewModel.articles) {
             adapter.submitList(it)
-        })
+        }
 
-        viewModel.unsubscribe.observe(this, Observer {
-             fragmentManager?.popBackStackImmediate()
-        })
+        observe(viewModel.event) {
+            when (it) {
+                is ShowSnackbar -> showMessage(view, it)
+                is Failure -> showFailure(view, it)
+                is CloseScreen -> fragmentManager?.popBackStackImmediate()
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.loadArticles()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -80,7 +93,7 @@ class ArticleListFragment : BaseFragment() {
         inflater?.inflate(R.menu.menu_articles_list, menu)
 
         menu?.findItem(R.id.hide_read)?.isChecked = viewModel.hideRead
-        menu?.findItem(R.id.unsubscribe)?.isVisible = viewModel.subscription != null
+        menu?.findItem(R.id.unsubscribe)?.isVisible = viewModel.hasSubscription()
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -107,9 +120,6 @@ class ArticleListFragment : BaseFragment() {
     }
 
     companion object {
-        private const val ARTICLE_LIST_MODE = "article_list_mode"
-        private const val SUBSCRIPTION = "subscription"
-
         fun openAllArticles(): ArticleListFragment {
             return newFragment(ArticleListMode.ALL)
         }

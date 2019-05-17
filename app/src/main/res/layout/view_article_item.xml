@@ -51,18 +51,18 @@
             style="@style/TextSummary"
             escapeText="@{article.description}"
             android:layout_below="@+id/article_title_wrapper"
-            android:layout_marginTop="@dimen/indent_small"
+            android:layout_marginTop="@dimen/indent_xsmall"
             tools:text="Article description" />
 
         <RelativeLayout
             style="@style/ContentFullWidth.Horizontal"
             android:layout_below="@+id/article_summary"
-            android:paddingTop="@dimen/indent_small">
+            android:paddingTop="@dimen/indent_xsmall">
 
             <TextView
                 android:id="@+id/article_date"
                 style="@style/TextCaption"
-                android:layout_marginEnd="@dimen/indent_small"
+                android:layout_marginEnd="@dimen/indent_xsmall"
                 android:text="@{article.publishDate}"
                 tools:text="Today" />
 
@@ -74,7 +74,7 @@
 
             <TextView
                 style="@style/TextCaption.SingleLine"
-                android:layout_marginStart="@dimen/indent_small"
+                android:layout_marginStart="@dimen/indent_xsmall"
                 android:layout_toEndOf="@+id/divider_horizontal"
                 android:text="@{subscriptionTitle}"
                 tools:text="Subscription" />

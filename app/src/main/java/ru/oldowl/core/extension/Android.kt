@@ -2,6 +2,9 @@ package ru.oldowl.core.extension
 
 import android.app.Activity
 import android.app.job.JobScheduler
+import android.arch.lifecycle.LifecycleOwner
+import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.Observer
 import android.content.*
 import android.net.Uri
 import android.os.Build
@@ -10,6 +13,8 @@ import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import ru.oldowl.core.Failure
+import ru.oldowl.core.ShowSnackbar
 import ru.oldowl.core.ui.BaseActivity
 
 fun BaseActivity.replaceFragment(id: Int, fragment: Fragment, addToBackStack: Boolean = true) {
@@ -78,4 +83,8 @@ fun Snackbar.make(view: View, @StringRes stringRes: Int, duration: Int): Snackba
     val context = view.context
 
     return Snackbar.make(view, context.getString(stringRes), duration)
+}
+
+fun <T : Any> LifecycleOwner.observe(liveData: LiveData<T>, body: (T?) -> Unit) {
+    liveData.observe(this, Observer(body))
 }

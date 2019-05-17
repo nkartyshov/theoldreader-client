@@ -21,22 +21,23 @@
             type="Runnable" />
     </data>
 
-    <android.support.design.widget.CoordinatorLayout
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="@dimen/indent_default">
+        android:layout_height="match_parent">
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintWidth_percent="0.8">
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/indent_default"
                 app:error="@{viewModel.emailError}"
                 app:errorEnabled="true">
 
@@ -70,15 +71,15 @@
 
             </android.support.design.widget.TextInputLayout>
 
-            <!-- TODO Implement progress button -->
-            <ru.oldowl.ui.view.ProgressButton
+            <ru.oldowl.core.ui.view.ProgressButton
                 android:id="@+id/sign_in"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/indent_big"
                 android:onClick="@{onSingIn}"
                 android:layout_gravity="center"
                 android:text="@string/sing_in"
-                app:showProgress="@{viewModel.progress}" />
+                app:setProgress="@{viewModel.progress}" />
 
             <TextView
                 android:id="@+id/reset_password"
@@ -97,5 +98,5 @@
                 android:text="@string/sign_up" />
 
         </LinearLayout>
-    </android.support.design.widget.CoordinatorLayout>
+    </android.support.constraint.ConstraintLayout>
 </layout>

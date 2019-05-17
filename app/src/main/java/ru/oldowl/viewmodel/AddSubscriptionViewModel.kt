@@ -7,10 +7,12 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.oldowl.api.feedly.FeedlyApi
 import ru.oldowl.api.theoldreader.TheOldReaderApi
+import ru.oldowl.core.ui.BaseViewModel
 import ru.oldowl.db.dao.SubscriptionDao
 import ru.oldowl.db.model.Subscription
 import ru.oldowl.service.AccountService
 
+// FIXME
 class AddSubscriptionViewModel(private val feedlyApi: FeedlyApi,
                                private val accountService: AccountService,
                                private val theOldReaderApi: TheOldReaderApi,

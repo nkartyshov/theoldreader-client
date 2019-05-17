@@ -1,8 +1,7 @@
-package ru.oldowl.ui.view
+package ru.oldowl.core.ui.view
 
 import android.content.Context
 import android.support.design.button.MaterialButton
-import android.support.design.internal.ThemeEnforcement
 import android.support.graphics.drawable.AnimatedVectorDrawableCompat
 import android.util.AttributeSet
 import ru.oldowl.R

@@ -1,56 +1,53 @@
 package ru.oldowl.ui
 
-import android.arch.lifecycle.Observer
 import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import org.jetbrains.anko.startActivity
 import org.koin.android.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import ru.oldowl.R
-import ru.oldowl.databinding.ActivityLoginBinding
+import ru.oldowl.core.CloseScreen
+import ru.oldowl.core.Failure
 import ru.oldowl.core.extension.browse
 import ru.oldowl.core.extension.hideSoftKeyboard
+import ru.oldowl.core.extension.observe
+import ru.oldowl.core.extension.showFailure
 import ru.oldowl.core.ui.BaseActivity
+import ru.oldowl.databinding.ActivityLoginBinding
 import ru.oldowl.viewmodel.LoginViewModel
 
 class LoginActivity : BaseActivity() {
-    private val loginViewModel: LoginViewModel by viewModel { parametersOf(getString(R.string.app_name)) }
+    private val viewModel: LoginViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val databinding: ActivityLoginBinding = DataBindingUtil.setContentView(this, R.layout.activity_login)
+        DataBindingUtil.setContentView<ActivityLoginBinding>(this, R.layout.activity_login).also {
+            it.viewModel = viewModel
+            it.lifecycleOwner = this
 
-        databinding.setOnResetPassword {
-            browse(RESET_PASSWORD_URL)
-        }
+            it.setOnResetPassword {
+                browse(RESET_PASSWORD_URL)
+            }
 
-        databinding.setOnSingUp {
-            browse(SING_UP_URL)
-        }
+            it.setOnSingUp {
+                browse(SING_UP_URL)
+            }
 
-        databinding.setOnSingIn {
-            hideSoftKeyboard()
-            loginViewModel.authentication()
-        }
+            it.setOnSingIn {
+                hideSoftKeyboard()
+                viewModel.authentication()
+            }
 
-        loginViewModel
-                .authenticationResult
-                .observe(this, Observer { result ->
-                    result?.let {
-                        if (result) {
-                            startActivity<MainActivity>()
-                            finish()
-                        } else {
-                            Snackbar.make(databinding.root,
-                                    R.string.authentication_error,
-                                    Snackbar.LENGTH_LONG).show()
-                        }
+            observe(viewModel.event) { event ->
+                when (event) {
+                    is Failure -> showFailure(it.root, event)
+                    is CloseScreen -> {
+                        startActivity<MainActivity>()
+                        finish()
                     }
-                })
-
-        databinding.viewModel = loginViewModel
-        databinding.lifecycleOwner = this
+                }
+            }
+        }
     }
 
     companion object {

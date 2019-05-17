@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="indent_xsmall">4dp</dimen>
+    <dimen name="indent_small">8dp</dimen>
     <dimen name="indent_default">16dp</dimen>
-    <dimen name="indent_small">4dp</dimen>
+    <dimen name="indent_normal">24dp</dimen>
+    <dimen name="indent_big">32dp</dimen>
 
     <dimen name="web_view_indent">10dp</dimen>
 

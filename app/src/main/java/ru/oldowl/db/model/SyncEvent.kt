@@ -29,7 +29,12 @@ data class SyncEvent(
 
     companion object {
 
-        fun markAllRead(feedId: String?): SyncEvent = SyncEvent(eventType = SyncEventType.MARK_ALL_READ, payload = feedId)
+        fun markAllRead(feedId: String?) = SyncEvent(eventType = SyncEventType.MARK_ALL_READ, payload = feedId)
 
+        fun unsubscribe(feedId: String) = SyncEvent(eventType = SyncEventType.UNSUBSCRIBE, payload = feedId)
+
+        fun updateFavorite(itemId: String) = SyncEvent(eventType = SyncEventType.UPDATE_FAVORITE, payload = itemId)
+
+        fun updateRead(itemId: String) = SyncEvent(eventType = SyncEventType.UPDATE_READ, payload = itemId)
     }
 }

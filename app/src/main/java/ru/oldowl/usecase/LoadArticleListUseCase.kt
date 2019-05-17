@@ -4,16 +4,17 @@ import ru.oldowl.core.UseCase
 import ru.oldowl.db.dao.ArticleDao
 import ru.oldowl.db.model.ArticleAndSubscriptionTitle
 import ru.oldowl.viewmodel.ArticleListMode
+import ru.oldowl.core.Result
 
 class LoadArticleListUseCase(
         private val articleDao: ArticleDao
-) : UseCase<Param, List<ArticleAndSubscriptionTitle>>() {
+) : UseCase<LoadArticleListUseCase.Param, List<ArticleAndSubscriptionTitle>>() {
 
-    override suspend fun run(param: Param): List<ArticleAndSubscriptionTitle> {
+    override suspend fun run(param: Param): Result<List<ArticleAndSubscriptionTitle>> {
         val mode = param.mode
         val hideRead = param.hideRead
 
-        return when (mode) {
+        val list = when (mode) {
             ArticleListMode.FAVORITE -> articleDao.findFavorite()
 
             ArticleListMode.ALL -> {
@@ -32,11 +33,13 @@ class LoadArticleListUseCase(
                     articleDao.findAll(subscriptionId)
             }
         }
-    }
-}
 
-data class Param(
-        val hideRead: Boolean,
-        val mode: ArticleListMode,
-        val subscriptionId: Long? = null
-)
+        return Result.success(list)
+    }
+
+    data class Param(
+            val hideRead: Boolean,
+            val mode: ArticleListMode,
+            val subscriptionId: Long? = null
+    )
+}

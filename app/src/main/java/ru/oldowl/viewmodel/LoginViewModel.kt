@@ -1,16 +1,14 @@
 package ru.oldowl.viewmodel
 
 import android.arch.lifecycle.MutableLiveData
-import kotlinx.coroutines.Dispatchers
+import android.databinding.ObservableField
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import ru.oldowl.R
-import ru.oldowl.api.theoldreader.TheOldReaderApi
-import ru.oldowl.service.AccountService
+import ru.oldowl.core.*
+import ru.oldowl.core.ui.BaseViewModel
+import ru.oldowl.usecase.LoginUseCase
 
-class LoginViewModel(private val appName: String,
-                     private val theOldReaderApi: TheOldReaderApi,
-                     private val accountService: AccountService) : BaseViewModel() {
+class LoginViewModel(private val loginUseCase: LoginUseCase) : BaseViewModel() {
 
     val email: MutableLiveData<String> = MutableLiveData()
     val emailError: MutableLiveData<Int> = MutableLiveData()
@@ -18,41 +16,43 @@ class LoginViewModel(private val appName: String,
     val password: MutableLiveData<String> = MutableLiveData()
     val passwordError: MutableLiveData<Int> = MutableLiveData()
 
-    val authenticationResult: MutableLiveData<Boolean> = MutableLiveData()
-    val progress: MutableLiveData<Boolean> = MutableLiveData()
+    val progress: ObservableField<Boolean> = ObservableField(false)
 
-    fun authentication() = launch(Dispatchers.Main) {
+    val event = MutableLiveData<Event>()
+
+    fun authentication() = launch {
         val email = email.value ?: ""
         val password = password.value ?: ""
 
-        progress.value = true
-        try {
-            emailError.value = null
-            if (email.isBlank()) {
-                emailError.value = R.string.email_error
+        emailError.value = null
+        if (email.isBlank()) {
+            emailError.value = R.string.email_error
+        }
+
+        passwordError.value = null
+        if (password.isBlank()) {
+            passwordError.value = R.string.password_error
+        }
+
+        if (emailError.value != null || passwordError.value != null) {
+            return@launch
+        }
+
+        progress.set(true)
+
+        val param = LoginUseCase.Param(email, password)
+        loginUseCase(param) {
+            onSuccess {
+                event.value = CloseScreen
             }
 
-            passwordError.value = null
-            if (password.isBlank()) {
-                passwordError.value = R.string.password_error
+            onComplete {
+                progress.set(true)
             }
 
-            if (emailError.value != null || passwordError.value != null) {
-                return@launch
+            onFailure {
+                event.value = Failure(R.string.authentication_error, it)
             }
-
-            val authToken = withContext(Dispatchers.Default) {
-                theOldReaderApi.authentication(email, password, appName) ?: ""
-            }
-
-            if (authToken.isNotBlank()) {
-                accountService.saveAccount(email, password, authToken)
-                authenticationResult.value = true
-            } else {
-                authenticationResult.value = false
-            }
-        } finally {
-            progress.value = false
         }
     }
 }

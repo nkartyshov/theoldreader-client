@@ -11,7 +11,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.amulyakhare.textdrawable.TextDrawable
 import com.amulyakhare.textdrawable.util.ColorGenerator
-import ru.oldowl.ui.view.ProgressButton
 import java.text.DateFormat
 import java.util.*
 
@@ -114,12 +113,6 @@ object BindingAdapter {
                 runnable.run()
             }
         }
-    }
-
-    @JvmStatic
-    @BindingAdapter("showProgress")
-    fun setShowProgress(progressButton: ProgressButton, progress: Boolean?) {
-        progressButton.setProgress(progress ?: false)
     }
 }
 

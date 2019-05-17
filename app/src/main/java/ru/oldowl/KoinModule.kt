@@ -14,11 +14,11 @@ import ru.oldowl.api.feedly.FeedlyApi
 import ru.oldowl.api.feedly.FeedlyWebService
 import ru.oldowl.api.theoldreader.TheOldReaderApi
 import ru.oldowl.api.theoldreader.TheOldReaderWebService
-import ru.oldowl.core.ui.MainViewModel
+import ru.oldowl.viewmodel.MainViewModel
 import ru.oldowl.db.AppDatabase
 import ru.oldowl.service.AccountService
 import ru.oldowl.service.SettingsService
-import ru.oldowl.usecase.LoadArticleListUseCase
+import ru.oldowl.usecase.*
 import ru.oldowl.viewmodel.*
 
 val serviceModule = module {
@@ -75,12 +75,18 @@ val serviceModule = module {
     single { AccountService(androidApplication(), get()) }
 
     // Use case
+    single { LoginUseCase(BuildConfig.APPLICATION_ID, get(), get()) }
+    single { GetNavigationItemListUseCase(get()) }
     single { LoadArticleListUseCase(get()) }
+    single { MarkAllReadUseCase(get(), get()) }
+    single { UnsubscribeUseCase(get(), get()) }
+    single { DeleteAllUseCase(get()) }
+    single { DeleteAllReadUseCase(get()) }
 
     // ViewModels
-    viewModel { (appName: String) -> LoginViewModel(appName, get(), get()) }
+    viewModel { LoginViewModel(get()) }
     viewModel { MainViewModel(get(), get(), get()) }
-    viewModel { ArticleListViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
+    viewModel { ArticleListViewModel(get(), get(), get(), get(), get(), get(), get()) }
     viewModel { ArticleViewModel(get(), get()) }
     viewModel { AddSubscriptionViewModel(get(), get(), get(), get()) }
 }

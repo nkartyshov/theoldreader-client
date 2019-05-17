@@ -1,4 +1,4 @@
-package ru.oldowl.viewmodel
+package ru.oldowl.core.ui
 
 import android.arch.lifecycle.ViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -12,7 +12,7 @@ abstract class BaseViewModel : ViewModel(), KoinComponent, CoroutineScope, AnkoL
     private val job = Job()
 
     override val coroutineContext: CoroutineContext
-        get() = job + Dispatchers.Default
+        get() = job + Dispatchers.Main
 
     override fun onCleared() {
         super.onCleared()

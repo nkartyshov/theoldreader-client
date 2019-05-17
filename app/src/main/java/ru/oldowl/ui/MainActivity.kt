@@ -22,7 +22,7 @@ import ru.oldowl.ui.adapter.SubscriptionAndUnreadCountAdapter
 import ru.oldowl.ui.fragment.AddSubscriptionFragment
 import ru.oldowl.ui.fragment.ArticleListFragment
 import ru.oldowl.ui.fragment.SettingsFragment
-import ru.oldowl.core.ui.MainViewModel
+import ru.oldowl.viewmodel.MainViewModel
 
 class MainActivity : BaseActivity() {
     private val mainViewModel: MainViewModel by viewModel()
