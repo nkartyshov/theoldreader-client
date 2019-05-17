@@ -19,10 +19,14 @@ import kotlinx.android.synthetic.main.toolbar.*
 import org.jetbrains.anko.startActivity
 import org.koin.standalone.inject
 import ru.oldowl.R
+import ru.oldowl.core.Failure
+import ru.oldowl.core.RefreshScreen
+import ru.oldowl.core.ShowSnackbar
 import ru.oldowl.databinding.ActivityArticleBinding
 import ru.oldowl.db.model.ArticleAndSubscriptionTitle
 import ru.oldowl.core.extension.browse
 import ru.oldowl.core.extension.copyToClipboard
+import ru.oldowl.core.extension.observe
 import ru.oldowl.core.extension.share
 import ru.oldowl.core.ui.BaseActivity
 import ru.oldowl.viewmodel.ArticleViewModel
@@ -56,9 +60,12 @@ class ArticleActivity : BaseActivity() {
             }
         }
 
-        viewModel.updateUi.observe(this, Observer {
-            invalidateOptionsMenu()
-        })
+        observe(viewModel.event) {
+            when (it) {
+                is RefreshScreen -> invalidateOptionsMenu()
+                is Failure -> null
+            }
+        }
 
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
