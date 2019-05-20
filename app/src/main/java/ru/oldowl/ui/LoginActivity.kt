@@ -4,7 +4,6 @@ import android.databinding.DataBindingUtil
 import android.os.Bundle
 import org.jetbrains.anko.startActivity
 import org.koin.android.viewmodel.ext.android.viewModel
-import org.koin.core.parameter.parametersOf
 import ru.oldowl.R
 import ru.oldowl.core.CloseScreen
 import ru.oldowl.core.Failure

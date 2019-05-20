@@ -2,25 +2,25 @@ package ru.oldowl.db.dao
 
 import android.arch.persistence.room.*
 import ru.oldowl.db.model.Article
-import ru.oldowl.db.model.ArticleAndSubscriptionTitle
+import ru.oldowl.db.model.ArticleListItem
 
 @Dao
 interface ArticleDao {
 
     @Query("select a.*, s.title as subscription_title from articles a inner join subscriptions s on a.subscription_id = s.id order by a.publish_date desc")
-    fun findAll(): List<ArticleAndSubscriptionTitle>
+    fun findAll(): List<ArticleListItem>
 
     @Query("select a.*, s.title as subscription_title from articles a inner join subscriptions s on a.subscription_id = s.id where a.subscription_id = :subscriptionId order by a.publish_date desc")
-    fun findAll(subscriptionId: Long?): List<ArticleAndSubscriptionTitle>
+    fun findAll(subscriptionId: Long?): List<ArticleListItem>
 
     @Query("select a.*, s.title as subscription_title from articles a inner join subscriptions s on a.subscription_id = s.id where a.read = 0 order by a.publish_date desc")
-    fun findUnread(): List<ArticleAndSubscriptionTitle>
+    fun findUnread(): List<ArticleListItem>
 
     @Query("select a.*, s.title as subscription_title from articles a inner join subscriptions s on a.subscription_id = s.id where a.subscription_id = :subscriptionId and a.read = 0 order by a.publish_date desc")
-    fun findUnread(subscriptionId: Long?): List<ArticleAndSubscriptionTitle>
+    fun findUnread(subscriptionId: Long?): List<ArticleListItem>
 
     @Query("select a.*, s.title as subscription_title from articles a inner join subscriptions s on a.subscription_id = s.id where a.favorite = 1 order by a.publish_date desc")
-    fun findFavorite(): List<ArticleAndSubscriptionTitle>
+    fun findFavorite(): List<ArticleListItem>
 
     @Query("select * from articles where original_id = :originalId")
     fun findByOriginalId(originalId: String): Article?

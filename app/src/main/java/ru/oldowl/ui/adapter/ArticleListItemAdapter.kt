@@ -5,17 +5,17 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import ru.oldowl.databinding.ViewArticleItemBinding
-import ru.oldowl.db.model.ArticleAndSubscriptionTitle
+import ru.oldowl.db.model.ArticleListItem
 import ru.oldowl.core.ui.SimpleDiff
 
-class ArticleAndSubscriptionTitleAdapter
-    : ListAdapter<ArticleAndSubscriptionTitle, ArticleAndSubscriptionTitleAdapter.ViewHolder>(
-        SimpleDiff<ArticleAndSubscriptionTitle>(
-                { old, new -> old.article.id == new.article.id && old.subscriptionTitle == new.subscriptionTitle }
+class ArticleListItemAdapter
+    : ListAdapter<ArticleListItem, ArticleListItemAdapter.ViewHolder>(
+        SimpleDiff<ArticleListItem>(
+                { old, new -> old == new }
         )
 ) {
 
-    var onItemClick: (article: ArticleAndSubscriptionTitle) -> Unit = {}
+    var onItemClick: (article: ArticleListItem) -> Unit = {}
 
     override fun onCreateViewHolder(root: ViewGroup, viewType: Int): ViewHolder {
         val dataBinding = ViewArticleItemBinding.inflate(LayoutInflater.from(root.context), root, false)
@@ -34,7 +34,7 @@ class ArticleAndSubscriptionTitleAdapter
     class ViewHolder(private val dataBinding: ViewArticleItemBinding)
         : RecyclerView.ViewHolder(dataBinding.root) {
 
-        fun bind(item: ArticleAndSubscriptionTitle) {
+        fun bind(item: ArticleListItem) {
             dataBinding.article = item.article
             dataBinding.subscriptionTitle = item.subscriptionTitle
         }

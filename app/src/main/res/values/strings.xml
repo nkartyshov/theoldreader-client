@@ -55,7 +55,7 @@
 
     <!-- Add subscription -->
     <string name="add_subscription_success">The %s was added</string>
-    <string name="add_subscription_error">The %s wasn\'t added</string>
+    <string name="add_subscription_error">Error adding subscription</string>
     <string name="add_subscription_unknown_error">Unknown error when saving subscription</string>
 
     <!-- Settings -->

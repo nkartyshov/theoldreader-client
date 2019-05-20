@@ -4,10 +4,14 @@ import android.support.design.widget.Snackbar
 import android.view.View
 import ru.oldowl.core.Failure
 import ru.oldowl.core.ShowSnackbar
+import java.text.DateFormat
 import java.util.*
 
 val Date.epochTime
     get() = this.time / 1000
+
+fun Date.toShortDateTime() =
+        DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(this)
 
 inline fun <T> Iterable<T>.exists(predicate: (T) -> Boolean): Boolean {
     for (item in this) {
@@ -21,9 +25,9 @@ inline fun <T> Iterable<T>.exists(predicate: (T) -> Boolean): Boolean {
 
 fun showMessage(view: View, event: ShowSnackbar) {
     Snackbar.make(view, event.message, event.duration).apply {
-        event.actions.forEach {
+       /* event.actions.forEach {
             setAction(it.first, it.second)
-        }
+        }*/
     }.show()
 }
 

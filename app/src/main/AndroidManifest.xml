@@ -26,11 +26,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".ui.LoginActivity"
             android:label="@string/sing_in" />
-        <activity android:name=".ui.MainActivity" />
-        <activity android:name=".ui.ArticleActivity"/>
+
+        <activity android:name=".ui.MainActivity"
+            android:label="@string/empty"/>
+
+        <activity android:name=".ui.ArticleActivity"
+            android:label="@string/empty"/>
 
         <service
             android:name=".AutoUpdateJob"

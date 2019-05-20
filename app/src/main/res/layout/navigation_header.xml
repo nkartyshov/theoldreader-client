@@ -10,9 +10,9 @@
             type="ru.oldowl.viewmodel.MainViewModel"/>
     </data>
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="130dp"
+        android:layout_height="wrap_content"
         android:padding="@dimen/indent_default">
 
         <ImageView
@@ -24,11 +24,13 @@
 
         <LinearLayout
             style="@style/ContentFullWidth.Vertical"
-            android:layout_alignParentBottom="true">
+            android:layout_marginStart="@dimen/indent_default"
+            android:layout_gravity="center_vertical">
 
             <TextView
                 android:id="@+id/email"
                 style="@style/TextNormal"
+                android:layout_marginBottom="@dimen/indent_xsmall"
                 android:text="@{viewModel.email}"
                 tools:text="test@mail.com" />
 
@@ -38,6 +40,6 @@
                 android:text="@{viewModel.lastSyncDate == null ? @string/nav_last_sync_date_not_sync : @string/nav_last_sync_date(viewModel.lastSyncDate)}"
                 tools:text="Last sync: 30.01.18 09:30" />
         </LinearLayout>
-    </RelativeLayout>
+    </LinearLayout>
 
 </layout>

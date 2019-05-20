@@ -6,7 +6,7 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class ArticleAndSubscriptionTitle(
+data class ArticleListItem(
         @Embedded
         var article: Article,
 

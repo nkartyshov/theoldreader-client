@@ -11,14 +11,8 @@ object RefreshScreen: Event()
 
 data class Failure(@StringRes val message: Int, val exception: Throwable) : Event()
 
-data class ShowSnackbar(@StringRes val message: Int, val duration: Int) : Event() {
-    var actions: Array<out Pair<Int, View.OnClickListener>> = emptyArray()
+data class ShowSnackbar(
+        @StringRes val message: Int,
+        val duration: Int = Snackbar.LENGTH_SHORT) : Event()
 
-    constructor(
-            @StringRes message: Int,
-            duration: Int,
-            vararg actions: Pair<Int, View.OnClickListener>
-    ) : this(message, duration) {
-        this.actions = actions
-    }
-}
+data class AddSubscriptionSuccess(val title: String): Event()

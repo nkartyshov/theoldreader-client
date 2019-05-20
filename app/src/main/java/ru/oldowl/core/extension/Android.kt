@@ -9,10 +9,13 @@ import android.content.*
 import android.net.Uri
 import android.os.Build
 import android.support.annotation.StringRes
+import android.support.customtabs.CustomTabsIntent
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import ru.oldowl.R
 import ru.oldowl.core.Failure
 import ru.oldowl.core.ShowSnackbar
 import ru.oldowl.core.ui.BaseActivity
@@ -30,11 +33,14 @@ fun BaseActivity.replaceFragment(id: Int, fragment: Fragment, addToBackStack: Bo
 
 fun Context.browse(url: String? = ""): Boolean {
     return try {
-        val intent = Intent(Intent.ACTION_VIEW).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            data = Uri.parse(url)
-        }
-        startActivity(intent)
+        val customTabsIntent = CustomTabsIntent.Builder()
+                .setShowTitle(true)
+                .setToolbarColor(ContextCompat.getColor(this, R.color.colorPrimary))
+                .setInstantAppsEnabled(false)
+                .addDefaultShareMenuItem()
+                .build()
+
+        customTabsIntent.launchUrl(this, Uri.parse(url))
         true
     } catch (e: ActivityNotFoundException) {
         e.printStackTrace()

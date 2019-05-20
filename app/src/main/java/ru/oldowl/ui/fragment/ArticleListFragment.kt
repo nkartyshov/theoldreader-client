@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.view.*
-import org.koin.android.viewmodel.ext.android.viewModel
+import org.koin.android.viewmodel.ext.android.sharedViewModel
 import ru.oldowl.R
 import ru.oldowl.core.CloseScreen
 import ru.oldowl.core.Failure
@@ -17,7 +17,7 @@ import ru.oldowl.core.ui.BaseFragment
 import ru.oldowl.databinding.FragmentArticleListBinding
 import ru.oldowl.db.model.Subscription
 import ru.oldowl.ui.ArticleActivity
-import ru.oldowl.ui.adapter.ArticleAndSubscriptionTitleAdapter
+import ru.oldowl.ui.adapter.ArticleListItemAdapter
 import ru.oldowl.viewmodel.ArticleListMode
 import ru.oldowl.viewmodel.ArticleListViewModel
 import ru.oldowl.viewmodel.ArticleListViewModel.Companion.ARTICLE_LIST_MODE
@@ -25,7 +25,7 @@ import ru.oldowl.viewmodel.ArticleListViewModel.Companion.SUBSCRIPTION
 
 class ArticleListFragment : BaseFragment() {
 
-    private val viewModel: ArticleListViewModel by viewModel()
+    private val viewModel: ArticleListViewModel by sharedViewModel()
 
     init {
         setHasOptionsMenu(true)
@@ -40,7 +40,7 @@ class ArticleListFragment : BaseFragment() {
 
         viewModel.setArgument(arguments)
 
-        val adapter = ArticleAndSubscriptionTitleAdapter()
+        val adapter = ArticleListItemAdapter()
         adapter.onItemClick = {
             ArticleActivity.openArticle(context, it)
         }

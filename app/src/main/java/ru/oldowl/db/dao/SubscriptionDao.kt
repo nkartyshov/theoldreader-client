@@ -2,7 +2,7 @@ package ru.oldowl.db.dao
 
 import android.arch.persistence.room.*
 import ru.oldowl.db.model.Subscription
-import ru.oldowl.db.model.SubscriptionAndUnreadCount
+import ru.oldowl.db.model.SubscriptionNavItem
 
 @Dao
 interface SubscriptionDao {
@@ -14,7 +14,7 @@ interface SubscriptionDao {
     fun findAll(): List<Subscription>
 
     @Query("select s.*, (select count(a.id) from articles a where a.read = 0 and a.subscription_id = s.id) as unread from subscriptions s")
-    fun findAllWithUnread(): List<SubscriptionAndUnreadCount>
+    fun fetchNavItems(): List<SubscriptionNavItem>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun save(subscription: Subscription): Long

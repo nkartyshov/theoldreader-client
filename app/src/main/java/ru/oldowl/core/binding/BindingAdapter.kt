@@ -11,6 +11,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.amulyakhare.textdrawable.TextDrawable
 import com.amulyakhare.textdrawable.util.ColorGenerator
+import ru.oldowl.core.extension.toShortDateTime
 import java.text.DateFormat
 import java.util.*
 
@@ -50,8 +51,7 @@ object BindingAdapter {
     @BindingAdapter("android:text")
     fun setDate(textView: TextView, date: Date?) {
         date?.let {
-            val dateTimeInstance = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT)
-            textView.text = dateTimeInstance.format(it)
+            textView.text = it.toShortDateTime()
         }
     }
 

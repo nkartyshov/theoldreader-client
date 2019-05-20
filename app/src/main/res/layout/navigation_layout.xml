@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
 
@@ -15,6 +14,22 @@
         <variable
             name="recyclerConfig"
             type="ru.oldowl.core.binding.RecyclerConfig" />
+
+        <variable
+            name="onAllPage"
+            type="Runnable" />
+
+        <variable
+            name="onFavoritePage"
+            type="Runnable" />
+
+        <variable
+            name="onAddSubscription"
+            type="Runnable" />
+
+        <variable
+            name="onSettings"
+            type="Runnable" />
     </data>
 
     <android.support.v4.widget.NestedScrollView
@@ -36,8 +51,8 @@
             <View style="@style/VerticalDivider" />
 
             <LinearLayout
-                android:id="@+id/all_articles"
-                style="@style/NavItem">
+                style="@style/NavItem"
+                android:onClick="@{onAllPage}">
 
                 <ImageView
                     style="@style/NavImageItem"
@@ -50,8 +65,8 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/favorite_articles"
-                style="@style/NavItem">
+                style="@style/NavItem"
+                android:onClick="@{onFavoritePage}">
 
                 <ImageView
                     style="@style/NavImageItem"
@@ -70,24 +85,23 @@
                 <View style="@style/VerticalDivider" />
 
                 <TextView
-                    style="@style/TextNormal"
-                    android:padding="@dimen/indent_default"
+                    style="@style/NavSubHeader"
                     android:text="@string/nav_subscriptions" />
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/subscription_list"
+                    config="@{recyclerConfig}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:nestedScrollingEnabled="false"
-                    config="@{recyclerConfig}" />
+                    android:nestedScrollingEnabled="false" />
 
             </LinearLayout>
 
             <View style="@style/VerticalDivider" />
 
             <LinearLayout
-                android:id="@+id/add_subscription"
-                style="@style/NavItem">
+                style="@style/NavItem"
+                android:onClick="@{onAddSubscription}">
 
                 <ImageView
                     style="@style/NavImageItem"
@@ -100,8 +114,8 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/settings"
-                style="@style/NavItem">
+                style="@style/NavItem"
+                android:onClick="@{onSettings}">
 
                 <ImageView
                     style="@style/NavImageItem"

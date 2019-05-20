@@ -5,7 +5,7 @@ import android.os.Bundle
 import ru.oldowl.core.Event
 import ru.oldowl.core.RefreshScreen
 import ru.oldowl.core.ui.BaseViewModel
-import ru.oldowl.db.model.ArticleAndSubscriptionTitle
+import ru.oldowl.db.model.ArticleListItem
 import ru.oldowl.usecase.MarkReadUseCase
 import ru.oldowl.usecase.ToggleFavoriteUseCase
 import java.util.*
@@ -15,7 +15,7 @@ class ArticleViewModel(
         private val markReadUseCase: MarkReadUseCase
 ) : BaseViewModel() {
 
-    private lateinit var item: ArticleAndSubscriptionTitle
+    private lateinit var item: ArticleListItem
 
     val event: MutableLiveData<Event> = MutableLiveData()
 
@@ -35,7 +35,7 @@ class ArticleViewModel(
         get() = item.article.url
 
     fun setArgument(bundle: Bundle?) = bundle?.let {
-        item = bundle.getParcelable(ARTICLE) as ArticleAndSubscriptionTitle
+        item = bundle.getParcelable(ARTICLE) as ArticleListItem
     }
 
     fun getPageContent(): String {

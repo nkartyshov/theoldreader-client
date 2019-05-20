@@ -12,7 +12,7 @@ import ru.oldowl.*
 import ru.oldowl.core.CloseScreen
 import ru.oldowl.core.Event
 import ru.oldowl.core.ui.BaseViewModel
-import ru.oldowl.db.model.ArticleAndSubscriptionTitle
+import ru.oldowl.db.model.ArticleListItem
 import ru.oldowl.db.model.Subscription
 import ru.oldowl.service.SettingsService
 import ru.oldowl.usecase.*
@@ -25,7 +25,7 @@ class ArticleListViewModel(private val application: Application,
                            private val markReadAllUseCase: MarkAllReadUseCase,
                            private val unsubscribeUseCase: UnsubscribeUseCase) : BaseViewModel(), LifecycleObserver {
 
-    private val articleLiveData: MutableLiveData<List<ArticleAndSubscriptionTitle>> = MutableLiveData()
+    private val articleLiveData: MutableLiveData<List<ArticleListItem>> = MutableLiveData()
 
     @Deprecated(message = "")
     private val jobStatusObserver: Observer<JobStatus?> by lazy {
@@ -66,7 +66,7 @@ class ArticleListViewModel(private val application: Application,
             }
         }
 
-    val articles: LiveData<List<ArticleAndSubscriptionTitle>>
+    val articles: LiveData<List<ArticleListItem>>
         get() {
             return articleLiveData
         }

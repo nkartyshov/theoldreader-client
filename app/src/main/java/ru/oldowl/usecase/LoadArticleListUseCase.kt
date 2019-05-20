@@ -2,15 +2,15 @@ package ru.oldowl.usecase
 
 import ru.oldowl.core.UseCase
 import ru.oldowl.db.dao.ArticleDao
-import ru.oldowl.db.model.ArticleAndSubscriptionTitle
+import ru.oldowl.db.model.ArticleListItem
 import ru.oldowl.viewmodel.ArticleListMode
 import ru.oldowl.core.Result
 
 class LoadArticleListUseCase(
         private val articleDao: ArticleDao
-) : UseCase<LoadArticleListUseCase.Param, List<ArticleAndSubscriptionTitle>>() {
+) : UseCase<LoadArticleListUseCase.Param, List<ArticleListItem>>() {
 
-    override suspend fun run(param: Param): Result<List<ArticleAndSubscriptionTitle>> {
+    override suspend fun run(param: Param): Result<List<ArticleListItem>> {
         val mode = param.mode
         val hideRead = param.hideRead
 

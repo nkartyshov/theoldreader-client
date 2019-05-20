@@ -20,7 +20,7 @@ data class Subscription(
         @ColumnInfo(name = "feed_id")
         var feedId: String? = null,
         @ColumnInfo(name = "title")
-        var title: String?,
+        var title: String,
         @ColumnInfo(name = "url")
         var url: String?,
         @ColumnInfo(name = "html_url")

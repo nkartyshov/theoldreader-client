@@ -1,11 +1,11 @@
 package ru.oldowl.ui
 
-import android.arch.lifecycle.Observer
 import android.content.Context
 import android.databinding.DataBindingUtil
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.support.design.widget.Snackbar
+import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -14,21 +14,19 @@ import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.ProgressBar
-import kotlinx.android.synthetic.main.activity_article.*
 import kotlinx.android.synthetic.main.toolbar.*
 import org.jetbrains.anko.startActivity
 import org.koin.standalone.inject
 import ru.oldowl.R
 import ru.oldowl.core.Failure
 import ru.oldowl.core.RefreshScreen
-import ru.oldowl.core.ShowSnackbar
-import ru.oldowl.databinding.ActivityArticleBinding
-import ru.oldowl.db.model.ArticleAndSubscriptionTitle
 import ru.oldowl.core.extension.browse
 import ru.oldowl.core.extension.copyToClipboard
 import ru.oldowl.core.extension.observe
 import ru.oldowl.core.extension.share
 import ru.oldowl.core.ui.BaseActivity
+import ru.oldowl.databinding.ActivityArticleBinding
+import ru.oldowl.db.model.ArticleListItem
 import ru.oldowl.viewmodel.ArticleViewModel
 import ru.oldowl.viewmodel.ArticleViewModel.Companion.ARTICLE
 
@@ -96,7 +94,7 @@ class ArticleActivity : BaseActivity() {
 
             R.id.copy_url -> viewModel.url?.let {
                 copyToClipboard(it)
-                Snackbar.make(article_content, R.string.copy_url_to_clipboard_snackbar, Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(window.decorView, R.string.copy_url_to_clipboard_snackbar, Snackbar.LENGTH_SHORT).show()
             }
         }
 
@@ -104,7 +102,7 @@ class ArticleActivity : BaseActivity() {
     }
 
     companion object {
-        fun openArticle(context: Context?, article: ArticleAndSubscriptionTitle) {
+        fun openArticle(context: Context?, article: ArticleListItem) {
             context?.startActivity<ArticleActivity>(ARTICLE to article)
         }
     }
