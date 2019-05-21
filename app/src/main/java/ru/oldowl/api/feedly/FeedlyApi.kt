@@ -34,7 +34,7 @@ class FeedlyApi(private val feedlyWebService: FeedlyWebService) : AnkoLogger {
                     Subscription(title = it.title,
                             htmlUrl = it.website,
                             url = it.feedId.removePrefix("feed/"),
-                            categoryId = 1)
+                            categoryId = "default")
                 } ?: emptyList()
     }
 }

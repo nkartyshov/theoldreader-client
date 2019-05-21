@@ -6,17 +6,15 @@ import ru.oldowl.db.dao.ArticleDao
 import ru.oldowl.db.dao.SyncEventDao
 import ru.oldowl.db.model.Article
 import ru.oldowl.db.model.SyncEvent
+import ru.oldowl.repository.ArticleRepository
 
 class ToggleFavoriteUseCase(
-        private val articleDao: ArticleDao,
-        private val eventDao: SyncEventDao
+        private val repository: ArticleRepository
 ) : UseCase<Article, Unit>() {
 
     override suspend fun run(param: Article): Result<Unit> {
         param.favorite = !param.favorite
-        articleDao.updateFavoriteState(param.id, param.favorite)
-        eventDao.save(SyncEvent.updateFavorite(param.originalId))
-
+        repository.updateFavoriteState(param)
         return Result.empty()
     }
 }

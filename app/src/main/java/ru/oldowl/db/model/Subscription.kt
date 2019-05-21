@@ -13,16 +13,14 @@ import java.util.*
                 onDelete = ForeignKey.SET_NULL)],
         indices = [Index("category_id")])
 data class Subscription(
-        @PrimaryKey(autoGenerate = true)
-        var id: Long = 0,
+        @PrimaryKey
+        var id: String = "",
         @ColumnInfo(name = "category_id")
-        var categoryId: Long?,
-        @ColumnInfo(name = "feed_id")
-        var feedId: String? = null,
+        var categoryId: String? = null,
         @ColumnInfo(name = "title")
         var title: String,
         @ColumnInfo(name = "url")
-        var url: String?,
+        var url: String,
         @ColumnInfo(name = "html_url")
         var htmlUrl: String? = "",
         @ColumnInfo(name = "last_update_date")

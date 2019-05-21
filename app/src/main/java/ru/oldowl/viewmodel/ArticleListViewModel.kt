@@ -14,11 +14,11 @@ import ru.oldowl.core.Event
 import ru.oldowl.core.ui.BaseViewModel
 import ru.oldowl.db.model.ArticleListItem
 import ru.oldowl.db.model.Subscription
-import ru.oldowl.service.SettingsService
+import ru.oldowl.repository.SettingsStorage
 import ru.oldowl.usecase.*
 
 class ArticleListViewModel(private val application: Application,
-                           private val settingsService: SettingsService,
+                           private val settingsStorage: SettingsStorage,
                            private val loadArticleListUseCase: LoadArticleListUseCase,
                            private val deleteAllUseCase: DeleteAllUseCase,
                            private val deleteAllReadUseCase: DeleteAllReadUseCase,
@@ -47,11 +47,11 @@ class ArticleListViewModel(private val application: Application,
 
     var hideRead: Boolean
         get() {
-            return settingsService.hideRead
+            return settingsStorage.hideRead
         }
         set(value) {
-            if (settingsService.hideRead != value) {
-                settingsService.hideRead = value
+            if (settingsStorage.hideRead != value) {
+                settingsStorage.hideRead = value
 
                 loadArticles()
             }
@@ -128,7 +128,7 @@ class ArticleListViewModel(private val application: Application,
 
     fun loadArticles() {
 
-        val param = LoadArticleListUseCase.Param(hideRead, mode, subscription?.id)
+        val param = LoadArticleListUseCase.Param(mode, subscription?.id)
         loadArticleListUseCase(param) {
             onSuccess { articles ->
                 launch(Dispatchers.Main) {

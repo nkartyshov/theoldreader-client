@@ -17,7 +17,7 @@ interface SubscriptionDao {
     fun fetchNavItems(): List<SubscriptionNavItem>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun save(subscription: Subscription): Long
+    fun save(subscription: Subscription)
 
     @Delete
     fun delete(subscription: Subscription)

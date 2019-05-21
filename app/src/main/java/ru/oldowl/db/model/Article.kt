@@ -15,10 +15,9 @@ import java.util.*
         ],
         indices = [Index("subscription_id")])
 data class Article(
-        @PrimaryKey(autoGenerate = true)
-        var id: Long = 0,
-        @ColumnInfo(name = "original_id")
-        var originalId: String = "",
+        @PrimaryKey
+        @ColumnInfo(name = "id")
+        var id: String,
         @ColumnInfo(name = "title")
         var title: String,
         @ColumnInfo(name = "description")
@@ -26,7 +25,7 @@ data class Article(
         @ColumnInfo(name = "url")
         var url: String,
         @ColumnInfo(name = "subscription_id")
-        var subscriptionId: Long?,
+        var subscriptionId: String? = null,
         @ColumnInfo(name = "read")
         var read: Boolean = false,
         @ColumnInfo(name = "favorite")

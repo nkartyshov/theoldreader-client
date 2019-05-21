@@ -14,14 +14,16 @@ import ru.oldowl.api.feedly.FeedlyApi
 import ru.oldowl.api.feedly.FeedlyWebService
 import ru.oldowl.api.theoldreader.TheOldReaderApi
 import ru.oldowl.api.theoldreader.TheOldReaderWebService
-import ru.oldowl.viewmodel.MainViewModel
 import ru.oldowl.db.AppDatabase
-import ru.oldowl.service.AccountService
-import ru.oldowl.service.SettingsService
+import ru.oldowl.repository.AccountRepository
+import ru.oldowl.repository.ArticleRepository
+import ru.oldowl.repository.SettingsStorage
+import ru.oldowl.repository.SubscriptionRepository
 import ru.oldowl.usecase.*
 import ru.oldowl.viewmodel.*
 
 val serviceModule = module {
+
     // Database
     single { AppDatabase.buildDatabase(androidApplication().applicationContext) }
     single { get<AppDatabase>().subscriptionDao() }
@@ -70,22 +72,24 @@ val serviceModule = module {
     single { TheOldReaderApi(get()) }
     single { FeedlyApi(get()) }
 
-    // Services
-    single { SettingsService(androidApplication()) }
-    single { AccountService(androidApplication(), get()) }
+    // Repository
+    single { SettingsStorage(androidApplication(), get()) }
+    single { AccountRepository(get()) }
+    single<SubscriptionRepository> { SubscriptionRepository.SubscriptionRepositoryImpl(get(), get(), get(), get()) }
+    single<ArticleRepository> { ArticleRepository.ArticleRepositoryImpl(get(), get(), get()) }
 
     // Use case
     single { LoginUseCase(BuildConfig.APPLICATION_ID, get(), get()) }
     single { GetNavigationItemListUseCase(get()) }
-    single { ToggleFavoriteUseCase(get(), get()) }
-    single { MarkReadUseCase(get(), get()) }
+    single { ToggleFavoriteUseCase(get()) }
+    single { MarkReadUseCase(get()) }
     single { LoadArticleListUseCase(get()) }
-    single { MarkAllReadUseCase(get(), get()) }
-    single { UnsubscribeUseCase(get(), get()) }
+    single { MarkAllReadUseCase(get()) }
+    single { UnsubscribeUseCase(get()) }
     single { DeleteAllUseCase(get()) }
     single { DeleteAllReadUseCase(get()) }
     single { SearchSubscriptionUseCase(get()) }
-    single { AddSubscriptionUseCase(get(), get(), get()) }
+    single { AddSubscriptionUseCase(get()) }
 
     // ViewModels
     viewModel { LoginViewModel(get()) }

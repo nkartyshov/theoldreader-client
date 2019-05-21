@@ -29,7 +29,7 @@ data class SyncEvent(
 
     companion object {
 
-        fun markAllRead(feedId: String?) = SyncEvent(eventType = SyncEventType.MARK_ALL_READ, payload = feedId)
+        fun markAllRead(feedId: String? = null) = SyncEvent(eventType = SyncEventType.MARK_ALL_READ, payload = feedId)
 
         fun unsubscribe(feedId: String) = SyncEvent(eventType = SyncEventType.UNSUBSCRIBE, payload = feedId)
 

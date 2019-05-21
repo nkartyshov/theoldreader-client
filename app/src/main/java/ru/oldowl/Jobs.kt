@@ -14,6 +14,7 @@ import kotlinx.coroutines.*
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
 import ru.oldowl.api.theoldreader.TheOldReaderApi
+import ru.oldowl.repository.SettingsStorage
 import ru.oldowl.db.dao.ArticleDao
 import ru.oldowl.db.dao.CategoryDao
 import ru.oldowl.db.dao.SyncEventDao
@@ -24,8 +25,7 @@ import ru.oldowl.db.model.Subscription
 import ru.oldowl.core.extension.exists
 import ru.oldowl.core.extension.isScheduled
 import ru.oldowl.db.model.SyncEventType
-import ru.oldowl.service.AccountService
-import ru.oldowl.service.SettingsService
+import ru.oldowl.repository.AccountRepository
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.coroutines.CoroutineContext
@@ -41,14 +41,14 @@ private val observeJobStatus: MutableLiveData<JobStatus> = MutableLiveData()
 data class JobStatus(val jobId: Int?, val finished: Boolean)
 
 object Jobs : KoinComponent {
-    private val settingsService: SettingsService by inject()
+    private val SETTINGS_STORAGE: SettingsStorage by inject()
 
     val observeJobStatus: LiveData<JobStatus> = ru.oldowl.observeJobStatus
 
     fun scheduleUpdate(context: Context) {
         val jobScheduler = context.getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
 
-        if (settingsService.autoUpdate) {
+        if (SETTINGS_STORAGE.autoUpdate) {
             val componentName = ComponentName(context, AutoUpdateJob::class.java)
             val job = JobInfo.Builder(AUTO_UPDATE_ID, componentName)
                     .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
@@ -75,7 +75,7 @@ object Jobs : KoinComponent {
         extras.putInt(FORCE, 1)
 
         subscription?.let {
-            extras.putLong(SUBSCRIPTION_ID, it.id)
+            extras.putString(SUBSCRIPTION_ID, it.id)
         }
 
         val componentName = ComponentName(context, AutoUpdateJob::class.java)
@@ -98,8 +98,8 @@ class AutoUpdateJob : JobService(), KoinComponent, CoroutineScope {
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Default + job
 
-    private val accountService: AccountService by inject()
-    private val settingsService: SettingsService by inject()
+    private val accountRepository: AccountRepository by inject()
+    private val settingsStorage: SettingsStorage by inject()
 
     private val theOldReaderApi: TheOldReaderApi by inject()
 
@@ -117,14 +117,14 @@ class AutoUpdateJob : JobService(), KoinComponent, CoroutineScope {
                 val subscriptionId = extras?.getLong(SUBSCRIPTION_ID) ?: -1
                 val force: Boolean = extras?.getInt(FORCE) == 1
 
-                val lastSyncDate = settingsService.lastSyncDate
+                val lastSyncDate = settingsStorage.lastSyncDate
                 if (!shouldUpdateSubscription(force, lastSyncDate)) {
                     Log.d(AutoUpdateJob::class.simpleName, "Autoupdate the subscriptions has been skip, last update date $lastSyncDate")
                     return@launch
                 }
 
                 // TODO update auth token
-                val account = accountService.getAccount()
+                val account = accountRepository.getAccount()
                 val authToken = account?.authToken ?: ""
 
                 // Sync events
@@ -142,7 +142,7 @@ class AutoUpdateJob : JobService(), KoinComponent, CoroutineScope {
                 else subscriptionDao.findAll()
 
                 for (subscription in subscriptions) {
-                    val feedId = subscription.feedId ?: ""
+                    val feedId = subscription.id
 
                     val itemIds = theOldReaderApi.getItemIds(feedId, authToken, newerThan = lastSyncDate)
                     if (itemIds.isNotEmpty()) {
@@ -153,7 +153,7 @@ class AutoUpdateJob : JobService(), KoinComponent, CoroutineScope {
                             contents
                                     .map {
                                         Article(
-                                                originalId = it.itemId,
+                                                id = it.itemId,
                                                 title = it.title,
                                                 description = it.description,
                                                 subscriptionId = subscription.id,
@@ -161,13 +161,12 @@ class AutoUpdateJob : JobService(), KoinComponent, CoroutineScope {
                                                 publishDate = it.publishDate
                                         )
                                     }
-                                    .filter { !articleDao.exists(it.originalId) }
                                     .forEach { articleDao.save(it) }
                         }
                     }
                 }
 
-                settingsService.lastSyncDate = Date()
+                settingsStorage.lastSyncDate = Date()
             } finally {
                 sendJobStatus(params?.jobId, true)
                 jobFinished(params, false)
@@ -188,7 +187,7 @@ class AutoUpdateJob : JobService(), KoinComponent, CoroutineScope {
     }
 
     private fun shouldUpdateSubscription(force: Boolean, lastSyncDate: Date?): Boolean {
-        val updatePeriodTime = TimeUnit.HOURS.toMillis(settingsService.autoUpdatePeriod)
+        val updatePeriodTime = TimeUnit.HOURS.toMillis(settingsStorage.autoUpdatePeriod)
 
         return force || lastSyncDate == null || (System.currentTimeMillis() - lastSyncDate.time) > updatePeriodTime
     }
@@ -198,13 +197,13 @@ class AutoUpdateJob : JobService(), KoinComponent, CoroutineScope {
                 .forEach { event ->
                     when (event.eventType) {
                         SyncEventType.UPDATE_READ -> event.payload?.let {
-                            val article = articleDao.findByOriginalId(it)
-                            theOldReaderApi.updateReadState(article!!.originalId, article.read, authToken)
+                            val article = articleDao.findById(it)
+                            theOldReaderApi.updateReadState(article!!.id, article.read, authToken)
                         }
 
                         SyncEventType.UPDATE_FAVORITE -> event.payload?.let {
-                            val article = articleDao.findByOriginalId(it)
-                            theOldReaderApi.updateFavoriteState(article!!.originalId, article.favorite, authToken)
+                            val article = articleDao.findById(it)
+                            theOldReaderApi.updateFavoriteState(article!!.id, article.favorite, authToken)
                         }
 
                         SyncEventType.MARK_ALL_READ -> event.payload?.let {
@@ -232,17 +231,17 @@ class AutoUpdateJob : JobService(), KoinComponent, CoroutineScope {
             // Delete favorite
             if (favorites.isNotEmpty()) {
                 favorites
-                        .filter { !favoriteIds.exists { id -> id == it.article.originalId } }
-                        .forEach { articleDao.updateFavoriteState(it.article.originalId, false) }
+                        .filter { !favoriteIds.exists { id -> id == it.article.id } }
+                        .forEach { articleDao.updateFavoriteState(it.article.id, false) }
             }
 
             contents
-                    .filter { subscriptions.exists { s -> it.feedId == s.feedId } }
+                    .filter { subscriptions.exists { s -> it.feedId == s.id } }
                     .map {
-                        val subscription = subscriptions.single { subscription -> subscription.feedId == it.feedId }
+                        val subscription = subscriptions.single { subscription -> subscription.id == it.feedId }
 
                         Article(
-                                originalId = it.itemId,
+                                id = it.itemId,
                                 title = it.title,
                                 description = it.description,
                                 subscriptionId = subscription.id,
@@ -251,12 +250,9 @@ class AutoUpdateJob : JobService(), KoinComponent, CoroutineScope {
                         )
                     }
                     .forEach {
-                        if (!articleDao.exists(it.originalId)) {
-                            articleDao.save(it)
-                        }
-
-                        articleDao.updateReadState(it.originalId, true)
-                        articleDao.updateFavoriteState(it.originalId, true)
+                        articleDao.save(it)
+                        articleDao.updateReadState(it.id, true)
+                        articleDao.updateFavoriteState(it.id, true)
                     }
         }
     }
@@ -267,39 +263,37 @@ class AutoUpdateJob : JobService(), KoinComponent, CoroutineScope {
 
         // Delete subscriptions
         subscriptions
-                .filter { !subscriptionResponses.exists { s -> s.id == it.feedId } }
+                .filter { !subscriptionResponses.exists { s -> s.id == it.id } }
                 .forEach { subscriptionDao.delete(it) }
 
         // Adds or update subscriptions
         for (subscriptionResponse in subscriptionResponses) {
             val categories = subscriptionResponse.categories
             val category = categories
-                    .map { Category(labelId = it.id, title = it.label) }
-                    .getOrElse(0) { Category(1, "default", "Default") }
+                    .map { Category(id = it.id, title = it.label) }
+                    .getOrElse(0) { Category("default", "Default") }
 
             val categoryId = findCategoryOrSave(category)
             val subscription = Subscription(
                     categoryId = categoryId,
+                    id = subscriptionResponse.id,
                     title = subscriptionResponse.title,
-                    feedId = subscriptionResponse.id,
                     url = subscriptionResponse.url,
                     htmlUrl = subscriptionResponse.htmlUrl
             )
 
-            val oldSubscription = subscriptions.singleOrNull { it.feedId == subscriptionResponse.id }
+            val oldSubscription = subscriptions.singleOrNull { it.id == subscriptionResponse.id }
             if (oldSubscription != null) {
-                subscription.id = oldSubscription.id
                 subscriptionDao.update(subscription)
             } else {
-                val subscriptionId = subscriptionDao.save(subscription)
-                subscription.id = subscriptionId
+                subscriptionDao.save(subscription)
             }
         }
     }
 
-    private fun findCategoryOrSave(category: Category): Long {
-        return if (categoryDao.exists(category.labelId))
-            categoryDao.findIdByLabelId(category.labelId)
-        else categoryDao.save(category)
+    private fun findCategoryOrSave(category: Category): String {
+        if (!categoryDao.exists(category.id))
+            categoryDao.save(category)
+        return categoryDao.findById(category.id).id
     }
 }

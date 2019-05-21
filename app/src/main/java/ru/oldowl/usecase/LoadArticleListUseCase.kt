@@ -1,45 +1,28 @@
 package ru.oldowl.usecase
 
-import ru.oldowl.core.UseCase
-import ru.oldowl.db.dao.ArticleDao
-import ru.oldowl.db.model.ArticleListItem
-import ru.oldowl.viewmodel.ArticleListMode
 import ru.oldowl.core.Result
+import ru.oldowl.core.UseCase
+import ru.oldowl.db.model.ArticleListItem
+import ru.oldowl.repository.ArticleRepository
+import ru.oldowl.viewmodel.ArticleListMode
 
 class LoadArticleListUseCase(
-        private val articleDao: ArticleDao
+        private val repository: ArticleRepository
 ) : UseCase<LoadArticleListUseCase.Param, List<ArticleListItem>>() {
 
-    override suspend fun run(param: Param): Result<List<ArticleListItem>> {
-        val mode = param.mode
-        val hideRead = param.hideRead
+    override suspend fun run(param: Param): Result<List<ArticleListItem>> =
+            Result.success(
+                    when (param.mode) {
+                        ArticleListMode.FAVORITE -> repository.findFavorite()
 
-        val list = when (mode) {
-            ArticleListMode.FAVORITE -> articleDao.findFavorite()
+                        ArticleListMode.ALL -> repository.findAll()
 
-            ArticleListMode.ALL -> {
-                if (hideRead)
-                    articleDao.findUnread()
-                else
-                    articleDao.findAll()
-            }
-
-            ArticleListMode.SUBSCRIPTION -> {
-                val subscriptionId = param.subscriptionId
-
-                if (hideRead)
-                    articleDao.findUnread(subscriptionId)
-                else
-                    articleDao.findAll(subscriptionId)
-            }
-        }
-
-        return Result.success(list)
-    }
+                        ArticleListMode.SUBSCRIPTION -> repository.findBySubscription(param.subscriptionId!!)
+                    }
+            )
 
     data class Param(
-            val hideRead: Boolean,
             val mode: ArticleListMode,
-            val subscriptionId: Long? = null
+            val subscriptionId: String? = null
     )
 }

@@ -20,10 +20,7 @@ import org.koin.standalone.inject
 import ru.oldowl.R
 import ru.oldowl.core.Failure
 import ru.oldowl.core.RefreshScreen
-import ru.oldowl.core.extension.browse
-import ru.oldowl.core.extension.copyToClipboard
-import ru.oldowl.core.extension.observe
-import ru.oldowl.core.extension.share
+import ru.oldowl.core.extension.*
 import ru.oldowl.core.ui.BaseActivity
 import ru.oldowl.databinding.ActivityArticleBinding
 import ru.oldowl.db.model.ArticleListItem
@@ -61,7 +58,7 @@ class ArticleActivity : BaseActivity() {
         observe(viewModel.event) {
             when (it) {
                 is RefreshScreen -> invalidateOptionsMenu()
-                is Failure -> null
+                is Failure -> showFailure(window.decorView, it)
             }
         }
 

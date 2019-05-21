@@ -200,7 +200,7 @@ class TheOldReaderApi(private val theOldReaderWebService: TheOldReaderWebService
                 } ?: emptyList()
     }
 
-    fun markAllRead(feedId: String?, token: String, olderThen: Date = Date()): Boolean {
+    fun markAllRead(feedId: String? = null, token: String, olderThen: Date = Date()): Boolean {
 
         val body = theOldReaderWebService.markAllRead(
                 authorizationHeader(token),

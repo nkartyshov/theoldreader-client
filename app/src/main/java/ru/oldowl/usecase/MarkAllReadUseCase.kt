@@ -6,21 +6,17 @@ import ru.oldowl.db.dao.ArticleDao
 import ru.oldowl.db.dao.SyncEventDao
 import ru.oldowl.db.model.Subscription
 import ru.oldowl.db.model.SyncEvent
+import ru.oldowl.repository.ArticleRepository
 
-// TODO Added sync from server if network is available
 class MarkAllReadUseCase(
-        private val articleDao: ArticleDao,
-        private val syncEventDao: SyncEventDao
+        private val repository: ArticleRepository
 ) : UseCase<Subscription?, Unit>() {
 
     override suspend fun run(param: Subscription?): Result<Unit> {
         when (param) {
-            null -> articleDao.markAllRead()
-            else -> articleDao.markAllRead(param.id)
+            null -> repository.markAllRead()
+            else -> repository.markAllRead(param)
         }
-
-        val syncEvent = SyncEvent.markAllRead(param?.feedId)
-        syncEventDao.save(syncEvent)
 
         return Result.empty()
     }

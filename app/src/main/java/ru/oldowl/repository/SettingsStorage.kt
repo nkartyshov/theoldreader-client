@@ -1,14 +1,19 @@
-package ru.oldowl.service
+package ru.oldowl.repository
 
 import android.content.Context
 import android.content.SharedPreferences
 import android.support.v7.preference.PreferenceManager
+import com.squareup.moshi.Moshi
 import ru.oldowl.R
+import ru.oldowl.db.model.Account
 import java.util.*
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
-class SettingsService(private val context: Context) {
+class SettingsStorage(
+        private val context: Context,
+        moshi: Moshi
+) {
 
     private val sharedPreferences: SharedPreferences
             by lazy { PreferenceManager.getDefaultSharedPreferences(context) }
@@ -19,6 +24,11 @@ class SettingsService(private val context: Context) {
     var hideRead: Boolean
             by BooleanPreferenceDelegate(sharedPreferences,
                     context.getString(R.string.key_hide_read), true)
+
+    var account: Account?
+            by AccountPreferenceDelegate(sharedPreferences,
+                    context.getString(R.string.key_account),
+                    moshi)
 
     val autoUpdate: Boolean
             by BooleanPreferenceDelegate(sharedPreferences,
@@ -45,7 +55,8 @@ class SettingsService(private val context: Context) {
             private val key: String,
             private val defaultValue: Long
     ) : ReadWriteProperty<Any, Long> {
-        override fun getValue(thisRef: Any, property: KProperty<*>): Long = sharedPreferences.getString(key, null)?.toLong() ?: defaultValue
+        override fun getValue(thisRef: Any, property: KProperty<*>): Long = sharedPreferences.getString(key, null)?.toLong()
+                ?: defaultValue
 
         override fun setValue(thisRef: Any, property: KProperty<*>, value: Long) {
             with(sharedPreferences.edit()) {
@@ -82,11 +93,32 @@ class SettingsService(private val context: Context) {
         override fun setValue(thisRef: Any, property: KProperty<*>, value: Date?) {
             value?.let {
                 with(sharedPreferences.edit()) {
-                    val editor = sharedPreferences.edit()
-                    editor.putLong(key, value.time)
-                    editor.apply()
+                    putLong(key, value.time)
+                    apply()
                 }
             }
         }
+    }
+
+    class AccountPreferenceDelegate(
+            private val sharedPreferences: SharedPreferences,
+            private val key: String,
+            private val moshi: Moshi
+    ) : ReadWriteProperty<Any, Account?> {
+
+        private val adapter by lazy { moshi.adapter(Account::class.java).nullSafe() }
+
+        override fun getValue(thisRef: Any, property: KProperty<*>): Account? =
+                sharedPreferences.getString(key, null)?.let {
+                    adapter.fromJson(it)
+                }
+
+
+        override fun setValue(thisRef: Any, property: KProperty<*>, value: Account?) =
+                with(sharedPreferences.edit()) {
+                    remove(key)
+                    putString(key, adapter.toJson(value))
+                    apply()
+                }
     }
 }

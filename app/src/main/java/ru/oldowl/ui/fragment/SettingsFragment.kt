@@ -6,6 +6,7 @@ import android.view.View
 import ru.oldowl.BuildConfig
 import ru.oldowl.Jobs
 import ru.oldowl.R
+import ru.oldowl.core.extension.browse
 
 class SettingsFragment : PreferenceFragmentCompat() {
 
@@ -24,7 +25,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         preferenceManager.sharedPreferences.registerOnSharedPreferenceChangeListener { _, key ->
             when(key) {
                 // FIXME Open github issue
-                getString(R.string.key_send_feedback) -> null
+                getString(R.string.key_send_feedback) -> context?.browse("http://example.com/")
                 getString(R.string.key_auto_update) -> Jobs.scheduleUpdate(context!!)
             }
         }

@@ -5,16 +5,16 @@ import org.jetbrains.anko.startActivity
 import org.koin.standalone.inject
 import ru.oldowl.R
 import ru.oldowl.core.ui.BaseActivity
-import ru.oldowl.service.AccountService
+import ru.oldowl.repository.AccountRepository
 
 class LaunchActivity : BaseActivity() {
-    private val accountService: AccountService by inject()
+    private val accountRepository: AccountRepository by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_launch)
 
-        if (accountService.hasAccount())
+        if (accountRepository.hasAccount())
             startActivity<MainActivity>()
         else
             startActivity<LoginActivity>()
