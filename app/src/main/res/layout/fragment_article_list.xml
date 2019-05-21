@@ -23,6 +23,8 @@
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/article_list"
+                android:clipToPadding="false"
+                android:paddingBottom="@dimen/recycler_view_indent_bottom"
                 style="@style/ContentFullParent"
                 config="@{recyclerConfig}" />
 

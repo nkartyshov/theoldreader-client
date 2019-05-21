@@ -22,7 +22,9 @@
         <android.support.v7.widget.RecyclerView
             config="@{recyclerConfig}"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingBottom="@dimen/recycler_view_indent_bottom" />
 
     </android.support.design.widget.CoordinatorLayout>
 </layout>

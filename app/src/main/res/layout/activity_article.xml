@@ -24,6 +24,8 @@
         <ScrollView
             android:id="@+id/article_wrapper"
             style="@style/ContentFullParent"
+            android:clipToPadding="false"
+            android:paddingBottom="@dimen/recycler_view_indent_bottom"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <LinearLayout style="@style/ContentFullParent.Vertical">
