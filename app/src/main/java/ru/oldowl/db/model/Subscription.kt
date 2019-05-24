@@ -10,11 +10,12 @@ import java.util.*
         foreignKeys = [ForeignKey(entity = Category::class,
                 parentColumns = ["id"],
                 childColumns = ["category_id"],
-                onDelete = ForeignKey.SET_NULL)],
+                onDelete = ForeignKey.SET_NULL,
+                onUpdate = ForeignKey.NO_ACTION)],
         indices = [Index("category_id")])
 data class Subscription(
         @PrimaryKey
-        var id: String = "",
+        var id: String,
         @ColumnInfo(name = "category_id")
         var categoryId: String? = null,
         @ColumnInfo(name = "title")
@@ -22,9 +23,5 @@ data class Subscription(
         @ColumnInfo(name = "url")
         var url: String,
         @ColumnInfo(name = "html_url")
-        var htmlUrl: String? = "",
-        @ColumnInfo(name = "last_update_date")
-        var lastUpdatedDate: Date? = null,
-        @ColumnInfo(name = "create_date")
-        var createDate: Date? = Date()
+        var htmlUrl: String = ""
 ) : Parcelable

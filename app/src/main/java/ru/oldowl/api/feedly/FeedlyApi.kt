@@ -31,7 +31,9 @@ class FeedlyApi(private val feedlyWebService: FeedlyWebService) : AnkoLogger {
                 .body()
                 ?.results
                 ?.map {
-                    Subscription(title = it.title,
+                    Subscription(
+                            id = it.feedId,
+                            title = it.title,
                             htmlUrl = it.website,
                             url = it.feedId.removePrefix("feed/"),
                             categoryId = "default")

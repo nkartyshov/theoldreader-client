@@ -16,7 +16,10 @@ interface SubscriptionDao {
     @Query("select s.*, (select count(a.id) from articles a where a.read = 0 and a.subscription_id = s.id) as unread from subscriptions s")
     fun fetchNavItems(): List<SubscriptionNavItem>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Query("select 1 from subscriptions where id = :id")
+    fun exists(id: String): Boolean
+
+    @Insert
     fun save(subscription: Subscription)
 
     @Delete

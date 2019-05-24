@@ -7,6 +7,7 @@ import retrofit2.Call
 import retrofit2.http.*
 import ru.oldowl.api.theoldreader.model.*
 import ru.oldowl.core.extension.epochTime
+import ru.oldowl.db.model.Category
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -256,13 +257,24 @@ class TheOldReaderApi(private val theOldReaderWebService: TheOldReaderWebService
         return false
     }
 
+    fun getCategories(authToken: String): List<Category> =
+            theOldReaderWebService.getSubscriptions(authorizationHeader(authToken))
+                    .execute()
+                    .body()
+                    ?.subscriptions
+                    ?.flatMap { it.categories }
+                    ?.map {
+                        Category(
+                                id = it.id,
+                                title = it.label
+                        )
+                    } ?: emptyList()
+
     companion object {
         fun authorizationHeader(token: String) = "GoogleLogin auth=$token"
 
         fun addItemIdPrefixIfExists(itemId: String) =
                 if (itemId.startsWith(ITEM_PREFIX)) itemId else ITEM_PREFIX + itemId
-
-        fun removeReaderPrefix(uri: String) = uri.removePrefix(READER_PREFIX)
 
         private const val ITEM_PREFIX = "tag:google.com,2005:reader/item/"
         private const val READER_PREFIX = "tag:google.com,2005:reader/"

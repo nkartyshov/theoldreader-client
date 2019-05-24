@@ -15,10 +15,7 @@ import ru.oldowl.api.feedly.FeedlyWebService
 import ru.oldowl.api.theoldreader.TheOldReaderApi
 import ru.oldowl.api.theoldreader.TheOldReaderWebService
 import ru.oldowl.db.AppDatabase
-import ru.oldowl.repository.AccountRepository
-import ru.oldowl.repository.ArticleRepository
-import ru.oldowl.repository.SettingsStorage
-import ru.oldowl.repository.SubscriptionRepository
+import ru.oldowl.repository.*
 import ru.oldowl.usecase.*
 import ru.oldowl.viewmodel.*
 
@@ -74,9 +71,11 @@ val serviceModule = module {
 
     // Repository
     single { SettingsStorage(androidApplication(), get()) }
-    single { AccountRepository(get()) }
+    single<SyncEventRepository> { SyncEventRepository.SyncEventRepositoryImpl(get(), get(), get(), get()) }
+    single<AccountRepository> { AccountRepository.AccountRepositoryImpl(get()) }
+    single<CategoryRepository> { CategoryRepository.CategoryRepositoryImpl(get(), get(), get()) }
     single<SubscriptionRepository> { SubscriptionRepository.SubscriptionRepositoryImpl(get(), get(), get(), get()) }
-    single<ArticleRepository> { ArticleRepository.ArticleRepositoryImpl(get(), get(), get()) }
+    single<ArticleRepository> { ArticleRepository.ArticleRepositoryImpl(get(), get(), get(), get(), get()) }
 
     // Use case
     single { LoginUseCase(BuildConfig.APPLICATION_ID, get(), get()) }

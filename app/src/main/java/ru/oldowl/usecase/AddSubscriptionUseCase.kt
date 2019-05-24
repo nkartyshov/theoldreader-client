@@ -10,7 +10,7 @@ class AddSubscriptionUseCase(
 ) : UseCase<Subscription, Unit>() {
 
     override suspend fun run(param: Subscription): Result<Unit> {
-        return if (repository.save(param))
+        return if (repository.addSubscription(param))
             Result.empty()
         else Result.failure("Error adding subscription")
     }

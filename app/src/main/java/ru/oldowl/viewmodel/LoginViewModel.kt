@@ -47,7 +47,7 @@ class LoginViewModel(private val loginUseCase: LoginUseCase) : BaseViewModel() {
             }
 
             onComplete {
-                progress.set(true)
+                progress.set(false)
             }
 
             onFailure {
