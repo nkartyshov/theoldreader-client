@@ -37,8 +37,8 @@ interface SubscriptionRepository {
         override suspend fun getNavItems(): List<SubscriptionNavItem> =
                 subscriptionDao
                         .fetchNavItems()
-                        .sortedByDescending { it.unread }
                         .sortedBy { it.subscription.title }
+                        .sortedByDescending { it.unread }
 
         override suspend fun findAll(): List<Subscription> = subscriptionDao.findAll()
 
