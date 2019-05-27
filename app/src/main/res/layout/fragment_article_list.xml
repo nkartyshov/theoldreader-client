@@ -4,6 +4,8 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="viewModel"
             type="ru.oldowl.viewmodel.ArticleListViewModel" />
@@ -13,7 +15,8 @@
             type="ru.oldowl.core.binding.RecyclerConfig" />
     </data>
 
-    <android.support.design.widget.CoordinatorLayout style="@style/ContentFullParent">
+    <android.support.design.widget.CoordinatorLayout
+        style="@style/ContentFullParent">
 
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/sync_list"
@@ -34,6 +37,7 @@
             android:id="@+id/make_all_read"
             style="@style/FloatingButton"
             android:src="@drawable/ic_done_all_white_24dp"
+            android:visibility="@{viewModel.favoriteMode ? View.GONE : View.VISIBLE}"
             app:fabSize="normal" />
 
     </android.support.design.widget.CoordinatorLayout>

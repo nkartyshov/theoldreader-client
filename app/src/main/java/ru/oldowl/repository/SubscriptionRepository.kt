@@ -3,7 +3,6 @@ package ru.oldowl.repository
 import ru.oldowl.api.theoldreader.TheOldReaderApi
 import ru.oldowl.db.dao.SubscriptionDao
 import ru.oldowl.db.dao.SyncEventDao
-import ru.oldowl.db.model.Category
 import ru.oldowl.db.model.Subscription
 import ru.oldowl.db.model.SubscriptionNavItem
 import ru.oldowl.db.model.SyncEvent
@@ -36,7 +35,10 @@ interface SubscriptionRepository {
         private val authToken by lazy { accountRepository.getAuthTokenOrThrow() }
 
         override suspend fun getNavItems(): List<SubscriptionNavItem> =
-                subscriptionDao.fetchNavItems().sortedByDescending { it.unread }
+                subscriptionDao
+                        .fetchNavItems()
+                        .sortedByDescending { it.unread }
+                        .sortedBy { it.subscription.title }
 
         override suspend fun findAll(): List<Subscription> = subscriptionDao.findAll()
 
@@ -71,17 +73,17 @@ interface SubscriptionRepository {
         }
 
         override suspend fun downloadSubscription(): List<Subscription> =
-            theOldReaderApi.getSubscriptions(authToken).map {
-                val categories = it.categories
-                val category = categories.singleOrNull()
+                theOldReaderApi.getSubscriptions(authToken).map {
+                    val categories = it.categories
+                    val category = categories.singleOrNull()
 
-                Subscription(
-                        categoryId = category?.id,
-                        id = it.id,
-                        title = it.title,
-                        url = it.url,
-                        htmlUrl = it.htmlUrl
-                )
-            }
+                    Subscription(
+                            categoryId = category?.id,
+                            id = it.id,
+                            title = it.title,
+                            url = it.url,
+                            htmlUrl = it.htmlUrl
+                    )
+                }
     }
 }

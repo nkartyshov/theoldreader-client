@@ -19,7 +19,7 @@ interface ArticleDao {
     @Query("select a.*, s.title as subscription_title from articles a inner join subscriptions s on a.subscription_id = s.id where a.subscription_id = :subscriptionId and a.read = 0 order by a.publish_date desc")
     fun findUnread(subscriptionId: String?): List<ArticleListItem>
 
-    @Query("select a.*, s.title as subscription_title from articles a inner join subscriptions s on a.subscription_id = s.id where a.favorite = 1 order by a.publish_date desc")
+    @Query("select a.*, s.title as subscription_title from articles a left join subscriptions s on a.subscription_id = s.id where a.favorite = 1 order by a.publish_date desc")
     fun findFavorite(): List<ArticleListItem>
 
     @Query("select * from articles where id = :id")

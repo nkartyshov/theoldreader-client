@@ -11,5 +11,5 @@ data class ArticleListItem(
         var article: Article,
 
         @ColumnInfo(name = "subscription_title")
-        var subscriptionTitle: String
+        var subscriptionTitle: String?
 ) : Parcelable

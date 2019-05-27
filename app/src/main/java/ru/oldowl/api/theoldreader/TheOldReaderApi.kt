@@ -195,7 +195,7 @@ class TheOldReaderApi(private val theOldReaderWebService: TheOldReaderWebService
                             title = entry.title,
                             description = description,
                             link = entry.link,
-                            feedId = entry.source.uri.removePrefix(READER_PREFIX),
+                            feedId = entry.source?.uri?.removePrefix(READER_PREFIX),
                             publishDate = entry.publishedDate
                     )
                 } ?: emptyList()
@@ -271,9 +271,9 @@ class TheOldReaderApi(private val theOldReaderWebService: TheOldReaderWebService
                     } ?: emptyList()
 
     companion object {
-        fun authorizationHeader(token: String) = "GoogleLogin auth=$token"
+        private fun authorizationHeader(token: String) = "GoogleLogin auth=$token"
 
-        fun addItemIdPrefixIfExists(itemId: String) =
+        private fun addItemIdPrefixIfExists(itemId: String) =
                 if (itemId.startsWith(ITEM_PREFIX)) itemId else ITEM_PREFIX + itemId
 
         private const val ITEM_PREFIX = "tag:google.com,2005:reader/item/"

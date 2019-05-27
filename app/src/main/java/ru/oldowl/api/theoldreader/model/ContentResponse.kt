@@ -7,6 +7,6 @@ data class ContentResponse(
         var title: String,
         var description: String,
         var link: String,
-        var feedId: String,
+        var feedId: String?,
         var publishDate: Date = Date()
 )

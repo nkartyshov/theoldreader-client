@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -19,66 +20,65 @@
             type="String" />
     </data>
 
-    <RelativeLayout
-        style="@style/ContentFullWidth.Vertical"
+    <android.support.constraint.ConstraintLayout
+        style="@style/ContentFullWidth"
         android:padding="@dimen/indent_default">
 
-        <LinearLayout
-            android:id="@+id/article_title_wrapper"
-            style="@style/ContentFullWidth.Horizontal">
+        <TextView
+            android:id="@+id/article_title"
+            style="@style/TextNormal"
+            android:layout_width="0dp"
+            android:layout_marginEnd="8dp"
+            android:paddingBottom="@dimen/indent_small"
+            android:text="@{article.title}"
+            android:textColor="@{article.read ? @color/gray : @color/black}"
+            app:layout_constraintEnd_toStartOf="@+id/imageView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Article title" />
 
-            <TextView
-                android:id="@+id/article_title"
-                style="@style/TextNormal"
-                android:layout_weight="1"
-                android:text="@{article.title}"
-                android:textColor="@{article.read ? @color/gray : @color/black}"
-                tools:text="Article title" />
-
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_gravity="top"
-                android:contentDescription="@string/favorite_article"
-                android:src="@drawable/ic_star_black_24dp"
-                android:tint="@{article.read ? @color/gray : @color/black}"
-                android:visibility="@{article.favorite ? View.VISIBLE : View.GONE }" />
-
-        </LinearLayout>
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:contentDescription="@string/favorite_article"
+            android:src="@drawable/ic_star_black_24dp"
+            android:tint="@{article.read ? @color/gray : @color/black}"
+            android:visibility="@{article.favorite ? View.VISIBLE : View.GONE, default=gone}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/article_title"
+            tools:visibility="visible" />
 
         <TextView
             android:id="@+id/article_summary"
             style="@style/TextSummary"
             escapeText="@{article.description}"
-            android:layout_below="@+id/article_title_wrapper"
-            android:layout_marginTop="@dimen/indent_xsmall"
+            android:paddingBottom="@dimen/indent_small"
+            app:layout_constraintTop_toBottomOf="@id/article_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             tools:text="Article description" />
 
-        <RelativeLayout
-            style="@style/ContentFullWidth.Horizontal"
-            android:layout_below="@+id/article_summary"
-            android:paddingTop="@dimen/indent_xsmall">
+        <TextView
+            android:id="@+id/subscription"
+            style="@style/TextCaption.SingleLine"
+            android:layout_width="0dp"
+            android:layout_marginEnd="8dp"
+            android:text="@{subscriptionTitle ?? @string/empty}"
+            app:layout_constraintEnd_toStartOf="@+id/article_date"
+            app:layout_constraintTop_toBottomOf="@id/article_summary"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="Subscription" />
 
-            <TextView
-                android:id="@+id/article_date"
-                style="@style/TextCaption"
-                android:layout_marginEnd="@dimen/indent_xsmall"
-                android:text="@{article.publishDate}"
-                tools:text="Today" />
+        <TextView
+            android:id="@+id/article_date"
+            style="@style/TextCaption"
+            android:text="@{article.publishDate}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/subscription"
+            app:layout_constraintTop_toBottomOf="@id/article_summary"
+            tools:text="Today" />
 
-            <TextView
-                android:id="@+id/divider_horizontal"
-                style="@style/TextCaption"
-                android:layout_toEndOf="@+id/article_date"
-                android:text="@string/item_sep" />
-
-            <TextView
-                style="@style/TextCaption.SingleLine"
-                android:layout_marginStart="@dimen/indent_xsmall"
-                android:layout_toEndOf="@+id/divider_horizontal"
-                android:text="@{subscriptionTitle}"
-                tools:text="Subscription" />
-
-        </RelativeLayout>
-    </RelativeLayout>
+    </android.support.constraint.ConstraintLayout>
 </layout>

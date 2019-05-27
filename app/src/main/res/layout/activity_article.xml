@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="android.view.View" />
 
         <variable
             name="viewModel"
@@ -14,9 +15,11 @@
             type="Runnable" />
     </data>
 
-    <android.support.design.widget.CoordinatorLayout style="@style/ContentFullParent">
+    <android.support.design.widget.CoordinatorLayout
+        style="@style/ContentFullParent">
 
-        <android.support.design.widget.AppBarLayout style="@style/ContentFullWidth">
+        <android.support.design.widget.AppBarLayout
+            style="@style/ContentFullWidth">
 
             <include layout="@layout/toolbar" />
         </android.support.design.widget.AppBarLayout>
@@ -67,7 +70,8 @@
                             android:id="@+id/divider_horizontal"
                             style="@style/TextCaption"
                             android:layout_toEndOf="@+id/article_date"
-                            android:text="@string/item_sep" />
+                            android:text="@string/item_sep"
+                            android:visibility="@{viewModel.subscriptionTitle == null ? View.GONE : View.VISIBLE }"/>
 
                         <TextView
                             android:id="@+id/subscription_title"

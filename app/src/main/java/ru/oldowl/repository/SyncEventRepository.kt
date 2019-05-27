@@ -37,8 +37,8 @@ interface SyncEventRepository {
                                 theOldReaderApi.updateFavoriteState(article!!.id, article.favorite, authToken)
                             }
 
-                            SyncEventType.MARK_ALL_READ -> event.payload?.let {
-                                theOldReaderApi.markAllRead(it, authToken, event.createdDate)
+                            SyncEventType.MARK_ALL_READ -> {
+                                theOldReaderApi.markAllRead(event.payload, authToken, event.createdDate)
                             }
 
                             SyncEventType.UNSUBSCRIBE -> event.payload?.let {
