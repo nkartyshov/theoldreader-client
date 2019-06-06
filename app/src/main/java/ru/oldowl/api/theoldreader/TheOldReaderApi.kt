@@ -179,6 +179,11 @@ class TheOldReaderApi(private val theOldReaderWebService: TheOldReaderWebService
     }
 
     fun getContents(itemIds: List<String>, token: String): List<ContentResponse> {
+
+        if (itemIds.isNullOrEmpty()) {
+            return emptyList()
+        }
+
         return theOldReaderWebService.getContents(authorizationHeader(token), itemIds)
                 .execute()
                 .body()
