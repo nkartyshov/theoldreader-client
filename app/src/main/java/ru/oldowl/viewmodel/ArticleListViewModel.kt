@@ -6,8 +6,6 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Observer
 import android.os.Bundle
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import ru.oldowl.*
 import ru.oldowl.core.CloseScreen
 import ru.oldowl.core.Event
@@ -85,10 +83,9 @@ class ArticleListViewModel(private val application: Application,
     fun hasSubscription() = subscription != null
 
     fun sync() {
-        if (mode == ArticleListMode.ALL)
-            Jobs.forceUpdate(application)
-        else if (mode == ArticleListMode.SUBSCRIPTION)
+        if (mode == ArticleListMode.SUBSCRIPTION)
             Jobs.forceUpdate(application, subscription)
+        else Jobs.forceUpdate(application)
     }
 
     fun deleteAll() =
@@ -127,13 +124,10 @@ class ArticleListViewModel(private val application: Application,
 
 
     fun loadArticles() {
-
         val param = LoadArticleListUseCase.Param(mode, subscription?.id)
         loadArticleListUseCase(param) {
             onSuccess { articles ->
-                launch(Dispatchers.Main) {
-                    articleLiveData.value = articles
-                }
+                articleLiveData.value = articles
             }
 
             onFailure {

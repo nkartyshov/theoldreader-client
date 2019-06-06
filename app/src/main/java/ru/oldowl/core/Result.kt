@@ -7,11 +7,6 @@ class Result<out T>(val value: T? = null,
 
     private val isFailure get() = exception != null
 
-    fun getOrNull(): T? = when {
-        isFailure -> null
-        else -> value
-    }
-
     fun exceptionOrNull(): Throwable? = when {
         isFailure -> exception as Throwable
         else -> null
