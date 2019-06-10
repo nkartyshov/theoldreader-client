@@ -53,7 +53,7 @@
             android:title="@string/version_name" />
 
         <Preference
-            android:key="@string/send_feedback"
+            android:key="@string/key_send_feedback"
             android:title="@string/send_feedback" />
 
     </PreferenceCategory>

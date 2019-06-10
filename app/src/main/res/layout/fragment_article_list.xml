@@ -21,7 +21,7 @@
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/sync_list"
             style="@style/ContentFullParent"
-            onRefresh="@{() -> viewModel.sync()}"
+            enable="@{!viewModel.favoriteMode}"
             refreshing="@{viewModel.dataLoading}">
 
             <android.support.v7.widget.RecyclerView

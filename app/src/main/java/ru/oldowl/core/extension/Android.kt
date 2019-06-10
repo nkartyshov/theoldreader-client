@@ -8,16 +8,17 @@ import android.arch.lifecycle.Observer
 import android.content.*
 import android.net.Uri
 import android.os.Build
+import android.os.Bundle
 import android.support.annotation.StringRes
 import android.support.customtabs.CustomTabsIntent
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
+import android.support.v7.preference.Preference
+import android.support.v7.preference.PreferenceFragmentCompat
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import ru.oldowl.R
-import ru.oldowl.core.Failure
-import ru.oldowl.core.ShowSnackbar
 import ru.oldowl.core.ui.BaseActivity
 
 fun BaseActivity.replaceFragment(id: Int, fragment: Fragment, addToBackStack: Boolean = true) {
@@ -66,6 +67,21 @@ fun Context.share(text: String? = "", subject: String = ""): Boolean {
 fun Context.copyToClipboard(url: String) {
     val clipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager?
     clipboardManager?.primaryClip = ClipData.newRawUri(url, Uri.parse(url))
+}
+
+inline fun <reified T : Context> Context.startActivity(bundle: Bundle? = null) {
+    val intent = Intent(this, T::class.java)
+
+    bundle?.let {
+        intent.putExtras(it)
+    }
+
+    this.startActivity(intent)
+}
+
+fun PreferenceFragmentCompat.findPreference(@StringRes strignRes: Int): Preference {
+    val key = this.context?.getString(strignRes)
+    return this.findPreference(key)
 }
 
 fun Activity.hideSoftKeyboard() {

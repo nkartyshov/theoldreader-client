@@ -4,11 +4,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.error
+import timber.log.Timber
 import kotlin.coroutines.CoroutineContext
 
-abstract class UseCase<P, out R> : CoroutineScope, AnkoLogger {
+abstract class UseCase<P, out R> : CoroutineScope {
 
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Default
@@ -22,7 +21,7 @@ abstract class UseCase<P, out R> : CoroutineScope, AnkoLogger {
             val result = try {
                 deferred.await()
             } catch (e: Throwable) {
-                error("Error", e)
+                Timber.e(e)
                 Result.failure<R>(e)
             }
 

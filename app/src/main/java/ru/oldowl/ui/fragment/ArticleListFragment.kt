@@ -51,7 +51,9 @@ class ArticleListFragment : BaseFragment() {
         FragmentArticleListBinding.bind(view).also {
 
             it.syncList.setDistanceToTriggerSync(distanceToTriggerSync)
-            it.syncList.isEnabled = !viewModel.isFavoriteMode()
+            it.syncList.setOnRefreshListener {
+                viewModel.sync()
+            }
 
             it.makeAllRead.setOnClickListener {
                 viewModel.markReadAll()

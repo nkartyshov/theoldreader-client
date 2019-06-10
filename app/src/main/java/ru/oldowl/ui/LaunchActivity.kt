@@ -1,9 +1,9 @@
 package ru.oldowl.ui
 
 import android.os.Bundle
-import org.jetbrains.anko.startActivity
 import org.koin.standalone.inject
 import ru.oldowl.R
+import ru.oldowl.core.extension.startActivity
 import ru.oldowl.core.ui.BaseActivity
 import ru.oldowl.repository.AccountRepository
 

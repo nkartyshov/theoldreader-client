@@ -6,17 +6,20 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Observer
 import android.os.Bundle
-import ru.oldowl.*
+import ru.oldowl.R
 import ru.oldowl.core.CloseScreen
 import ru.oldowl.core.Event
 import ru.oldowl.core.ui.BaseViewModel
 import ru.oldowl.db.model.ArticleListItem
 import ru.oldowl.db.model.Subscription
+import ru.oldowl.job.JobStatus
 import ru.oldowl.repository.SettingsStorage
+import ru.oldowl.repository.SyncManager
 import ru.oldowl.usecase.*
 
 class ArticleListViewModel(private val application: Application,
                            private val settingsStorage: SettingsStorage,
+                           private val syncManager: SyncManager,
                            private val loadArticleListUseCase: LoadArticleListUseCase,
                            private val deleteAllUseCase: DeleteAllUseCase,
                            private val deleteAllReadUseCase: DeleteAllReadUseCase,
@@ -25,14 +28,20 @@ class ArticleListViewModel(private val application: Application,
 
     private val articleLiveData: MutableLiveData<List<ArticleListItem>> = MutableLiveData()
 
-    @Deprecated(message = "")
     private val jobStatusObserver: Observer<JobStatus?> by lazy {
         Observer<JobStatus?> {
-            when (it?.jobId) {
-                FORCED_UPDATE_ID, AUTO_UPDATE_ID -> {
-                    dataLoading.value = !it.finished
+            when (it) {
+                is JobStatus.Success -> {
+                    dataLoading.value = false
                     loadArticles()
                 }
+
+                is JobStatus.Failure -> {
+                    dataLoading.value = false
+                    // TODO show error
+                }
+
+                is JobStatus.InProgress -> dataLoading.value = true
             }
         }
     }
@@ -70,7 +79,7 @@ class ArticleListViewModel(private val application: Application,
         }
 
     init {
-        Jobs.observeJobStatus.observeForever(jobStatusObserver)
+        syncManager.state.observeForever(jobStatusObserver)
     }
 
     fun setArgument(arguments: Bundle?) = arguments?.let {
@@ -82,11 +91,7 @@ class ArticleListViewModel(private val application: Application,
 
     fun hasSubscription() = subscription != null
 
-    fun sync() {
-        if (mode == ArticleListMode.SUBSCRIPTION)
-            Jobs.forceUpdate(application, subscription)
-        else Jobs.forceUpdate(application)
-    }
+    fun sync() = syncManager.forceUpdate(subscription)
 
     fun deleteAll() =
             deleteAllUseCase(subscription?.id) {
@@ -138,8 +143,7 @@ class ArticleListViewModel(private val application: Application,
 
     override fun onCleared() {
         super.onCleared()
-
-        Jobs.observeJobStatus.removeObserver(jobStatusObserver)
+        syncManager.state.removeObserver(jobStatusObserver)
     }
 
     companion object {

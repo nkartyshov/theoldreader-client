@@ -1,13 +1,12 @@
 package ru.oldowl.api.theoldreader
 
 import com.rometools.rome.feed.synd.SyndFeed
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.error
 import retrofit2.Call
 import retrofit2.http.*
 import ru.oldowl.api.theoldreader.model.*
 import ru.oldowl.core.extension.epochTime
 import ru.oldowl.db.model.Category
+import timber.log.Timber
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -104,7 +103,7 @@ interface TheOldReaderWebService {
     }
 }
 
-class TheOldReaderApi(private val theOldReaderWebService: TheOldReaderWebService) : AnkoLogger {
+class TheOldReaderApi(private val theOldReaderWebService: TheOldReaderWebService) {
 
     fun authentication(email: String, password: String, appName: String): String? {
 
@@ -133,7 +132,7 @@ class TheOldReaderApi(private val theOldReaderWebService: TheOldReaderWebService
             return response?.streamId!!
         }
 
-        error("Error adding the subscription $url, error ${response?.error}")
+        Timber.e("Error adding the subscription $url, error ${response?.error}")
         return null
     }
 
@@ -148,7 +147,7 @@ class TheOldReaderApi(private val theOldReaderWebService: TheOldReaderWebService
                 ?.joinToString() ?: ""
 
         if (body.isNotBlank()) {
-            error("Error unsubscribe from $feedId\n$body")
+            Timber.e("Error unsubscribe from $feedId\n$body")
             return false
         }
 
@@ -215,7 +214,7 @@ class TheOldReaderApi(private val theOldReaderWebService: TheOldReaderWebService
         ).execute().body()?.errors?.joinToString() ?: ""
 
         if (body.isBlank()) {
-            error("Error mark all read\n$body")
+            Timber.e("Error mark all read\n$body")
             return false
         }
 
@@ -238,7 +237,7 @@ class TheOldReaderApi(private val theOldReaderWebService: TheOldReaderWebService
             return true
         }
 
-        error("Error mark read item $itemIds, $body")
+        Timber.e("Error mark read item $itemIds, $body")
         return false
     }
 
@@ -258,7 +257,7 @@ class TheOldReaderApi(private val theOldReaderWebService: TheOldReaderWebService
             return true
         }
 
-        error("Error mark favorite item $itemIds, $body")
+        Timber.e("Error mark favorite item $itemIds, $body")
         return false
     }
 

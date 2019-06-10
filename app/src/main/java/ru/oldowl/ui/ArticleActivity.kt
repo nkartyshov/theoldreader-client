@@ -15,7 +15,6 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.ProgressBar
 import kotlinx.android.synthetic.main.toolbar.*
-import org.jetbrains.anko.startActivity
 import org.koin.standalone.inject
 import ru.oldowl.R
 import ru.oldowl.core.Failure
@@ -100,7 +99,9 @@ class ArticleActivity : BaseActivity() {
 
     companion object {
         fun openArticle(context: Context?, article: ArticleListItem) {
-            context?.startActivity<ArticleActivity>(ARTICLE to article)
+            val bundle = Bundle()
+            bundle.putParcelable(ARTICLE, article)
+            context?.startActivity<ArticleActivity>(bundle)
         }
     }
 }

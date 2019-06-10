@@ -2,15 +2,11 @@ package ru.oldowl.ui
 
 import android.databinding.DataBindingUtil
 import android.os.Bundle
-import org.jetbrains.anko.startActivity
 import org.koin.android.viewmodel.ext.android.viewModel
 import ru.oldowl.R
 import ru.oldowl.core.CloseScreen
 import ru.oldowl.core.Failure
-import ru.oldowl.core.extension.browse
-import ru.oldowl.core.extension.hideSoftKeyboard
-import ru.oldowl.core.extension.observe
-import ru.oldowl.core.extension.showFailure
+import ru.oldowl.core.extension.*
 import ru.oldowl.core.ui.BaseActivity
 import ru.oldowl.databinding.ActivityLoginBinding
 import ru.oldowl.viewmodel.LoginViewModel

@@ -10,7 +10,6 @@ import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.toolbar.*
 import org.koin.android.viewmodel.ext.android.viewModel
-import ru.oldowl.Jobs
 import ru.oldowl.R
 import ru.oldowl.core.binding.RecyclerConfig
 import ru.oldowl.core.extension.observe
@@ -89,7 +88,7 @@ class MainActivity : BaseActivity() {
 
         openFragment(ArticleListFragment.openAllArticles())
 
-        Jobs.scheduleUpdate(this)
+        mainViewModel.startScheduleUpdate()
     }
 
     private fun openFragment(fragment: Fragment, addToBackStack: Boolean = false) {

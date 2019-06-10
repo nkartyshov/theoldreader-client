@@ -71,6 +71,7 @@ val serviceModule = module {
 
     // Repository
     single { SettingsStorage(androidApplication(), get()) }
+    single { SyncManager(androidApplication(), get()) }
     single<SyncEventRepository> { SyncEventRepository.SyncEventRepositoryImpl(get(), get(), get(), get()) }
     single<AccountRepository> { AccountRepository.AccountRepositoryImpl(get()) }
     single<CategoryRepository> { CategoryRepository.CategoryRepositoryImpl(get(), get(), get()) }
@@ -92,8 +93,8 @@ val serviceModule = module {
 
     // ViewModels
     viewModel { LoginViewModel(get()) }
-    viewModel { MainViewModel(get(), get(), get()) }
-    viewModel { ArticleListViewModel(get(), get(), get(), get(), get(), get(), get()) }
+    viewModel { MainViewModel(get(), get(), get(), get()) }
+    viewModel { ArticleListViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { ArticleViewModel(get(), get()) }
     viewModel { AddSubscriptionViewModel(get(), get()) }
 }
