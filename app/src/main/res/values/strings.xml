@@ -58,6 +58,10 @@
     <string name="add_subscription_error">Error adding subscription</string>
     <string name="add_subscription_unknown_error">Unknown error when saving subscription</string>
 
+    <string name="notification_general_channel_name">General</string>
+    <string name="notification_new_article_title">New articles: %d</string>
+    <string name="notification_new_article_text">Tap to start reading</string>
+
     <!-- Settings -->
     <string name="settings_general">General</string>
     <string name="settings_storage">Storage</string>

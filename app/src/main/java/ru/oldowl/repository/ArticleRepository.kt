@@ -37,6 +37,8 @@ interface ArticleRepository {
 
     suspend fun deleteAllRead(subscriptionId: String)
 
+    suspend fun cleanup()
+
     suspend fun downloadArticles(subscription: Subscription, newerThan: Date? = null): List<Article>
 
     suspend fun downloadFavorites(): List<Article>
@@ -97,6 +99,18 @@ interface ArticleRepository {
         override suspend fun deleteAllRead() = articleDao.deleteAllRead()
 
         override suspend fun deleteAllRead(subscriptionId: String) = articleDao.deleteAllRead(subscriptionId)
+
+        override suspend fun cleanup() {
+            val cleanupReadPeriod = settingsStorage.autoCleanupReadPeriod
+            if (cleanupReadPeriod != 0L) {
+                articleDao.cleanup(Date(cleanupReadPeriod), read = true)
+            }
+
+            val cleanupUnreadPeriod = settingsStorage.autoCleanupUnreadPeriod
+            if (cleanupUnreadPeriod != 0L) {
+                articleDao.cleanup(Date(cleanupUnreadPeriod), read = false)
+            }
+        }
 
         override suspend fun downloadArticles(subscription: Subscription, newerThan: Date?): List<Article> {
             val date = newerThan ?: settingsStorage.lastSyncDate

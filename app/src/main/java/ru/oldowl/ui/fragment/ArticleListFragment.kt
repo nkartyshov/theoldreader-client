@@ -5,6 +5,7 @@ import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.view.*
 import org.koin.android.viewmodel.ext.android.sharedViewModel
+import org.koin.standalone.inject
 import ru.oldowl.R
 import ru.oldowl.core.CloseScreen
 import ru.oldowl.core.Failure
@@ -16,6 +17,7 @@ import ru.oldowl.core.extension.showMessage
 import ru.oldowl.core.ui.BaseFragment
 import ru.oldowl.databinding.FragmentArticleListBinding
 import ru.oldowl.db.model.Subscription
+import ru.oldowl.repository.NotificationManager
 import ru.oldowl.ui.ArticleActivity
 import ru.oldowl.ui.adapter.ArticleListItemAdapter
 import ru.oldowl.viewmodel.ArticleListMode
@@ -26,6 +28,8 @@ import ru.oldowl.viewmodel.ArticleListViewModel.Companion.SUBSCRIPTION
 class ArticleListFragment : BaseFragment() {
 
     private val viewModel: ArticleListViewModel by sharedViewModel()
+
+    private val notificationManager: NotificationManager by inject()
 
     init {
         setHasOptionsMenu(true)
@@ -98,27 +102,42 @@ class ArticleListFragment : BaseFragment() {
         menu?.findItem(R.id.unsubscribe)?.isVisible = viewModel.hasSubscription()
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
-            R.id.delete_all -> viewModel.deleteAll()
-
-            R.id.delete_all_read -> viewModel.deleteAllRead()
-
-            R.id.unsubscribe -> {
-                viewModel.unsubscribe()
-            }
-
-            R.id.read_all -> viewModel.markReadAll()
-
-            R.id.sync -> viewModel.sync()
-
-            R.id.hide_read -> {
-                item.isChecked = !item.isChecked
-                viewModel.hideRead = item.isChecked
-            }
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean = when (item?.itemId) {
+        R.id.delete_all -> {
+            viewModel.deleteAll()
+            true
         }
 
-        return super.onOptionsItemSelected(item)
+        R.id.delete_all_read -> {
+            viewModel.deleteAllRead()
+            true
+        }
+
+        R.id.unsubscribe -> {
+            viewModel.unsubscribe()
+            true
+        }
+
+        R.id.read_all -> {
+            viewModel.markReadAll()
+            true
+        }
+
+        R.id.sync -> { viewModel.sync()
+            true}
+
+        R.id.hide_read -> {
+            item.isChecked = !item.isChecked
+            viewModel.hideRead = item.isChecked
+            true
+        }
+
+        R.id.test -> {
+            notificationManager.showNewArticles(5)
+            true
+        }
+
+        else -> super.onOptionsItemSelected(item)
     }
 
     companion object {

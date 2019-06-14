@@ -3,6 +3,7 @@ package ru.oldowl.db.dao
 import android.arch.persistence.room.*
 import ru.oldowl.db.model.Article
 import ru.oldowl.db.model.ArticleListItem
+import java.util.*
 
 @Dao
 interface ArticleDao {
@@ -54,4 +55,7 @@ interface ArticleDao {
 
     @Delete
     fun delete(article: Article)
+
+    @Query("delete from articles where read = :read and favorite = 0 and publish_date < :cleanupPeriod")
+    fun cleanup(cleanupPeriod: Date, read: Boolean)
 }

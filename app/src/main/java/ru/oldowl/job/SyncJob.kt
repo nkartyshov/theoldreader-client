@@ -8,8 +8,10 @@ import timber.log.Timber
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-class AutoUpdateJob : CoroutineJobService() {
+class SyncJob : CoroutineJobService() {
+
     private val settingsStorage: SettingsStorage by inject()
+    private val notificationManager: NotificationManager by inject()
 
     private val syncEventRepository: SyncEventRepository by inject()
     private val categoryRepository: CategoryRepository by inject()
@@ -46,12 +48,17 @@ class AutoUpdateJob : CoroutineJobService() {
                 listOf(subscriptionRepository.findById(subscriptionId))
             else subscriptionRepository.findAll()
 
-            subscriptions
-                    .flatMap { articleRepository.downloadArticles(it) }
-                    .forEach { articleRepository.save(it) }
+            val articles = subscriptions.flatMap { articleRepository.downloadArticles(it) }
+            if (articles.isNotEmpty()) {
+                articles.forEach { articleRepository.save(it) }
+
+                notificationManager.showNewArticles(articles.size)
+            }
 
             // Sync favorites
             syncFavorites()
+
+            articleRepository.cleanup()
 
             settingsStorage.lastSyncDate = Date()
 

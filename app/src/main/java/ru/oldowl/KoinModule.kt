@@ -70,6 +70,7 @@ val serviceModule = module {
     single { FeedlyApi(get()) }
 
     // Repository
+    single { NotificationManager(androidApplication()) }
     single { SettingsStorage(androidApplication(), get()) }
     single { SyncManager(androidApplication(), get()) }
     single<SyncEventRepository> { SyncEventRepository.SyncEventRepositoryImpl(get(), get(), get(), get()) }
