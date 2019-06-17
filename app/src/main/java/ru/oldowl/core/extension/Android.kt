@@ -41,7 +41,10 @@ fun Context.browse(url: String? = ""): Boolean {
                 .addDefaultShareMenuItem()
                 .build()
 
-        customTabsIntent.launchUrl(this, Uri.parse(url))
+        with(customTabsIntent) {
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            launchUrl(this@browse, Uri.parse(url))
+        }
         true
     } catch (e: ActivityNotFoundException) {
         e.printStackTrace()

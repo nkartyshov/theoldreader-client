@@ -19,6 +19,7 @@ object BindingAdapter {
 
     private val HTML_TAGS_REGEX = Regex("(<.*?>|<\\/.*?>)")
     private val CONTROL_CHARS_REGEX = Regex("[\\t\\n]")
+    private val REMOVE_EXTRA_SPACE = Regex(" {2,}+")
 
     private const val MIME_TYPE = "text/html"
     private const val ENCODING = "UTF-8"
@@ -62,6 +63,7 @@ object BindingAdapter {
                 textView.text = it
                         .replace(HTML_TAGS_REGEX, "")
                         .replace(CONTROL_CHARS_REGEX, "")
+                        .replace(REMOVE_EXTRA_SPACE, " ")
             }
 
     @JvmStatic

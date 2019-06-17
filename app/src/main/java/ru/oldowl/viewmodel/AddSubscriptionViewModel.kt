@@ -16,6 +16,7 @@ class AddSubscriptionViewModel(
 
     val searchResult: MutableLiveData<List<Subscription>> = MutableLiveData()
 
+    // TODO Вынести в базовый класс
     val event: MutableLiveData<Event> = MutableLiveData()
 
     fun search(query: String) {
@@ -28,14 +29,11 @@ class AddSubscriptionViewModel(
     fun save(value: Subscription) {
         addSubscriptionUseCase(value) {
             onSuccess {
-                event.value = AddSubscriptionSuccess(value.title!!)
+                event.value = AddSubscriptionSuccess(value.title)
             }
             onFailure {
                 event.value = Failure(R.string.add_subscription_error, it)
             }
         }
     }
-
-    class SaveResult(val success: Boolean,
-                     val subscription: Subscription)
 }
