@@ -7,7 +7,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.support.v4.app.NotificationCompat
-import android.support.v4.content.ContextCompat
 import ru.oldowl.R
 import ru.oldowl.ui.MainActivity
 
@@ -26,10 +25,6 @@ class NotificationManager(
 
     init {
         createChannel()
-    }
-
-    fun showDownloadingArticle() {
-        TODO("Not implemented")
     }
 
     fun showNewArticles(count: Int) {

@@ -5,7 +5,6 @@ import android.databinding.DataBindingUtil
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.support.design.widget.Snackbar
-import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -17,8 +16,8 @@ import android.widget.ProgressBar
 import kotlinx.android.synthetic.main.toolbar.*
 import org.koin.standalone.inject
 import ru.oldowl.R
-import ru.oldowl.core.Failure
-import ru.oldowl.core.RefreshScreen
+import ru.oldowl.core.UiEvent.RefreshScreen
+import ru.oldowl.core.UiEvent.ShowSnackbar
 import ru.oldowl.core.extension.*
 import ru.oldowl.core.ui.BaseActivity
 import ru.oldowl.databinding.ActivityArticleBinding
@@ -57,7 +56,7 @@ class ArticleActivity : BaseActivity() {
         observe(viewModel.event) {
             when (it) {
                 is RefreshScreen -> invalidateOptionsMenu()
-                is Failure -> showFailure(window.decorView, it)
+                is ShowSnackbar -> showMessage(window.decorView, it)
             }
         }
 

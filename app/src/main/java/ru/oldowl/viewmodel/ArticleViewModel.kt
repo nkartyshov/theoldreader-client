@@ -1,9 +1,7 @@
 package ru.oldowl.viewmodel
 
-import android.arch.lifecycle.MutableLiveData
 import android.os.Bundle
-import ru.oldowl.core.Event
-import ru.oldowl.core.RefreshScreen
+import ru.oldowl.core.UiEvent.RefreshScreen
 import ru.oldowl.core.ui.BaseViewModel
 import ru.oldowl.db.model.ArticleListItem
 import ru.oldowl.usecase.MarkReadUseCase
@@ -16,8 +14,6 @@ class ArticleViewModel(
 ) : BaseViewModel() {
 
     private lateinit var item: ArticleListItem
-
-    val event: MutableLiveData<Event> = MutableLiveData()
 
     val title: String?
         get() = item.article.title
@@ -39,6 +35,7 @@ class ArticleViewModel(
     }
 
     fun getPageContent(): String {
+        // TODO Исправить ширину body
         return buildString {
             append("<html>\n")
             append("<head>\n")
@@ -63,7 +60,7 @@ class ArticleViewModel(
         toggleFavoriteUseCase(item.article) {
             onSuccess { event.value = RefreshScreen }
             onFailure {
-                // TODO show snackbar
+                showOopsSnackBar()
             }
         }
     }
@@ -72,7 +69,7 @@ class ArticleViewModel(
         markReadUseCase(item.article) {
             onSuccess { event.value = RefreshScreen }
             onFailure {
-                // TODO show snackbar
+                showOopsSnackBar()
             }
         }
     }

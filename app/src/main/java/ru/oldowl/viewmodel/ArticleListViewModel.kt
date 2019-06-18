@@ -7,8 +7,7 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Observer
 import android.os.Bundle
 import ru.oldowl.R
-import ru.oldowl.core.CloseScreen
-import ru.oldowl.core.Event
+import ru.oldowl.core.UiEvent.*
 import ru.oldowl.core.ui.BaseViewModel
 import ru.oldowl.db.model.ArticleListItem
 import ru.oldowl.db.model.Subscription
@@ -38,7 +37,7 @@ class ArticleListViewModel(private val application: Application,
 
                 is JobStatus.Failure -> {
                     dataLoading.value = false
-                    // TODO show error
+                    showOopsSnackBar()
                 }
 
                 is JobStatus.InProgress -> dataLoading.value = true
@@ -50,7 +49,6 @@ class ArticleListViewModel(private val application: Application,
     private var subscription: Subscription? = null
 
     val dataLoading = MutableLiveData<Boolean>()
-    val event = MutableLiveData<Event>()
 
     var hideRead: Boolean
         get() {
@@ -97,7 +95,7 @@ class ArticleListViewModel(private val application: Application,
             deleteAllUseCase(subscription?.id) {
                 onSuccess { loadArticles() }
                 onFailure {
-                    // TODO show error snackbar
+                    showOopsSnackBar()
                 }
             }
 
@@ -105,7 +103,7 @@ class ArticleListViewModel(private val application: Application,
             deleteAllReadUseCase(subscription?.id) {
                 onSuccess { loadArticles() }
                 onFailure {
-                    // TODO show error snackbar
+                    showOopsSnackBar()
                 }
             }
 
@@ -113,7 +111,7 @@ class ArticleListViewModel(private val application: Application,
             markReadAllUseCase(subscription) {
                 onSuccess { loadArticles() }
                 onFailure {
-                    // TODO show error snackbar
+                    showOopsSnackBar()
                 }
             }
 
@@ -122,7 +120,7 @@ class ArticleListViewModel(private val application: Application,
                 unsubscribeUseCase(it) {
                     onSuccess { event.value = CloseScreen }
                     onFailure {
-                        // TODO show error snackbar
+                        showOopsSnackBar()
                     }
                 }
             }
@@ -136,7 +134,7 @@ class ArticleListViewModel(private val application: Application,
             }
 
             onFailure {
-                // TODO show error snackbar
+                showOopsSnackBar()
             }
         }
     }

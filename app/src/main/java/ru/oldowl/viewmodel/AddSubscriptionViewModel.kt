@@ -2,9 +2,7 @@ package ru.oldowl.viewmodel
 
 import android.arch.lifecycle.MutableLiveData
 import ru.oldowl.R
-import ru.oldowl.core.AddSubscriptionSuccess
-import ru.oldowl.core.Event
-import ru.oldowl.core.Failure
+import ru.oldowl.core.UiEvent.ShowSnackbar
 import ru.oldowl.core.ui.BaseViewModel
 import ru.oldowl.db.model.Subscription
 import ru.oldowl.usecase.AddSubscriptionUseCase
@@ -16,23 +14,24 @@ class AddSubscriptionViewModel(
 
     val searchResult: MutableLiveData<List<Subscription>> = MutableLiveData()
 
-    // TODO Вынести в базовый класс
-    val event: MutableLiveData<Event> = MutableLiveData()
-
     fun search(query: String) {
         searchSubscriptionUseCase(query) {
-            onSuccess { searchResult.value = it }
-            onFailure { event.value = Failure(R.string.add_subscription_unknown_error, it) }
+            onSuccess {
+                searchResult.value = it
+            }
+            onFailure {
+                event.value = ShowSnackbar(R.string.add_subscription_unknown_error)
+            }
         }
     }
 
     fun save(value: Subscription) {
         addSubscriptionUseCase(value) {
             onSuccess {
-                event.value = AddSubscriptionSuccess(value.title)
+                event.value = ShowSnackbar(R.string.add_subscription_success, args = listOf(value.title))
             }
             onFailure {
-                event.value = Failure(R.string.add_subscription_error, it)
+                event.value = ShowSnackbar(R.string.add_subscription_error)
             }
         }
     }

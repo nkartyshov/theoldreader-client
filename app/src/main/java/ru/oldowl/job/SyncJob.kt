@@ -52,7 +52,9 @@ class SyncJob : CoroutineJobService() {
             if (articles.isNotEmpty()) {
                 articles.forEach { articleRepository.save(it) }
 
-                notificationManager.showNewArticles(articles.size)
+                if (!force) {
+                    notificationManager.showNewArticles(articles.size)
+                }
             }
 
             // Sync favorites

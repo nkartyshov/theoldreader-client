@@ -7,12 +7,9 @@ import android.view.*
 import org.koin.android.viewmodel.ext.android.sharedViewModel
 import org.koin.standalone.inject
 import ru.oldowl.R
-import ru.oldowl.core.CloseScreen
-import ru.oldowl.core.Failure
-import ru.oldowl.core.ShowSnackbar
+import ru.oldowl.core.UiEvent.*
 import ru.oldowl.core.binding.RecyclerConfig
 import ru.oldowl.core.extension.observe
-import ru.oldowl.core.extension.showFailure
 import ru.oldowl.core.extension.showMessage
 import ru.oldowl.core.ui.BaseFragment
 import ru.oldowl.databinding.FragmentArticleListBinding
@@ -83,7 +80,6 @@ class ArticleListFragment : BaseFragment() {
         observe(viewModel.event) {
             when (it) {
                 is ShowSnackbar -> showMessage(view, it)
-                is Failure -> showFailure(view, it)
                 is CloseScreen -> fragmentManager?.popBackStackImmediate()
             }
         }
@@ -123,8 +119,10 @@ class ArticleListFragment : BaseFragment() {
             true
         }
 
-        R.id.sync -> { viewModel.sync()
-            true}
+        R.id.sync -> {
+            viewModel.sync()
+            true
+        }
 
         R.id.hide_read -> {
             item.isChecked = !item.isChecked

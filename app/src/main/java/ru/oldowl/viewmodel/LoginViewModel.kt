@@ -4,7 +4,8 @@ import android.arch.lifecycle.MutableLiveData
 import android.databinding.ObservableField
 import kotlinx.coroutines.launch
 import ru.oldowl.R
-import ru.oldowl.core.*
+import ru.oldowl.core.UiEvent.CloseScreen
+import ru.oldowl.core.UiEvent.ShowSnackbar
 import ru.oldowl.core.ui.BaseViewModel
 import ru.oldowl.usecase.LoginUseCase
 
@@ -17,8 +18,6 @@ class LoginViewModel(private val loginUseCase: LoginUseCase) : BaseViewModel() {
     val passwordError: MutableLiveData<Int> = MutableLiveData()
 
     val progress: ObservableField<Boolean> = ObservableField(false)
-
-    val event = MutableLiveData<Event>()
 
     fun authentication() = launch {
         val email = email.value ?: ""
@@ -51,7 +50,7 @@ class LoginViewModel(private val loginUseCase: LoginUseCase) : BaseViewModel() {
             }
 
             onFailure {
-                event.value = Failure(R.string.authentication_error, it)
+                event.value = ShowSnackbar(R.string.authentication_error)
             }
         }
     }

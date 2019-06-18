@@ -11,12 +11,10 @@ import android.os.Build
 import android.os.Bundle
 import android.support.annotation.StringRes
 import android.support.customtabs.CustomTabsIntent
-import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v7.preference.Preference
 import android.support.v7.preference.PreferenceFragmentCompat
-import android.view.View
 import android.view.inputmethod.InputMethodManager
 import ru.oldowl.R
 import ru.oldowl.core.ui.BaseActivity
@@ -102,12 +100,6 @@ fun JobScheduler.isScheduled(jobId: Int): Boolean {
     }
 
     return job != null
-}
-
-fun Snackbar.make(view: View, @StringRes stringRes: Int, duration: Int): Snackbar {
-    val context = view.context
-
-    return Snackbar.make(view, context.getString(stringRes), duration)
 }
 
 fun <T : Any> LifecycleOwner.observe(liveData: LiveData<T>, body: (T?) -> Unit) {

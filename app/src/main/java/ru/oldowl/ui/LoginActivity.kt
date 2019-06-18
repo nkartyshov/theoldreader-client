@@ -4,8 +4,7 @@ import android.databinding.DataBindingUtil
 import android.os.Bundle
 import org.koin.android.viewmodel.ext.android.viewModel
 import ru.oldowl.R
-import ru.oldowl.core.CloseScreen
-import ru.oldowl.core.Failure
+import ru.oldowl.core.UiEvent.*
 import ru.oldowl.core.extension.*
 import ru.oldowl.core.ui.BaseActivity
 import ru.oldowl.databinding.ActivityLoginBinding
@@ -35,7 +34,7 @@ class LoginActivity : BaseActivity() {
 
             observe(viewModel.event) { event ->
                 when (event) {
-                    is Failure -> showFailure(it.root, event)
+                    is ShowSnackbar -> showMessage(it.root, event)
                     is CloseScreen -> {
                         startActivity<MainActivity>()
                         finish()

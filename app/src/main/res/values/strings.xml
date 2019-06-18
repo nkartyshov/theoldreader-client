@@ -93,4 +93,6 @@
     <string name="three_weeks">Three weeks</string>
     <string name="one_month">One month</string>
     <string name="nav_exit">Exit</string>
+
+    <string name="something_went_wrong_error">Oops, something went wrong. Try again!</string>
 </resources>
