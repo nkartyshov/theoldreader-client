@@ -37,7 +37,7 @@ class ArticleActivity : BaseActivity() {
 
             val webViewClientImpl = WebViewClientImpl(applicationContext, it.loadingProgress, it.articleWrapper).apply {
                 setOnPageFinishedListener {
-                    viewModel.markRead()
+                    viewModel.toggleRead()
                 }
             }
 
@@ -68,18 +68,23 @@ class ArticleActivity : BaseActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_article, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
 
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         menu?.run {
-            menu.findItem(R.id.mark_favorite)?.isVisible = !viewModel.favorite
-            menu.findItem(R.id.unmark_favorite)?.isVisible = viewModel.favorite
+            findItem(R.id.mark_favorite)?.isVisible = !viewModel.favorite
+            findItem(R.id.unmark_favorite)?.isVisible = viewModel.favorite
         }
 
-        return super.onCreateOptionsMenu(menu)
+        return super.onPrepareOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
             R.id.mark_favorite, R.id.unmark_favorite -> viewModel.toggleFavorite()
+
+            R.id.toggle_read -> viewModel.toggleRead()
 
             R.id.open_in_browser -> browse(viewModel.url)
 
@@ -97,6 +102,7 @@ class ArticleActivity : BaseActivity() {
     }
 
     companion object {
+
         fun openArticle(context: Context?, article: ArticleListItem) {
             val bundle = Bundle()
             bundle.putParcelable(ARTICLE, article)

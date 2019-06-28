@@ -4,13 +4,13 @@ import android.os.Bundle
 import ru.oldowl.core.UiEvent.RefreshScreen
 import ru.oldowl.core.ui.BaseViewModel
 import ru.oldowl.db.model.ArticleListItem
-import ru.oldowl.usecase.MarkReadUseCase
+import ru.oldowl.usecase.ToggleReadUseCase
 import ru.oldowl.usecase.ToggleFavoriteUseCase
 import java.util.*
 
 class ArticleViewModel(
         private val toggleFavoriteUseCase: ToggleFavoriteUseCase,
-        private val markReadUseCase: MarkReadUseCase
+        private val toggleReadUseCase: ToggleReadUseCase
 ) : BaseViewModel() {
 
     private lateinit var item: ArticleListItem
@@ -35,19 +35,17 @@ class ArticleViewModel(
     }
 
     fun getPageContent(): String {
-        // TODO Исправить ширину body
         return buildString {
             append("<html>\n")
             append("<head>\n")
-            append("<meta charset=\"utf-8\" />\n")
-            append("<meta name='viewport' content='width=device-width'/>\n")
             append("<style type=\"text/css\">\n")
+            append("body { max-width: 100%; padding: 0 0.2cm 0 0.2cm; }\n")
             append("* { max-width: 100%; word-break: break-word }\n")
-            append("body { padding: 0 0.2cm 0 0.2cm; }\n")
-            // FIXME doesn't hide iframe
-            append("iframe { display: none; }\n")
-            append("img { height: auto }\n")
+            append("img { height: auto; }\n")
+            append("pre { white-space: pre-wrap; } \n")
+            append("table { width: 0; } \n")
             append("</style>\n")
+            append("<meta name=\"viewport\" content=\"width=device-width\" charset=\"utf-8\"/>\n")
             append("</head>\n")
             append("<body>\n")
             append(item.article.description)
@@ -65,8 +63,8 @@ class ArticleViewModel(
         }
     }
 
-    fun markRead() {
-        markReadUseCase(item.article) {
+    fun toggleRead() {
+        toggleReadUseCase(item.article) {
             onSuccess { event.value = RefreshScreen }
             onFailure {
                 showOopsSnackBar()

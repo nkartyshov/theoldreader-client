@@ -15,6 +15,11 @@
         app:showAsAction="ifRoom" />
 
     <item
+        android:id="@+id/toggle_read"
+        android:title="@string/toggle_read"
+        app:showAsAction="never"/>
+
+    <item
         android:id="@+id/share"
         android:title="@string/share"
         app:showAsAction="never" />

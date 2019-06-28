@@ -5,16 +5,16 @@ import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.view.*
 import org.koin.android.viewmodel.ext.android.sharedViewModel
-import org.koin.standalone.inject
 import ru.oldowl.R
-import ru.oldowl.core.UiEvent.*
+import ru.oldowl.core.UiEvent.CloseScreen
+import ru.oldowl.core.UiEvent.ShowSnackbar
 import ru.oldowl.core.binding.RecyclerConfig
+import ru.oldowl.core.extension.confirmDialog
 import ru.oldowl.core.extension.observe
 import ru.oldowl.core.extension.showMessage
 import ru.oldowl.core.ui.BaseFragment
 import ru.oldowl.databinding.FragmentArticleListBinding
 import ru.oldowl.db.model.Subscription
-import ru.oldowl.repository.NotificationManager
 import ru.oldowl.ui.ArticleActivity
 import ru.oldowl.ui.adapter.ArticleListItemAdapter
 import ru.oldowl.viewmodel.ArticleListMode
@@ -25,8 +25,6 @@ import ru.oldowl.viewmodel.ArticleListViewModel.Companion.SUBSCRIPTION
 class ArticleListFragment : BaseFragment() {
 
     private val viewModel: ArticleListViewModel by sharedViewModel()
-
-    private val notificationManager: NotificationManager by inject()
 
     init {
         setHasOptionsMenu(true)
@@ -100,17 +98,23 @@ class ArticleListFragment : BaseFragment() {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean = when (item?.itemId) {
         R.id.delete_all -> {
-            viewModel.deleteAll()
+            confirmDialog(R.string.delete_all_dialog_message) {
+                viewModel.deleteAll()
+            }
             true
         }
 
         R.id.delete_all_read -> {
-            viewModel.deleteAllRead()
+            confirmDialog(R.string.delete_all_read_dialog_message) {
+                viewModel.deleteAllRead()
+            }
             true
         }
 
         R.id.unsubscribe -> {
-            viewModel.unsubscribe()
+            confirmDialog(R.string.delete_unsubscribe_dialog_message) {
+                viewModel.unsubscribe()
+            }
             true
         }
 
@@ -127,11 +131,6 @@ class ArticleListFragment : BaseFragment() {
         R.id.hide_read -> {
             item.isChecked = !item.isChecked
             viewModel.hideRead = item.isChecked
-            true
-        }
-
-        R.id.test -> {
-            notificationManager.showNewArticles(5)
             true
         }
 

@@ -13,11 +13,22 @@
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@color/statusBarColor</item>
 
+        <item name="alertDialogTheme">@style/AppDialogTheme</item>
+        <item name="android:alertDialogTheme">@style/AppDialogTheme</item>
+
         <item name="buttonStyle">@style/Base.Widget.AppCompat.Button.Colored</item>
     </style>
 
     <style name="AppTheme" parent="BaseTheme">
         <item name="android:navigationBarColor">@color/black</item>
+    </style>
+
+    <style name="AppDialogTheme" parent="Theme.MaterialComponents.Light.Dialog.Alert">
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColorPrimary">@color/black</item>
+        <item name="android:windowBackground">@drawable/dialog_background_round</item>
+        
+        <item name="android:buttonBarButtonStyle">@style/Widget.MaterialComponents.Button.TextButton.Dialog</item>
     </style>
 
     <style name="TextNormal" parent="TextAppearance.AppCompat.Body1">

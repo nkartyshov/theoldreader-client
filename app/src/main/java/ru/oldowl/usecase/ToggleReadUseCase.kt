@@ -8,12 +8,12 @@ import ru.oldowl.db.model.Article
 import ru.oldowl.db.model.SyncEvent
 import ru.oldowl.repository.ArticleRepository
 
-class MarkReadUseCase(
+class ToggleReadUseCase(
         private val repository: ArticleRepository
 ) : UseCase<Article, Unit>() {
 
     override suspend fun run(param: Article): Result<Unit> {
-        param.read = true
+        param.read = !param.read
         repository.updateReadState(param)
 
         return Result.empty()

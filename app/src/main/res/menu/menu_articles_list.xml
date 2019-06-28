@@ -34,8 +34,4 @@
         android:title="@string/sync"
         app:showAsAction="never" />
 
-    <item
-        android:id="@+id/test"
-        android:title="Test"
-        app:showAsAction="never" />
 </menu>

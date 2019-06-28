@@ -48,6 +48,7 @@
     <!-- Article detail -->
     <string name="mark_favorite">Mark favorite</string>
     <string name="unmark_favorite">Unmark favorite</string>
+    <string name="toggle_read">Toggle read</string>
     <string name="copy_url_to_clipboard">Copy url to clipboard</string>
     <string name="copy_url_to_clipboard_snackbar">The url copied to clipboard</string>
     <string name="open_in_browser">Open in browser</string>
@@ -94,5 +95,14 @@
     <string name="one_month">One month</string>
     <string name="nav_exit">Exit</string>
 
+    <!-- Dialog -->
+    <string name="warning_dialog_title">Warning</string>
+    <string name="delete_all_dialog_message">Are you sure you want to delete all articles?</string>
+    <string name="delete_all_read_dialog_message">Are you sure you want to delete all read articles?</string>
+    <string name="delete_unsubscribe_dialog_message">Are you sure you want to unsubscribe from this subscription?</string>
+    <string name="yes_dialog_button">Yes</string>
+    <string name="no_dialog_button">No</string>
+
+    <!-- Error -->
     <string name="something_went_wrong_error">Oops, something went wrong. Try again!</string>
 </resources>

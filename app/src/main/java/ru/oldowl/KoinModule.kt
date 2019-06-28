@@ -83,7 +83,7 @@ val serviceModule = module {
     single { LoginUseCase(BuildConfig.APPLICATION_ID, get(), get()) }
     single { GetNavigationItemListUseCase(get()) }
     single { ToggleFavoriteUseCase(get()) }
-    single { MarkReadUseCase(get()) }
+    single { ToggleReadUseCase(get()) }
     single { LoadArticleListUseCase(get()) }
     single { MarkAllReadUseCase(get()) }
     single { UnsubscribeUseCase(get()) }

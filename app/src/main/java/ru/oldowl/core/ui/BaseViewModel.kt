@@ -6,7 +6,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import org.koin.standalone.KoinComponent
+import ru.oldowl.R
 import ru.oldowl.core.UiEvent
+import ru.oldowl.core.UiEvent.ShowSnackbar
 import kotlin.coroutines.CoroutineContext
 
 abstract class BaseViewModel : ViewModel(), KoinComponent, CoroutineScope {
