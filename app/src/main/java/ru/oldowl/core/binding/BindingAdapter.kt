@@ -12,7 +12,7 @@ import android.widget.TextView
 import com.amulyakhare.textdrawable.TextDrawable
 import com.amulyakhare.textdrawable.util.ColorGenerator
 import ru.oldowl.core.extension.toShortDateTime
-import java.text.DateFormat
+import ru.oldowl.core.ui.EmptyDataObserver
 import java.util.*
 
 object BindingAdapter {
@@ -102,6 +102,11 @@ object BindingAdapter {
         config.dividerItemDecoration?.let {
             recyclerView.addItemDecoration(it)
         }
+
+        config.emptyView?.let {
+            val emptyDataObserver = EmptyDataObserver(recyclerView, it)
+            recyclerView.adapter?.registerAdapterDataObserver(emptyDataObserver)
+        }
     }
 
     @JvmStatic
@@ -113,6 +118,12 @@ object BindingAdapter {
                 runnable.run()
             }
         }
+    }
+
+    @JvmStatic
+    @BindingAdapter("app:visibility")
+    fun setVisibility(view: View, visible: Boolean = true) {
+        view.visibility = if (visible) View.VISIBLE else View.GONE
     }
 }
 

@@ -60,7 +60,6 @@
     <style name="TextHeader" parent="Base.TextAppearance.AppCompat.Subhead">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
-        <!--<item name="android:textSize">20sp</item>-->
     </style>
 
     <style name="TextSummary" parent="TextCaption">
@@ -125,5 +124,27 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_gravity">bottom|end</item>
         <item name="android:layout_margin">@dimen/indent_default</item>
+    </style>
+    
+    <style name="EmptyState" parent="ContentFullParent.Vertical">
+        <!--<item name="android:background">?android:windowBackground</item>-->
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="EmptyState.Image">
+        <item name="android:layout_width">112dp</item>
+        <item name="android:layout_height">112dp</item>
+        <item name="android:layout_marginBottom">@dimen/indent_normal</item>
+    </style>
+
+    <style name="EmptyState.Title" parent="TextNormal">
+        <item name="android:maxWidth">300dp</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:layout_marginBottom">@dimen/indent_small</item>
+    </style>
+
+    <style name="EmptyState.Text" parent="EmptyState.Title">
+        <item name="android:textSize">16sp</item>
     </style>
 </resources>

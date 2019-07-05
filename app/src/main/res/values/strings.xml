@@ -45,6 +45,12 @@
     <string name="unsubscribe">Unsubscribe</string>
     <string name="sync">Sync</string>
 
+    <string name="empty_state_article_title">Articles list is empty</string>
+    <string name="empty_state_article_message">Pull down to refresh</string>
+
+    <string name="empty_state_favorite_title">No favorite articles yet</string>
+    <string name="empty_state_favorite_message">Click the 'Star' button on any article to add a favorite</string>
+
     <!-- Article detail -->
     <string name="mark_favorite">Mark favorite</string>
     <string name="unmark_favorite">Unmark favorite</string>

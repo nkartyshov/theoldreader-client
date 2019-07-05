@@ -35,11 +35,12 @@ class ArticleActivity : BaseActivity() {
             it.viewModel = viewModel
             it.lifecycleOwner = this
 
-            val webViewClientImpl = WebViewClientImpl(applicationContext, it.loadingProgress, it.articleWrapper).apply {
-                setOnPageFinishedListener {
-                    viewModel.toggleRead()
-                }
-            }
+            val webViewClientImpl = WebViewClientImpl(applicationContext, it.loadingProgress, it.articleWrapper)
+                    .apply {
+                        setOnPageFinishedListener {
+                            viewModel.markRead()
+                        }
+                    }
 
             with(it.articleContent) {
                 settings.javaScriptEnabled = false

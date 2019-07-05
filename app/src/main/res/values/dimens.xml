@@ -6,7 +6,7 @@
     <dimen name="indent_normal">24dp</dimen>
     <dimen name="indent_big">32dp</dimen>
 
-    <dimen name="recycler_view_indent_bottom">92dp</dimen>
+    <dimen name="recycler_view_indent_bottom">86dp</dimen>
 
     <dimen name="web_view_indent">10dp</dimen>
 

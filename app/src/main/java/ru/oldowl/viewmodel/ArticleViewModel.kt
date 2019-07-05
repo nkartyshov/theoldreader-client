@@ -63,6 +63,14 @@ class ArticleViewModel(
         }
     }
 
+    fun markRead() {
+        if (item.article.read) {
+            return
+        }
+
+        toggleRead()
+    }
+
     fun toggleRead() {
         toggleReadUseCase(item.article) {
             onSuccess { event.value = RefreshScreen }

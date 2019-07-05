@@ -61,7 +61,8 @@ class ArticleListFragment : BaseFragment() {
             it.recyclerConfig = RecyclerConfig(
                     adapter,
                     LinearLayoutManager(context),
-                    DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
+                    DividerItemDecoration(context, DividerItemDecoration.VERTICAL),
+                    it.emptyView
             )
 
             it.viewModel = viewModel

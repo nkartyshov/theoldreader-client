@@ -15,8 +15,7 @@
             type="ru.oldowl.core.binding.RecyclerConfig" />
     </data>
 
-    <android.support.design.widget.CoordinatorLayout
-        style="@style/ContentFullParent">
+    <android.support.design.widget.CoordinatorLayout style="@style/ContentFullParent">
 
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/sync_list"
@@ -24,12 +23,45 @@
             enable="@{!viewModel.favoriteMode}"
             refreshing="@{viewModel.dataLoading}">
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/article_list"
-                android:clipToPadding="false"
-                android:paddingBottom="@dimen/recycler_view_indent_bottom"
-                style="@style/ContentFullParent"
-                config="@{recyclerConfig}" />
+            <FrameLayout
+                style="@style/ContentFullParent">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/article_list"
+                    style="@style/ContentFullParent"
+                    config="@{recyclerConfig}"
+                    android:clipToPadding="false"
+                    android:paddingBottom="@dimen/recycler_view_indent_bottom" />
+
+                <LinearLayout
+                    android:id="@+id/empty_view"
+                    style="@style/EmptyState">
+
+                    <android.support.v7.widget.AppCompatImageView
+                        style="@style/EmptyState.Image"
+                        app:srcCompat="@drawable/ic_rss_feed"/>
+
+                    <TextView
+                        style="@style/EmptyState.Title"
+                        android:text="@string/empty_state_favorite_title"
+                        app:visibility="@{viewModel.favoriteMode}"/>
+
+                    <TextView
+                        style="@style/EmptyState.Text"
+                        android:text="@string/empty_state_favorite_message"
+                        app:visibility="@{viewModel.favoriteMode}"/>
+
+                    <TextView
+                        style="@style/EmptyState.Title"
+                        android:text="@string/empty_state_article_title"
+                        app:visibility="@{!viewModel.favoriteMode}"/>
+
+                    <TextView
+                        style="@style/EmptyState.Text"
+                        android:text="@string/empty_state_article_message"
+                        app:visibility="@{!viewModel.favoriteMode}"/>
+                </LinearLayout>
+            </FrameLayout>
 
         </android.support.v4.widget.SwipeRefreshLayout>
 
@@ -37,7 +69,7 @@
             android:id="@+id/make_all_read"
             style="@style/FloatingButton"
             android:src="@drawable/ic_done_all_white_24dp"
-            android:visibility="@{viewModel.favoriteMode ? View.GONE : View.VISIBLE}"
+            app:visibility="@{!viewModel.favoriteMode}"
             app:fabSize="normal" />
 
     </android.support.design.widget.CoordinatorLayout>
