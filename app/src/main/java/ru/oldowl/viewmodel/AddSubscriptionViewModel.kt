@@ -12,15 +12,23 @@ class AddSubscriptionViewModel(
         private val searchSubscriptionUseCase: SearchSubscriptionUseCase,
         private val addSubscriptionUseCase: AddSubscriptionUseCase) : BaseViewModel() {
 
+    val dataLoading = MutableLiveData<Boolean>()
     val searchResult: MutableLiveData<List<Subscription>> = MutableLiveData()
 
     fun search(query: String) {
+        dataLoading.value = true
+
         searchSubscriptionUseCase(query) {
             onSuccess {
                 searchResult.value = it
             }
+
             onFailure {
                 event.value = ShowSnackbar(R.string.add_subscription_unknown_error)
+            }
+
+            onComplete {
+                dataLoading.value = false
             }
         }
     }

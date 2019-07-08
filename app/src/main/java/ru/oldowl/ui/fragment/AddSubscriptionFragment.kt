@@ -31,7 +31,8 @@ class AddSubscriptionFragment : BaseFragment() {
         return FragmentAddSubscriptionBinding.inflate(inflater, container, false).also {
             it.recyclerConfig = RecyclerConfig(listAdapter,
                     LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false),
-                    DividerItemDecoration(context, LinearLayoutManager.VERTICAL)
+                    DividerItemDecoration(context, LinearLayoutManager.VERTICAL),
+                    it.emptyView
             )
 
             it.viewModel = viewModel
@@ -60,6 +61,10 @@ class AddSubscriptionFragment : BaseFragment() {
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         inflater?.inflate(R.menu.menu_add_subscription, menu)
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu?) {
+        super.onPrepareOptionsMenu(menu)
         with(menu?.findItem(R.id.search_view)) {
 
             this?.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
@@ -81,7 +86,7 @@ class AddSubscriptionFragment : BaseFragment() {
 
                 override fun onQueryTextSubmit(query: String?): Boolean {
                     query?.let { viewModel.search(it) }
-                    return true
+                    return false
                 }
 
                 override fun onQueryTextChange(query: String?): Boolean {

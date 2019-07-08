@@ -72,9 +72,7 @@ class MainActivity : BaseActivity() {
         drawer_view.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
             override fun onDrawerOpened(drawerView: View) {
                 super.onDrawerOpened(drawerView)
-
-                mainViewModel.updateLastSyncDate()
-                mainViewModel.updateSubscriptions()
+                updateDrawer()
             }
         })
 
@@ -88,7 +86,13 @@ class MainActivity : BaseActivity() {
 
         openFragment(ArticleListFragment.openAllArticles())
 
+        updateDrawer()
         mainViewModel.startScheduleUpdate()
+    }
+
+    private fun updateDrawer() {
+        mainViewModel.updateLastSyncDate()
+        mainViewModel.updateSubscriptions()
     }
 
     private fun openFragment(fragment: Fragment, addToBackStack: Boolean = false) {

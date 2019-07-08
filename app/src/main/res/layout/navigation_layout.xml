@@ -40,8 +40,7 @@
         android:fitsSystemWindows="true">
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            style="@style/ContentFullParent"
             android:orientation="vertical">
 
             <include
@@ -91,8 +90,7 @@
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/subscription_list"
                     config="@{recyclerConfig}"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    style="@style/ContentFullWidth"
                     android:nestedScrollingEnabled="false" />
 
             </LinearLayout>

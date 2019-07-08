@@ -7,6 +7,6 @@ data class SubscriptionResponses(
 data class SubscriptionResponse(
         var feedId: String,
         var title: String,
-        var description: String,
+        var description: String? = null,
         var website: String
 )

@@ -27,7 +27,7 @@ class ArticleListViewModel(private val application: Application,
 
     private val articleLiveData: MutableLiveData<List<ArticleListItem>> = MutableLiveData()
 
-    private val jobStatusObserver: Observer<JobStatus?> by lazy {
+    private val jobStatusObserver by lazy {
         Observer<JobStatus?> {
             when (it) {
                 is JobStatus.Success -> {

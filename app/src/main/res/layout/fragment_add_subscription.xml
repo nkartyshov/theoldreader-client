@@ -15,16 +15,43 @@
     <android.support.design.widget.CoordinatorLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        style="@style/ContentFullParent"
         tools:context=".ui.fragment.AddSubscriptionFragment">
 
-        <android.support.v7.widget.RecyclerView
-            config="@{recyclerConfig}"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clipToPadding="false"
-            android:paddingBottom="@dimen/recycler_view_indent_bottom" />
+        <android.support.v4.widget.SwipeRefreshLayout
+            style="@style/ContentFullParent"
+            enable="@{viewModel.dataLoading}"
+            refreshing="@{viewModel.dataLoading}">
+
+            <FrameLayout
+                style="@style/ContentFullParent">
+
+                <android.support.v7.widget.RecyclerView
+                    config="@{recyclerConfig}"
+                    style="@style/ContentFullParent"
+                    android:clipToPadding="false"
+                    android:paddingBottom="@dimen/recycler_view_indent_bottom" />
+
+                <LinearLayout
+                    android:id="@+id/empty_view"
+                    style="@style/EmptyState">
+
+                    <ImageView
+                        style="@style/EmptyState.Image"
+                        android:src="@drawable/ic_search_black_24dp" />
+
+                    <TextView
+                        style="@style/EmptyState.Title"
+                        android:text="@string/empty_state_search_item_title" />
+
+                    <TextView
+                        style="@style/EmptyState.Text"
+                        android:text="@string/empty_state_search_item_text"/>
+
+                </LinearLayout>
+            </FrameLayout>
+
+        </android.support.v4.widget.SwipeRefreshLayout>
 
     </android.support.design.widget.CoordinatorLayout>
 </layout>

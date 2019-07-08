@@ -22,8 +22,7 @@
     </data>
 
     <android.support.constraint.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        style="@style/ContentFullParent">
 
         <LinearLayout
             android:layout_width="0dp"
@@ -36,8 +35,7 @@
             app:layout_constraintWidth_percent="0.8">
 
             <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                style="@style/ContentFullWidth"
                 app:error="@{viewModel.emailError}"
                 app:errorEnabled="true">
 
@@ -53,8 +51,7 @@
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                style="@style/ContentFullWidth"
                 android:layout_marginTop="@dimen/indent_default"
                 app:error="@{viewModel.passwordError}"
                 app:errorEnabled="true"
@@ -73,8 +70,7 @@
 
             <ru.oldowl.core.ui.view.ProgressButton
                 android:id="@+id/sign_in"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                style="@style/ContentFullWidth"
                 android:layout_marginTop="@dimen/indent_big"
                 android:onClick="@{onSingIn}"
                 android:layout_gravity="center"
