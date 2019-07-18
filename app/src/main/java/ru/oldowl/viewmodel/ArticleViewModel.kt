@@ -44,6 +44,7 @@ class ArticleViewModel(
             append("img { height: auto; }\n")
             append("pre { white-space: pre-wrap; } \n")
             append("table { width: 0; } \n")
+            append("iframe { display: none; } \n")
             append("</style>\n")
             append("<meta name=\"viewport\" content=\"width=device-width\" charset=\"utf-8\"/>\n")
             append("</head>\n")

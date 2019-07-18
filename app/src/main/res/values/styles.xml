@@ -127,24 +127,24 @@
     </style>
     
     <style name="EmptyState" parent="ContentFullParent.Vertical">
-        <!--<item name="android:background">?android:windowBackground</item>-->
         <item name="android:gravity">center</item>
     </style>
 
     <style name="EmptyState.Image">
-        <item name="android:layout_width">112dp</item>
-        <item name="android:layout_height">112dp</item>
+        <item name="android:layout_width">128dp</item>
+        <item name="android:layout_height">128dp</item>
         <item name="android:layout_marginBottom">@dimen/indent_normal</item>
     </style>
 
     <style name="EmptyState.Title" parent="TextNormal">
-        <item name="android:maxWidth">300dp</item>
+        <item name="android:maxWidth">200dp</item>
         <item name="android:textSize">20sp</item>
         <item name="android:textAlignment">center</item>
         <item name="android:layout_marginBottom">@dimen/indent_small</item>
     </style>
 
     <style name="EmptyState.Text" parent="EmptyState.Title">
-        <item name="android:textSize">16sp</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:lineSpacingMultiplier">1.4</item>
     </style>
 </resources>

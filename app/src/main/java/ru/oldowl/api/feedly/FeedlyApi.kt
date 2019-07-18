@@ -33,8 +33,7 @@ class FeedlyApi(private val feedlyWebService: FeedlyWebService) {
                             id = it.feedId,
                             title = it.title,
                             htmlUrl = it.website,
-                            url = it.feedId.removePrefix("feed/"),
-                            categoryId = "default")
+                            url = it.feedId.removePrefix("feed/"))
                 } ?: emptyList()
     }
 }
