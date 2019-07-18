@@ -137,7 +137,7 @@
     </style>
 
     <style name="EmptyState.Title" parent="TextNormal">
-        <item name="android:maxWidth">200dp</item>
+        <item name="android:maxWidth">250dp</item>
         <item name="android:textSize">20sp</item>
         <item name="android:textAlignment">center</item>
         <item name="android:layout_marginBottom">@dimen/indent_small</item>
