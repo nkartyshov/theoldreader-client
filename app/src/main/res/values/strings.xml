@@ -63,7 +63,7 @@
     <!-- Add subscription -->
     <string name="add_subscription_success">The %s was added</string>
     <string name="add_subscription_error">Error adding subscription</string>
-    <string name="add_subscription_unknown_error">Unknown error when saving subscription</string>
+    <string name="search_subscription_error">Error searching subscriptions</string>
 
     <string name="notification_general_channel_name">General</string>
     <string name="notification_new_article_title">New articles: %d</string>

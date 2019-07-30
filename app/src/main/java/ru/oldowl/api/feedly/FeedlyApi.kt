@@ -29,11 +29,13 @@ class FeedlyApi(private val feedlyWebService: FeedlyWebService) {
                 .body()
                 ?.results
                 ?.map {
+                    val url = it.feedId.removePrefix("feed/")
+
                     Subscription(
                             id = it.feedId,
-                            title = it.title,
-                            htmlUrl = it.website,
-                            url = it.feedId.removePrefix("feed/"))
+                            url = url,
+                            title = it.title ?: url,
+                            htmlUrl = it.website ?: url)
                 } ?: emptyList()
     }
 }

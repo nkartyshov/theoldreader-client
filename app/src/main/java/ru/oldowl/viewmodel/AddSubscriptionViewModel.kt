@@ -24,13 +24,17 @@ class AddSubscriptionViewModel(
             }
 
             onFailure {
-                event.value = ShowSnackbar(R.string.add_subscription_unknown_error)
+                event.value = ShowSnackbar(R.string.search_subscription_error)
             }
 
             onComplete {
                 dataLoading.value = false
             }
         }
+    }
+
+    fun reset() {
+        searchResult.value = emptyList()
     }
 
     fun save(value: Subscription) {

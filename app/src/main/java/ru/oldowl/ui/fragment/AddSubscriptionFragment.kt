@@ -73,6 +73,7 @@ class AddSubscriptionFragment : BaseFragment() {
                 }
 
                 override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
+                    viewModel.reset()
                     activity?.onBackPressed()
                     return true
                 }
@@ -90,6 +91,9 @@ class AddSubscriptionFragment : BaseFragment() {
                 }
 
                 override fun onQueryTextChange(query: String?): Boolean {
+                    if (query.isNullOrBlank()) {
+                        viewModel.reset()
+                    }
                     return false
                 }
             })

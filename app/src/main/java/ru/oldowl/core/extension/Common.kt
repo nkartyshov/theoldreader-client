@@ -14,6 +14,6 @@ fun Date.toShortDateTime() =
 
 fun showMessage(view: View, event: ShowSnackbar) {
     val context = view.context
-    val message = context.getString(event.message, event.args)
+    val message = context.getString(event.message, *event.args.toTypedArray())
     Snackbar.make(view, message, event.duration).show()
 }
