@@ -1,10 +1,10 @@
 package ru.oldowl.core.binding
 
-import android.databinding.BindingAdapter
-import android.support.annotation.StringRes
-import android.support.design.widget.TextInputLayout
-import android.support.v4.widget.SwipeRefreshLayout
-import android.support.v7.widget.RecyclerView
+import androidx.databinding.BindingAdapter
+import androidx.annotation.StringRes
+import com.google.android.material.textfield.TextInputLayout
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import android.webkit.WebView
 import android.widget.ImageView
@@ -68,14 +68,14 @@ object BindingAdapter {
 
     @JvmStatic
     @BindingAdapter("refreshing")
-    fun setRefreshing(swipeRefreshLayout: SwipeRefreshLayout, refreshing: Boolean?) =
+    fun setRefreshing(swipeRefreshLayout: androidx.swiperefreshlayout.widget.SwipeRefreshLayout, refreshing: Boolean?) =
             refreshing?.let {
                 swipeRefreshLayout.isRefreshing = it
             }
 
     @JvmStatic
     @BindingAdapter("enable")
-    fun setEnable(swipeRefreshLayout: SwipeRefreshLayout, enable: Boolean?) {
+    fun setEnable(swipeRefreshLayout: androidx.swiperefreshlayout.widget.SwipeRefreshLayout, enable: Boolean?) {
         enable?.let {
             swipeRefreshLayout.isEnabled = it
         }
@@ -91,7 +91,7 @@ object BindingAdapter {
 
     @JvmStatic
     @BindingAdapter("config")
-    fun configRecyclerView(recyclerView: RecyclerView, config: RecyclerConfig?) {
+    fun configRecyclerView(recyclerView: androidx.recyclerview.widget.RecyclerView, config: RecyclerConfig?) {
         if (config == null) {
             return
         }

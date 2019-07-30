@@ -21,7 +21,7 @@
             type="Runnable" />
     </data>
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         style="@style/ContentFullParent">
 
         <LinearLayout
@@ -34,12 +34,12 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintWidth_percent="0.8">
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 style="@style/ContentFullWidth"
                 app:error="@{viewModel.emailError}"
                 app:errorEnabled="true">
 
-                <android.support.design.widget.TextInputEditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/email"
                     style="@style/TextNormal"
                     android:layout_width="match_parent"
@@ -48,16 +48,16 @@
                     android:inputType="textEmailAddress"
                     android:text="@={viewModel.email}" />
 
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 style="@style/ContentFullWidth"
                 android:layout_marginTop="@dimen/indent_default"
                 app:error="@{viewModel.passwordError}"
                 app:errorEnabled="true"
                 app:passwordToggleEnabled="true">
 
-                <android.support.design.widget.TextInputEditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/password"
                     style="@style/TextNormal"
                     android:layout_width="match_parent"
@@ -66,7 +66,7 @@
                     android:inputType="textPassword"
                     android:text="@={viewModel.password}" />
 
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
             <ru.oldowl.core.ui.view.ProgressButton
                 android:id="@+id/sign_in"
@@ -94,5 +94,5 @@
                 android:text="@string/sign_up" />
 
         </LinearLayout>
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

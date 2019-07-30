@@ -1,7 +1,7 @@
 package ru.oldowl.core
 
-import android.support.annotation.StringRes
-import android.support.design.widget.Snackbar
+import androidx.annotation.StringRes
+import com.google.android.material.snackbar.Snackbar
 
 sealed class UiEvent {
 

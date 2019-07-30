@@ -20,7 +20,7 @@
             type="String" />
     </data>
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         style="@style/ContentFullWidth"
         android:padding="@dimen/indent_default">
 
@@ -80,5 +80,5 @@
             app:layout_constraintTop_toBottomOf="@id/article_summary"
             tools:text="Today" />
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

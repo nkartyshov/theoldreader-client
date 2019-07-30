@@ -1,12 +1,12 @@
 package ru.oldowl.core.ui
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 
 class EmptyDataObserver(
-        private val recyclerView: RecyclerView,
+        private val recyclerView: androidx.recyclerview.widget.RecyclerView,
         private val emptyView: View
-) : RecyclerView.AdapterDataObserver() {
+) : androidx.recyclerview.widget.RecyclerView.AdapterDataObserver() {
 
     override fun onChanged() {
         checkIfEmpty()

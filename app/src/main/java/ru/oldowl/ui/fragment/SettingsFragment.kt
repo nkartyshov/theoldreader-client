@@ -1,7 +1,7 @@
 package ru.oldowl.ui.fragment
 
 import android.os.Bundle
-import android.support.v7.preference.PreferenceFragmentCompat
+import androidx.preference.PreferenceFragmentCompat
 import android.view.View
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject

@@ -1,6 +1,6 @@
 package ru.oldowl.db.model
 
-import android.arch.persistence.room.*
+import androidx.room.*
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 import java.util.*

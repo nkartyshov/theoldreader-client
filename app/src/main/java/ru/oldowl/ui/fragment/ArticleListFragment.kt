@@ -1,8 +1,8 @@
 package ru.oldowl.ui.fragment
 
 import android.os.Bundle
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.*
 import org.koin.android.viewmodel.ext.android.sharedViewModel
 import ru.oldowl.R
@@ -89,15 +89,15 @@ class ArticleListFragment : BaseFragment() {
         viewModel.loadArticles()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        inflater?.inflate(R.menu.menu_articles_list, menu)
+        inflater.inflate(R.menu.menu_articles_list, menu)
 
-        menu?.findItem(R.id.hide_read)?.isChecked = viewModel.hideRead
-        menu?.findItem(R.id.unsubscribe)?.isVisible = viewModel.hasSubscription()
+        menu.findItem(R.id.hide_read)?.isChecked = viewModel.hideRead
+        menu.findItem(R.id.unsubscribe)?.isVisible = viewModel.hasSubscription()
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean = when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
         R.id.delete_all -> {
             confirmDialog(R.string.delete_all_dialog_message) {
                 viewModel.deleteAll()

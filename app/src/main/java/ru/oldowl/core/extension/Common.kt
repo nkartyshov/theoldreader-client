@@ -1,6 +1,6 @@
 package ru.oldowl.core.extension
 
-import android.support.design.widget.Snackbar
+import com.google.android.material.snackbar.Snackbar
 import android.view.View
 import ru.oldowl.core.UiEvent.*
 import java.text.DateFormat

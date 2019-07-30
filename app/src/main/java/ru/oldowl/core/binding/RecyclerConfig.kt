@@ -1,7 +1,7 @@
 package ru.oldowl.core.binding
 
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 
 class RecyclerConfig(

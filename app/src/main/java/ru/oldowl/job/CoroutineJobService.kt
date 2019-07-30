@@ -2,7 +2,7 @@ package ru.oldowl.job
 
 import android.app.job.JobParameters
 import android.app.job.JobService
-import android.arch.lifecycle.MutableLiveData
+import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.*
 import org.koin.standalone.KoinComponent
 import kotlin.coroutines.CoroutineContext

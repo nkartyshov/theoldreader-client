@@ -1,10 +1,8 @@
 package ru.oldowl.ui
 
 import android.content.Context
-import android.databinding.DataBindingUtil
 import android.graphics.Bitmap
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -13,8 +11,10 @@ import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.ProgressBar
+import androidx.databinding.DataBindingUtil
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.toolbar.*
-import org.koin.standalone.inject
+import org.koin.android.viewmodel.ext.android.viewModel
 import ru.oldowl.R
 import ru.oldowl.core.UiEvent.RefreshScreen
 import ru.oldowl.core.UiEvent.ShowSnackbar
@@ -27,7 +27,7 @@ import ru.oldowl.viewmodel.ArticleViewModel.Companion.ARTICLE
 
 class ArticleActivity : BaseActivity() {
 
-    private val viewModel: ArticleViewModel by inject()
+    private val viewModel: ArticleViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

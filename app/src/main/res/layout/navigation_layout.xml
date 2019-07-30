@@ -32,7 +32,7 @@
             type="Runnable" />
     </data>
 
-    <android.support.v4.widget.NestedScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="300dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
@@ -87,7 +87,7 @@
                     style="@style/NavSubHeader"
                     android:text="@string/nav_subscriptions" />
 
-                <android.support.v7.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/subscription_list"
                     config="@{recyclerConfig}"
                     style="@style/ContentFullWidth"
@@ -125,5 +125,5 @@
                     android:text="@string/nav_settings" />
             </LinearLayout>
         </LinearLayout>
-    </android.support.v4.widget.NestedScrollView>
+    </androidx.core.widget.NestedScrollView>
 </layout>

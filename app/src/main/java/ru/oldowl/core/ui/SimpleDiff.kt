@@ -1,6 +1,6 @@
 package ru.oldowl.core.ui
 
-import android.support.v7.util.DiffUtil
+import androidx.recyclerview.widget.DiffUtil
 
 class SimpleDiff<T> (
     private val compareItems: (old: T, new: T) -> Boolean,

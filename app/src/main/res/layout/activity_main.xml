@@ -9,7 +9,7 @@
             type="ru.oldowl.viewmodel.MainViewModel" />
     </data>
 
-    <android.support.v4.widget.DrawerLayout
+    <androidx.drawerlayout.widget.DrawerLayout
         android:id="@+id/drawer_view"
         style="@style/ContentFullParent"
         android:fitsSystemWindows="true">
@@ -30,5 +30,5 @@
             layout="@layout/navigation_layout"
             app:viewModel="@{viewModel}" />
 
-    </android.support.v4.widget.DrawerLayout>
+    </androidx.drawerlayout.widget.DrawerLayout>
 </layout>

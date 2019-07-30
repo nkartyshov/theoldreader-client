@@ -1,10 +1,10 @@
 package ru.oldowl.viewmodel
 
 import android.app.Application
-import android.arch.lifecycle.LifecycleObserver
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.Observer
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import android.os.Bundle
 import ru.oldowl.R
 import ru.oldowl.core.UiEvent.*

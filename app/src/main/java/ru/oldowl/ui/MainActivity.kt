@@ -1,12 +1,11 @@
 package ru.oldowl.ui
 
-import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.widget.DrawerLayout
-import android.support.v7.app.ActionBarDrawerToggle
-import android.support.v7.widget.LinearLayoutManager
 import android.view.View
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.toolbar.*
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -69,7 +68,7 @@ class MainActivity : BaseActivity() {
         actionBarDrawerToggle.syncState()
 
         drawer_view.setStatusBarBackground(R.color.colorPrimaryDark)
-        drawer_view.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
+        drawer_view.addDrawerListener(object : androidx.drawerlayout.widget.DrawerLayout.SimpleDrawerListener() {
             override fun onDrawerOpened(drawerView: View) {
                 super.onDrawerOpened(drawerView)
                 updateDrawer()
@@ -96,6 +95,7 @@ class MainActivity : BaseActivity() {
     }
 
     private fun openFragment(fragment: Fragment, addToBackStack: Boolean = false) {
+
         replaceFragment(R.id.fragment_container, fragment, addToBackStack)
 
         drawer_view.closeDrawers()

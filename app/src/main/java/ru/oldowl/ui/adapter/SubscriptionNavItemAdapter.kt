@@ -1,8 +1,8 @@
 package ru.oldowl.ui.adapter
 
 import android.content.Context
-import android.support.v7.recyclerview.extensions.ListAdapter
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import ru.oldowl.R
@@ -36,7 +36,7 @@ class SubscriptionNavItemAdapter
 
     class ViewHolder(
             private val dataBinding: ViewSubscriptionItemBinding
-    ) : RecyclerView.ViewHolder(dataBinding.root) {
+    ) : androidx.recyclerview.widget.RecyclerView.ViewHolder(dataBinding.root) {
 
         private val context: Context = dataBinding.root.context
 

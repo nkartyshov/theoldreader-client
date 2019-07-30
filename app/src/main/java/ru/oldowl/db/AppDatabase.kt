@@ -1,6 +1,6 @@
 package ru.oldowl.db
 
-import android.arch.persistence.room.*
+import androidx.room.*
 import android.content.Context
 import ru.oldowl.db.dao.ArticleDao
 import ru.oldowl.db.dao.CategoryDao

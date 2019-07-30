@@ -1,6 +1,6 @@
 package ru.oldowl.db.dao
 
-import android.arch.persistence.room.*
+import androidx.room.*
 import ru.oldowl.db.model.Category
 
 @Dao

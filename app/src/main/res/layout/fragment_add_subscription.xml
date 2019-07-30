@@ -12,13 +12,13 @@
             type="ru.oldowl.core.binding.RecyclerConfig" />
     </data>
 
-    <android.support.design.widget.CoordinatorLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         style="@style/ContentFullParent"
         tools:context=".ui.fragment.AddSubscriptionFragment">
 
-        <android.support.v4.widget.SwipeRefreshLayout
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             style="@style/ContentFullParent"
             enable="@{viewModel.dataLoading}"
             refreshing="@{viewModel.dataLoading}">
@@ -26,7 +26,7 @@
             <FrameLayout
                 style="@style/ContentFullParent">
 
-                <android.support.v7.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     config="@{recyclerConfig}"
                     style="@style/ContentFullParent" />
 
@@ -49,7 +49,7 @@
                 </LinearLayout>
             </FrameLayout>
 
-        </android.support.v4.widget.SwipeRefreshLayout>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    </android.support.design.widget.CoordinatorLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

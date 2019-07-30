@@ -2,7 +2,8 @@ package ru.oldowl.repository
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.support.v7.preference.PreferenceManager
+import androidx.core.content.edit
+import androidx.preference.PreferenceManager
 import com.squareup.moshi.Moshi
 import ru.oldowl.R
 import ru.oldowl.db.model.Account
@@ -59,7 +60,7 @@ class SettingsStorage(
                 ?: defaultValue
 
         override fun setValue(thisRef: Any, property: KProperty<*>, value: Long) {
-            with(sharedPreferences.edit()) {
+            sharedPreferences.edit {
                 putString(key, value.toString())
                 apply()
             }
@@ -74,7 +75,7 @@ class SettingsStorage(
         override fun getValue(thisRef: Any, property: KProperty<*>): Boolean = sharedPreferences.getBoolean(key, defaultValue)
 
         override fun setValue(thisRef: Any, property: KProperty<*>, value: Boolean) {
-            with(sharedPreferences.edit()) {
+            sharedPreferences.edit {
                 putBoolean(key, value)
                 apply()
             }
@@ -92,7 +93,7 @@ class SettingsStorage(
 
         override fun setValue(thisRef: Any, property: KProperty<*>, value: Date?) {
             value?.let {
-                with(sharedPreferences.edit()) {
+                sharedPreferences.edit {
                     putLong(key, value.time)
                     apply()
                 }
@@ -113,12 +114,10 @@ class SettingsStorage(
                     adapter.fromJson(it)
                 }
 
-
         override fun setValue(thisRef: Any, property: KProperty<*>, value: Account?) =
-                with(sharedPreferences.edit()) {
+                sharedPreferences.edit {
                     remove(key)
                     putString(key, adapter.toJson(value))
-                    apply()
                 }
     }
 }

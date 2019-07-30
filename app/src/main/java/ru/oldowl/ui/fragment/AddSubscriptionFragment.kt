@@ -1,13 +1,15 @@
 package ru.oldowl.ui.fragment
 
 import android.os.Bundle
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.SearchView
 import android.view.*
+import androidx.appcompat.widget.SearchView
+import androidx.fragment.app.activityViewModels
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import org.koin.android.viewmodel.ext.android.sharedViewModel
 import ru.oldowl.R
-import ru.oldowl.core.UiEvent.*
+import ru.oldowl.core.UiEvent.ShowSnackbar
 import ru.oldowl.core.binding.RecyclerConfig
 import ru.oldowl.core.extension.observe
 import ru.oldowl.core.extension.showMessage
@@ -30,7 +32,7 @@ class AddSubscriptionFragment : BaseFragment() {
                               savedInstanceState: Bundle?): View? {
         return FragmentAddSubscriptionBinding.inflate(inflater, container, false).also {
             it.recyclerConfig = RecyclerConfig(listAdapter,
-                    LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false),
+                    LinearLayoutManager(context, RecyclerView.VERTICAL, false),
                     DividerItemDecoration(context, LinearLayoutManager.VERTICAL),
                     it.emptyView
             )
@@ -59,13 +61,13 @@ class AddSubscriptionFragment : BaseFragment() {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        inflater?.inflate(R.menu.menu_add_subscription, menu)
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_add_subscription, menu)
     }
 
-    override fun onPrepareOptionsMenu(menu: Menu?) {
+    override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
-        with(menu?.findItem(R.id.search_view)) {
+        with(menu.findItem(R.id.search_view)) {
 
             this?.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
                 override fun onMenuItemActionExpand(item: MenuItem?): Boolean {

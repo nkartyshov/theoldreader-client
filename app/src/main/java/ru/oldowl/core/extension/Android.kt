@@ -2,33 +2,33 @@ package ru.oldowl.core.extension
 
 import android.app.Activity
 import android.app.job.JobScheduler
-import android.arch.lifecycle.LifecycleOwner
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.Observer
 import android.content.*
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.support.annotation.StringRes
-import android.support.customtabs.CustomTabsIntent
-import android.support.v4.app.Fragment
-import android.support.v4.content.ContextCompat
-import android.support.v7.preference.Preference
-import android.support.v7.preference.PreferenceFragmentCompat
 import android.view.inputmethod.InputMethodManager
+import androidx.annotation.StringRes
+import androidx.browser.customtabs.CustomTabsIntent
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.commit
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
+import androidx.preference.Preference
+import androidx.preference.PreferenceFragmentCompat
 import ru.oldowl.R
 import ru.oldowl.core.ui.BaseActivity
 
-fun BaseActivity.replaceFragment(id: Int, fragment: Fragment, addToBackStack: Boolean = true) {
-    val beginTransaction = supportFragmentManager.beginTransaction()
-    beginTransaction.replace(id, fragment)
+fun BaseActivity.replaceFragment(id: Int, fragment: Fragment, addToBackStack: Boolean = true) =
+        supportFragmentManager.commit {
+            replace(id, fragment)
 
-    if (addToBackStack) {
-        beginTransaction.addToBackStack(null)
-    }
+            if (addToBackStack) {
+                addToBackStack(null)
+            }
+        }
 
-    beginTransaction.commit()
-}
 
 fun Context.browse(url: String? = ""): Boolean {
     return try {
@@ -50,20 +50,19 @@ fun Context.browse(url: String? = ""): Boolean {
     }
 }
 
-fun Context.share(text: String? = "", subject: String = ""): Boolean {
-    return try {
-        val intent = Intent(Intent.ACTION_SEND).apply {
-            type = "text/plain"
-            putExtra(Intent.EXTRA_SUBJECT, subject)
-            putExtra(Intent.EXTRA_TEXT, text)
+fun Context.share(text: String? = "", subject: String = ""): Boolean =
+        try {
+            val intent = Intent(Intent.ACTION_SEND).apply {
+                type = "text/plain"
+                putExtra(Intent.EXTRA_SUBJECT, subject)
+                putExtra(Intent.EXTRA_TEXT, text)
+            }
+            startActivity(Intent.createChooser(intent, null))
+            true
+        } catch (e: ActivityNotFoundException) {
+            e.printStackTrace()
+            false
         }
-        startActivity(Intent.createChooser(intent, null))
-        true
-    } catch (e: ActivityNotFoundException) {
-        e.printStackTrace()
-        false
-    }
-}
 
 fun Context.copyToClipboard(url: String) {
     val clipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager?
@@ -80,8 +79,8 @@ inline fun <reified T : Context> Context.startActivity(bundle: Bundle? = null) {
     this.startActivity(intent)
 }
 
-fun PreferenceFragmentCompat.findPreference(@StringRes strignRes: Int): Preference {
-    val key = this.context?.getString(strignRes)
+fun PreferenceFragmentCompat.findPreference(@StringRes stringRes: Int): Preference {
+    val key = this.context?.getString(stringRes)
     return this.findPreference(key)
 }
 

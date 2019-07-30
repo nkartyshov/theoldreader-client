@@ -1,7 +1,7 @@
 package ru.oldowl.viewmodel
 
-import android.arch.lifecycle.MutableLiveData
-import android.databinding.ObservableField
+import androidx.lifecycle.MutableLiveData
+import androidx.databinding.ObservableField
 import kotlinx.coroutines.launch
 import ru.oldowl.R
 import ru.oldowl.core.UiEvent.CloseScreen

@@ -15,9 +15,9 @@
             type="ru.oldowl.core.binding.RecyclerConfig" />
     </data>
 
-    <android.support.design.widget.CoordinatorLayout style="@style/ContentFullParent">
+    <androidx.coordinatorlayout.widget.CoordinatorLayout style="@style/ContentFullParent">
 
-        <android.support.v4.widget.SwipeRefreshLayout
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/sync_list"
             style="@style/ContentFullParent"
             enable="@{!viewModel.favoriteMode}"
@@ -26,7 +26,7 @@
             <FrameLayout
                 style="@style/ContentFullParent">
 
-                <android.support.v7.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/article_list"
                     style="@style/ContentFullParent"
                     config="@{recyclerConfig}"
@@ -37,7 +37,7 @@
                     android:id="@+id/empty_view"
                     style="@style/EmptyState">
 
-                    <android.support.v7.widget.AppCompatImageView
+                    <androidx.appcompat.widget.AppCompatImageView
                         style="@style/EmptyState.Image"
                         app:srcCompat="@drawable/ic_rss_feed"/>
 
@@ -63,14 +63,14 @@
                 </LinearLayout>
             </FrameLayout>
 
-        </android.support.v4.widget.SwipeRefreshLayout>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-        <android.support.design.widget.FloatingActionButton
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/make_all_read"
             style="@style/FloatingButton"
             android:src="@drawable/ic_done_all_white_24dp"
             app:visibility="@{!viewModel.favoriteMode}"
             app:fabSize="normal" />
 
-    </android.support.design.widget.CoordinatorLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

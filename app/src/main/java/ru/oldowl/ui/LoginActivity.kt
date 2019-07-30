@@ -1,16 +1,18 @@
 package ru.oldowl.ui
 
-import android.databinding.DataBindingUtil
 import android.os.Bundle
+import androidx.databinding.DataBindingUtil
 import org.koin.android.viewmodel.ext.android.viewModel
 import ru.oldowl.R
-import ru.oldowl.core.UiEvent.*
+import ru.oldowl.core.UiEvent.CloseScreen
+import ru.oldowl.core.UiEvent.ShowSnackbar
 import ru.oldowl.core.extension.*
 import ru.oldowl.core.ui.BaseActivity
 import ru.oldowl.databinding.ActivityLoginBinding
 import ru.oldowl.viewmodel.LoginViewModel
 
 class LoginActivity : BaseActivity() {
+
     private val viewModel: LoginViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {

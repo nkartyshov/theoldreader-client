@@ -1,6 +1,6 @@
 package ru.oldowl.viewmodel
 
-import android.arch.lifecycle.MutableLiveData
+import androidx.lifecycle.MutableLiveData
 import ru.oldowl.core.extension.toShortDateTime
 import ru.oldowl.core.ui.BaseViewModel
 import ru.oldowl.db.model.SubscriptionNavItem

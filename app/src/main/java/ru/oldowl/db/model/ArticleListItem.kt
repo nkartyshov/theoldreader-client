@@ -1,7 +1,7 @@
 package ru.oldowl.db.model
 
-import android.arch.persistence.room.ColumnInfo
-import android.arch.persistence.room.Embedded
+import androidx.room.ColumnInfo
+import androidx.room.Embedded
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 

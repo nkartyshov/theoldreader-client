@@ -15,14 +15,14 @@
             type="Runnable" />
     </data>
 
-    <android.support.design.widget.CoordinatorLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         style="@style/ContentFullParent">
 
-        <android.support.design.widget.AppBarLayout
+        <com.google.android.material.appbar.AppBarLayout
             style="@style/ContentFullWidth">
 
             <include layout="@layout/toolbar" />
-        </android.support.design.widget.AppBarLayout>
+        </com.google.android.material.appbar.AppBarLayout>
 
         <ScrollView
             android:id="@+id/article_wrapper"
@@ -99,12 +99,12 @@
             android:layout_gravity="center"
             android:visibility="gone" />
 
-        <android.support.design.widget.FloatingActionButton
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/open_in_browser"
             style="@style/FloatingButton"
             android:src="@drawable/ic_open_in_browser_white_24dp"
             android:onClick="@{openInBrowser}"
             app:fabSize="normal" />
 
-    </android.support.design.widget.CoordinatorLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

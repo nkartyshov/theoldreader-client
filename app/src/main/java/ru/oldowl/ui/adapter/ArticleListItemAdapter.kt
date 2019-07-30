@@ -1,7 +1,7 @@
 package ru.oldowl.ui.adapter
 
-import android.support.v7.recyclerview.extensions.ListAdapter
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import ru.oldowl.databinding.ViewArticleItemBinding
@@ -32,7 +32,7 @@ class ArticleListItemAdapter
     }
 
     class ViewHolder(private val dataBinding: ViewArticleItemBinding)
-        : RecyclerView.ViewHolder(dataBinding.root) {
+        : androidx.recyclerview.widget.RecyclerView.ViewHolder(dataBinding.root) {
 
         fun bind(item: ArticleListItem) {
             dataBinding.article = item.article

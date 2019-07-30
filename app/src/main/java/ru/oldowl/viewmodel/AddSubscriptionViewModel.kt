@@ -1,6 +1,6 @@
 package ru.oldowl.viewmodel
 
-import android.arch.lifecycle.MutableLiveData
+import androidx.lifecycle.MutableLiveData
 import ru.oldowl.R
 import ru.oldowl.core.UiEvent.ShowSnackbar
 import ru.oldowl.core.ui.BaseViewModel
