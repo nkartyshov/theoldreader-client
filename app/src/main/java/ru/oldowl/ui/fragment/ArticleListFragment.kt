@@ -45,7 +45,7 @@ class ArticleListFragment : BaseFragment() {
         }
 
         val density = resources.displayMetrics.density
-        val distanceToTriggerSync = 256 * density.toInt()
+        val distanceToTriggerSync = 128 * density.toInt()
 
         FragmentArticleListBinding.bind(view).also {
 
@@ -92,9 +92,14 @@ class ArticleListFragment : BaseFragment() {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.menu_articles_list, menu)
+    }
 
-        menu.findItem(R.id.hide_read)?.isChecked = viewModel.hideRead
-        menu.findItem(R.id.unsubscribe)?.isVisible = viewModel.hasSubscription()
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        super.onPrepareOptionsMenu(menu)
+        with(menu) {
+            findItem(R.id.hide_read)?.isChecked = viewModel.hideRead
+            findItem(R.id.unsubscribe)?.isVisible = viewModel.hasSubscription()
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
