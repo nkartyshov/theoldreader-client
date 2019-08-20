@@ -2,7 +2,6 @@ package ru.oldowl.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import ru.oldowl.R
-import ru.oldowl.core.UiEvent.ShowSnackbar
 import ru.oldowl.core.ui.BaseViewModel
 import ru.oldowl.db.model.Subscription
 import ru.oldowl.usecase.AddSubscriptionUseCase
@@ -24,7 +23,7 @@ class AddSubscriptionViewModel(
             }
 
             onFailure {
-                event.value = ShowSnackbar(R.string.search_subscription_error)
+                showShortSnackbar(R.string.search_subscription_error)
             }
 
             onComplete {
@@ -40,10 +39,12 @@ class AddSubscriptionViewModel(
     fun save(value: Subscription) {
         addSubscriptionUseCase(value) {
             onSuccess {
-                event.value = ShowSnackbar(R.string.add_subscription_success, args = listOf(value.title))
+                showShortSnackbar(R.string.add_subscription_success) {
+                    args(value.title)
+                }
             }
             onFailure {
-                event.value = ShowSnackbar(R.string.add_subscription_error)
+                showShortSnackbar(R.string.add_subscription_error)
             }
         }
     }

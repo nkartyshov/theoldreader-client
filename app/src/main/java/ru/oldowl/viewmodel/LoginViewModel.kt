@@ -5,7 +5,6 @@ import androidx.databinding.ObservableField
 import kotlinx.coroutines.launch
 import ru.oldowl.R
 import ru.oldowl.core.UiEvent.CloseScreen
-import ru.oldowl.core.UiEvent.ShowSnackbar
 import ru.oldowl.core.ui.BaseViewModel
 import ru.oldowl.usecase.LoginUseCase
 
@@ -50,7 +49,7 @@ class LoginViewModel(private val loginUseCase: LoginUseCase) : BaseViewModel() {
             }
 
             onFailure {
-                event.value = ShowSnackbar(R.string.authentication_error)
+                showShortSnackbar(R.string.authentication_error)
             }
         }
     }

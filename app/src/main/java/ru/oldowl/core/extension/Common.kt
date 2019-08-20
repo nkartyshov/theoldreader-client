@@ -9,11 +9,18 @@ import java.util.*
 val Date.epochTime
     get() = this.time / 1000
 
-fun Date.toShortDateTime() =
+fun Date.toShortDateTime(): String =
         DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(this)
 
 fun showMessage(view: View, event: ShowSnackbar) {
     val context = view.context
     val message = context.getString(event.message, *event.args.toTypedArray())
-    Snackbar.make(view, message, event.duration).show()
+
+    val snackbar = Snackbar.make(view, message, event.duration)
+
+    event.action?.let {
+        snackbar.setAction(it.first, it.second)
+    }
+
+    snackbar.show()
 }

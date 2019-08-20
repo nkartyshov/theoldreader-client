@@ -14,6 +14,8 @@
 
     <string name="search">Search</string>
 
+    <string name="undo">Undo</string>
+
     <!-- Login -->
     <string name="sing_in">Sing in</string>
     <string name="email">Email</string>
@@ -50,6 +52,9 @@
 
     <string name="empty_state_favorite_title">No favorite articles yet</string>
     <string name="empty_state_favorite_message">Click the \'Star\' button on any article to add a favorite</string>
+
+    <string name="mark_all_read_snackbar">Marked as read: %d</string>
+    <string name="delete_articles_snackbar">Deleted articles: %d</string>
 
     <!-- Article detail -->
     <string name="mark_favorite">Mark favorite</string>

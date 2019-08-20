@@ -26,6 +26,9 @@ interface ArticleDao {
     @Query("select * from articles where id = :id")
     fun findById(id: String): Article?
 
+    @Query("select id from articles where (:subscriptionId is null or subscription_id = :subscriptionId) and (:read is null or read = :read)")
+    fun findIds(subscriptionId: String? = null, read: Boolean? = null): List<String>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun save(article: Article)
 
@@ -35,22 +38,28 @@ interface ArticleDao {
     @Query("update articles set read = :read where id = :id")
     fun updateReadState(id: String, read: Boolean)
 
+    @Query("update articles set read = :read where id in (:ids)")
+    fun updateReadStates(ids: List<String>, read: Boolean)
+
+    @Query("update articles set deleted = :deleted where id in (:ids)")
+    fun updateDeleteStates(ids: List<String>, deleted: Boolean)
+
     @Query("update articles set read = 1")
     fun markAllRead()
 
     @Query("update articles set read = 1 where subscription_id = :subscriptionId")
     fun markAllRead(subscriptionId: String?)
 
-    @Query("delete from articles")
+    @Query("update articles set deleted = 1")
     fun deleteAll()
 
-    @Query("delete from articles where subscription_id = :subscriptionId")
+    @Query("update articles set deleted = 1 where subscription_id = :subscriptionId")
     fun deleteAll(subscriptionId: String?)
 
-    @Query("delete from articles where read = 1")
+    @Query("update articles set deleted = 1 where read = 1")
     fun deleteAllRead()
 
-    @Query("delete from articles where read = 1 and subscription_id = :subscriptionId")
+    @Query("update articles set deleted = 1 where read = 1 and subscription_id = :subscriptionId")
     fun deleteAllRead(subscriptionId: String?)
 
     @Delete

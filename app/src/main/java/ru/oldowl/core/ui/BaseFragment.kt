@@ -7,7 +7,7 @@ import kotlinx.coroutines.Job
 import org.koin.standalone.KoinComponent
 import kotlin.coroutines.CoroutineContext
 
-abstract class BaseFragment : androidx.fragment.app.Fragment(), CoroutineScope, KoinComponent {
+abstract class BaseFragment : Fragment(), CoroutineScope, KoinComponent {
     private val job: Job = Job()
 
     override val coroutineContext: CoroutineContext

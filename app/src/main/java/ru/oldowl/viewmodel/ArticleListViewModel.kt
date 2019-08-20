@@ -1,14 +1,14 @@
 package ru.oldowl.viewmodel
 
 import android.app.Application
-import androidx.lifecycle.LifecycleObserver
+import android.os.Bundle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import android.os.Bundle
 import ru.oldowl.R
-import ru.oldowl.core.UiEvent.*
+import ru.oldowl.core.UiEvent.CloseScreen
 import ru.oldowl.core.ui.BaseViewModel
+import ru.oldowl.db.model.Article
 import ru.oldowl.db.model.ArticleListItem
 import ru.oldowl.db.model.Subscription
 import ru.oldowl.job.JobStatus
@@ -16,14 +16,18 @@ import ru.oldowl.repository.SettingsStorage
 import ru.oldowl.repository.SyncManager
 import ru.oldowl.usecase.*
 
-class ArticleListViewModel(private val application: Application,
-                           private val settingsStorage: SettingsStorage,
-                           private val syncManager: SyncManager,
-                           private val loadArticleListUseCase: LoadArticleListUseCase,
-                           private val deleteAllUseCase: DeleteAllUseCase,
-                           private val deleteAllReadUseCase: DeleteAllReadUseCase,
-                           private val markReadAllUseCase: MarkAllReadUseCase,
-                           private val unsubscribeUseCase: UnsubscribeUseCase) : BaseViewModel(), LifecycleObserver {
+class ArticleListViewModel(
+        private val application: Application,
+        private val settingsStorage: SettingsStorage,
+        private val syncManager: SyncManager,
+        private val loadArticleListUseCase: LoadArticleListUseCase,
+        private val deleteAllUseCase: DeleteAllUseCase,
+        private val deleteAllReadUseCase: DeleteAllReadUseCase,
+        private val markReadAllUseCase: MarkAllReadUseCase,
+        private val unsubscribeUseCase: UnsubscribeUseCase,
+        private val markUnreadUseCase: MarkAllUnreadUseCase,
+        private val addArticlesUseCase: AddArticlesUseCase
+) : BaseViewModel() {
 
     private val articleLiveData: MutableLiveData<List<ArticleListItem>> = MutableLiveData()
 
@@ -93,7 +97,14 @@ class ArticleListViewModel(private val application: Application,
 
     fun deleteAll() =
             deleteAllUseCase(subscription?.id) {
-                onSuccess { loadArticles() }
+                onSuccess {
+                    it?.let {list ->
+                        if (list.isNotEmpty()) {
+                            loadArticles()
+                            undoDeleteArticles(list)
+                        }
+                    }
+                }
                 onFailure {
                     showOopsSnackBar()
                 }
@@ -101,7 +112,14 @@ class ArticleListViewModel(private val application: Application,
 
     fun deleteAllRead() =
             deleteAllReadUseCase(subscription?.id) {
-                onSuccess { loadArticles() }
+                onSuccess {
+                    it?.let {list ->
+                        if (list.isNotEmpty()) {
+                            loadArticles()
+                            undoDeleteArticles(list)
+                        }
+                    }
+                }
                 onFailure {
                     showOopsSnackBar()
                 }
@@ -109,7 +127,14 @@ class ArticleListViewModel(private val application: Application,
 
     fun markReadAll() =
             markReadAllUseCase(subscription) {
-                onSuccess { loadArticles() }
+                onSuccess {
+                    it?.let { list ->
+                        if (list.isNotEmpty()) {
+                            loadArticles()
+                            undoMarkAllRead(list)
+                        }
+                    }
+                }
                 onFailure {
                     showOopsSnackBar()
                 }
@@ -143,6 +168,49 @@ class ArticleListViewModel(private val application: Application,
         super.onCleared()
         syncManager.state.removeObserver(jobStatusObserver)
     }
+
+    private fun undoDelete(ids: List<String>) =
+            showShortSnackbar(R.string.delete_articles_snackbar) {
+                args(ids.size)
+
+                action(R.string.undo) {
+
+                }
+            }
+
+    private fun undoMarkAllRead(ids: List<String>) =
+            showShortSnackbar(R.string.mark_all_read_snackbar) {
+                args(ids.size)
+
+                action(R.string.undo) {
+                    markUnreadUseCase(ids) {
+                        onSuccess {
+                            loadArticles()
+                        }
+
+                        onFailure {
+                            showOopsSnackBar()
+                        }
+                    }
+                }
+            }
+
+    private fun undoDeleteArticles(ids: List<String>) =
+            showShortSnackbar(R.string.delete_articles_snackbar) {
+                args(ids.size)
+
+                action(R.string.undo) {
+                    addArticlesUseCase(ids) {
+                        onSuccess {
+                            loadArticles()
+                        }
+
+                        onFailure {
+                            showOopsSnackBar()
+                        }
+                    }
+                }
+            }
 
     companion object {
         const val ARTICLE_LIST_MODE = "article_list_mode"

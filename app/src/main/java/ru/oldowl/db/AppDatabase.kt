@@ -10,7 +10,7 @@ import ru.oldowl.db.model.*
 import java.util.*
 
 @Database(entities = [ Subscription::class, Article::class, Category::class, SyncEvent::class ],
-        version = 1,
+        version = 2,
         exportSchema = false)
 @TypeConverters(DateTypeConverter::class, EventTypeConverter::class)
 abstract class AppDatabase : RoomDatabase() {
