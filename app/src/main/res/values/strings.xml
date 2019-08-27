@@ -55,6 +55,7 @@
 
     <string name="mark_all_read_snackbar">Marked as read: %d</string>
     <string name="delete_articles_snackbar">Deleted articles: %d</string>
+    <string name="unsubscribe_snackbar">You unsubscribed from %s</string>
 
     <!-- Article detail -->
     <string name="mark_favorite">Mark favorite</string>

@@ -79,14 +79,14 @@ interface ArticleRepository {
 
         override suspend fun markAllRead(): List<String> =
                 articleDao.findIds().let {
-                    articleDao.markAllRead()
+                    updateReadStates(it, true)
                     syncEventDao.save(SyncEvent.markAllRead())
                     it
                 }
 
         override suspend fun markAllRead(subscription: Subscription): List<String> =
                 articleDao.findIds(subscriptionId = subscription.id).let {
-                    articleDao.markAllRead(subscriptionId = subscription.id)
+                    updateReadStates(it, true)
                     syncEventDao.save(SyncEvent.markAllRead(subscription.id))
                     it
                 }
@@ -101,38 +101,42 @@ interface ArticleRepository {
             syncEventDao.save(SyncEvent.updateRead(article.id))
         }
 
-        override suspend fun updateReadStates(ids: List<String>, state: Boolean) = articleDao.updateReadStates(ids, state)
-
         override suspend fun updateFavoriteState(article: Article) {
             articleDao.updateFavoriteState(article.id, article.favorite)
             syncEventDao.save(SyncEvent.updateFavorite(article.id))
         }
 
+        override suspend fun updateReadStates(ids: List<String>, state: Boolean) =
+                ids.chunked(500).forEach {
+                    articleDao.updateReadStates(it, state)
+                }
+
         override suspend fun updateDeletedStates(ids: List<String>, state: Boolean) =
-                articleDao.updateDeleteStates(ids, state)
+                ids.chunked(500).forEach {
+                    articleDao.updateDeleteStates(it, state)
+                }
 
         override suspend fun deleteAll(): List<String> =
                 articleDao.findIds().let {
-                    articleDao.deleteAll()
+                    updateDeletedStates(it, true)
                     it
                 }
 
-
         override suspend fun deleteAll(subscriptionId: String): List<String> =
                 articleDao.findIds(subscriptionId).let {
-                    articleDao.deleteAll(subscriptionId)
+                    updateDeletedStates(it, true)
                     it
                 }
 
         override suspend fun deleteAllRead(): List<String> =
                 articleDao.findIds(read = true).let {
-                    articleDao.deleteAllRead()
+                    updateDeletedStates(it, true)
                     it
                 }
 
         override suspend fun deleteAllRead(subscriptionId: String): List<String> =
                 articleDao.findIds(subscriptionId, read = true).let {
-                    articleDao.deleteAllRead(subscriptionId)
+                    updateDeletedStates(it, true)
                     it
                 }
 

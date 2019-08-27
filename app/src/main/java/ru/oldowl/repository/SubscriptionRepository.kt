@@ -66,10 +66,7 @@ interface SubscriptionRepository {
 
         override suspend fun unsubscribe(subscription: Subscription) {
             subscriptionDao.delete(subscription)
-
-            if (!theOldReaderApi.unsubscribe(subscription.id, authToken)) {
-                syncEventDao.save(SyncEvent.unsubscribe(subscription.id))
-            }
+            syncEventDao.save(SyncEvent.unsubscribe(subscription.id))
         }
 
         override suspend fun downloadSubscription(): List<Subscription> =

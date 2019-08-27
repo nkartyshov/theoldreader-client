@@ -1,29 +1,30 @@
 package ru.oldowl.core.binding
 
-import androidx.databinding.BindingAdapter
-import androidx.annotation.StringRes
-import com.google.android.material.textfield.TextInputLayout
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import androidx.recyclerview.widget.RecyclerView
+import android.annotation.SuppressLint
 import android.view.View
 import android.webkit.WebView
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.StringRes
+import androidx.databinding.BindingAdapter
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.amulyakhare.textdrawable.TextDrawable
 import com.amulyakhare.textdrawable.util.ColorGenerator
+import com.google.android.material.textfield.TextInputLayout
 import ru.oldowl.core.extension.toShortDateTime
 import ru.oldowl.core.ui.EmptyDataObserver
 import java.util.*
 
 object BindingAdapter {
 
-    private val HTML_TAGS_REGEX = Regex("(<.*?>|<\\/.*?>)")
+    private val HTML_TAGS_REGEX = Regex("(<.*?>|</.*?>)")
     private val CONTROL_CHARS_REGEX = Regex("[\\t\\n]")
     private val REMOVE_EXTRA_SPACE = Regex(" {2,}+")
 
     private const val MIME_TYPE = "text/html"
     private const val ENCODING = "UTF-8"
 
+    @SuppressLint("DefaultLocale")
     @JvmStatic
     @BindingAdapter("text")
     fun setText(imageView: ImageView, text: String) {
@@ -68,14 +69,14 @@ object BindingAdapter {
 
     @JvmStatic
     @BindingAdapter("refreshing")
-    fun setRefreshing(swipeRefreshLayout: androidx.swiperefreshlayout.widget.SwipeRefreshLayout, refreshing: Boolean?) =
+    fun setRefreshing(swipeRefreshLayout: SwipeRefreshLayout, refreshing: Boolean?) =
             refreshing?.let {
                 swipeRefreshLayout.isRefreshing = it
             }
 
     @JvmStatic
     @BindingAdapter("enable")
-    fun setEnable(swipeRefreshLayout: androidx.swiperefreshlayout.widget.SwipeRefreshLayout, enable: Boolean?) {
+    fun setEnable(swipeRefreshLayout: SwipeRefreshLayout, enable: Boolean?) {
         enable?.let {
             swipeRefreshLayout.isEnabled = it
         }

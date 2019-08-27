@@ -10,6 +10,8 @@
         <item name="android:textColorSecondary">@color/gray</item>
         <item name="android:textColorTertiary">@color/gray</item>
 
+        <item name="android:fontFamily">@font/lato</item>
+
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@color/statusBarColor</item>
 
@@ -34,6 +36,8 @@
     <style name="TextNormal" parent="TextAppearance.AppCompat.Body1">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
+
+        <item name="android:fontFamily">@font/lato</item>
     </style>
 
     <style name="TextNormal.Bold">
@@ -49,6 +53,8 @@
     <style name="TextCaption" parent="TextAppearance.AppCompat.Caption">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
+
+        <item name="android:fontFamily">@font/lato</item>
     </style>
 
     <style name="TextCaption.SingleLine">
@@ -60,6 +66,8 @@
     <style name="TextHeader" parent="Base.TextAppearance.AppCompat.Subhead">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
+
+        <item name="android:fontFamily">@font/lato</item>
     </style>
 
     <style name="TextSummary" parent="TextCaption">

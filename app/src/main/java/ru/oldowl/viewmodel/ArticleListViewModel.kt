@@ -5,10 +5,10 @@ import android.os.Bundle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import com.google.android.material.snackbar.Snackbar
 import ru.oldowl.R
 import ru.oldowl.core.UiEvent.CloseScreen
 import ru.oldowl.core.ui.BaseViewModel
-import ru.oldowl.db.model.Article
 import ru.oldowl.db.model.ArticleListItem
 import ru.oldowl.db.model.Subscription
 import ru.oldowl.job.JobStatus
@@ -98,7 +98,7 @@ class ArticleListViewModel(
     fun deleteAll() =
             deleteAllUseCase(subscription?.id) {
                 onSuccess {
-                    it?.let {list ->
+                    it?.let { list ->
                         if (list.isNotEmpty()) {
                             loadArticles()
                             undoDeleteArticles(list)
@@ -113,7 +113,7 @@ class ArticleListViewModel(
     fun deleteAllRead() =
             deleteAllReadUseCase(subscription?.id) {
                 onSuccess {
-                    it?.let {list ->
+                    it?.let { list ->
                         if (list.isNotEmpty()) {
                             loadArticles()
                             undoDeleteArticles(list)
@@ -143,13 +143,14 @@ class ArticleListViewModel(
     fun unsubscribe() =
             subscription?.let {
                 unsubscribeUseCase(it) {
-                    onSuccess { event.value = CloseScreen }
+                    onSuccess {
+                        event.value = CloseScreen
+                    }
                     onFailure {
                         showOopsSnackBar()
                     }
                 }
             }
-
 
     fun loadArticles() {
         val param = LoadArticleListUseCase.Param(mode, subscription?.id)
@@ -169,17 +170,8 @@ class ArticleListViewModel(
         syncManager.state.removeObserver(jobStatusObserver)
     }
 
-    private fun undoDelete(ids: List<String>) =
-            showShortSnackbar(R.string.delete_articles_snackbar) {
-                args(ids.size)
-
-                action(R.string.undo) {
-
-                }
-            }
-
     private fun undoMarkAllRead(ids: List<String>) =
-            showShortSnackbar(R.string.mark_all_read_snackbar) {
+            showSnackbar(R.string.mark_all_read_snackbar, Snackbar.LENGTH_LONG) {
                 args(ids.size)
 
                 action(R.string.undo) {
@@ -196,7 +188,7 @@ class ArticleListViewModel(
             }
 
     private fun undoDeleteArticles(ids: List<String>) =
-            showShortSnackbar(R.string.delete_articles_snackbar) {
+            showSnackbar(R.string.delete_articles_snackbar, Snackbar.LENGTH_LONG) {
                 args(ids.size)
 
                 action(R.string.undo) {

@@ -9,7 +9,6 @@ class AddArticlesUseCase(
 ) : UseCase<List<String>, Unit>() {
 
     override suspend fun run(param: List<String>): Result<Unit> {
-        // FIXME
         articleRepository.updateDeletedStates(param, false)
         return Result.empty()
     }

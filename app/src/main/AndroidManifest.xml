@@ -3,16 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="ru.oldowl">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name=".AppApplication"
         android:allowBackup="false"
         android:fullBackupContent="false"
-        android:label="@string/app_name"
         android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
@@ -31,17 +30,20 @@
             android:name=".ui.LoginActivity"
             android:label="@string/sing_in" />
 
-        <activity android:name=".ui.MainActivity"
-            android:label="@string/empty"/>
+        <activity
+            android:name=".ui.MainActivity"
+            android:label="@string/empty" />
 
-        <activity android:name=".ui.ArticleActivity"
-            android:launchMode="singleTask"
-            android:label="@string/empty"/>
+        <activity
+            android:name=".ui.ArticleActivity"
+            android:label="@string/empty" />
+
+        <meta-data
+            android:name="firebase_crashlytics_collection_enabled"
+            android:value="false" />
 
         <service
             android:name=".job.SyncJob"
             android:permission="android.permission.BIND_JOB_SERVICE" />
-
-        <meta-data android:name="firebase_crashlytics_collection_enabled" android:value="false" />
     </application>
 </manifest>

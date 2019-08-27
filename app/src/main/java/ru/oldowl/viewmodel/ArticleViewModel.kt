@@ -39,7 +39,7 @@ class ArticleViewModel(
             append("<html>\n")
             append("<head>\n")
             append("<style type=\"text/css\">\n")
-            append("body { max-width: 100%; padding: 0 0.2cm 0 0.2cm; }\n")
+            append("body { max-width: 100%; padding: 0 0.2cm 0 0.2cm; font-family: sans-serif-light; }\n")
             append("* { max-width: 100%; word-break: break-word }\n")
             append("img { height: auto; }\n")
             append("pre { white-space: pre-wrap; } \n")

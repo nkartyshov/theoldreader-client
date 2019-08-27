@@ -38,7 +38,7 @@ abstract class BaseViewModel : ViewModel(), KoinComponent, CoroutineScope {
         event.value = showSnackbar(R.string.something_went_wrong_error, Snackbar.LENGTH_SHORT)
     }
 
-    private fun showSnackbar(@StringRes message: Int, duration: Int, block: ShowSnackbar.() -> Unit = {}): ShowSnackbar
+    protected fun showSnackbar(@StringRes message: Int, duration: Int, block: ShowSnackbar.() -> Unit = {}): ShowSnackbar
             = ShowSnackbar(message, duration)
             .apply(block)
 }
