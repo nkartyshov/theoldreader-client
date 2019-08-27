@@ -1,4 +1,5 @@
-[![API](https://img.shields.io/badge/API-21%2B-blue.svg?style=flat)](https://android-arsenal.com/api?level=21)
+[![API](https://img.shields.io/badge/API-21%2B-blue.svg)](https://android-arsenal.com/api?level=21)
+[![Latest release](https://img.shields.io/github/tag/nkartyshov/theoldreader-client?label=latest%20release)](https://github.com/nkartyshov/theoldreader-client/releases)
 
 Old Owl
 =======
