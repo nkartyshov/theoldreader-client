@@ -15,7 +15,7 @@ Unofficial RSS client for The Old Reader
 
 ### Screenshots
 
-![](screenshots/promo_1.png)
-![](screenshots/promo_2.png)
-![](screenshots/promo_3.png)
-![](screenshots/promo_4.png)
+![](screenshots/promo_1.jpg)
+![](screenshots/promo_2.jpg)
+![](screenshots/promo_3.jpg)
+![](screenshots/promo_4.jpg)
