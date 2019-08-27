@@ -31,7 +31,9 @@ val serviceModule = module {
     // OkHttp
     single {
         val logger = HttpLoggingInterceptor()
-        logger.level = HttpLoggingInterceptor.Level.BODY
+
+        logger.level = if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY
+        else HttpLoggingInterceptor.Level.BASIC
 
         OkHttpClient.Builder()
                 .addInterceptor(logger)

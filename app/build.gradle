@@ -8,10 +8,15 @@ apply plugin: 'io.fabric'
 android {
     signingConfigs {
         config {
-            keyAlias 'old-owl'
-            keyPassword 'krevedko'
-            storeFile file('E:/workspace/old-owl.jks')
-            storePassword 'krevedko'
+            Properties properties = new Properties()
+            properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+            if (properties.getProperty("store.path") != null) {
+                storeFile file(properties.getProperty("store.path"))
+                storePassword properties.getProperty("store.password")
+                keyAlias properties.getProperty("key.alias")
+                keyPassword properties.getProperty("key.password")
+            }
         }
     }
 
@@ -65,6 +70,16 @@ android {
 
     kotlinOptions {
         jvmTarget = "1.8"
+    }
+
+    applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            def applicationId = variant.applicationId
+            def flavor = variant.name
+            def version = variant.versionName
+
+            output.outputFileName = "${applicationId}-${version}-${flavor}.apk"
+        }
     }
 }
 
