@@ -5,9 +5,7 @@ import android.os.Bundle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import com.google.android.material.snackbar.Snackbar
 import ru.oldowl.R
-import ru.oldowl.core.UiEvent.CloseScreen
 import ru.oldowl.core.ui.BaseViewModel
 import ru.oldowl.db.model.ArticleListItem
 import ru.oldowl.db.model.Subscription
@@ -25,6 +23,7 @@ class ArticleListViewModel(
         private val deleteAllReadUseCase: DeleteAllReadUseCase,
         private val markReadAllUseCase: MarkAllReadUseCase,
         private val unsubscribeUseCase: UnsubscribeUseCase,
+        private val addSubscriptionUseCase: AddSubscriptionUseCase,
         private val markUnreadUseCase: MarkAllUnreadUseCase,
         private val addArticlesUseCase: AddArticlesUseCase
 ) : BaseViewModel() {
@@ -141,19 +140,26 @@ class ArticleListViewModel(
             }
 
     fun unsubscribe() =
-            subscription?.let {
-                unsubscribeUseCase(it) {
+            subscription?.let { s ->
+                unsubscribeUseCase(s) {
                     onSuccess {
-                        event.value = CloseScreen
+                        addSubscription(s)
                     }
+
                     onFailure {
                         showOopsSnackBar()
                     }
                 }
             }
 
-    fun loadArticles() {
-        val param = LoadArticleListUseCase.Param(mode, subscription?.id)
+
+    override fun onCleared() {
+        super.onCleared()
+        syncManager.state.removeObserver(jobStatusObserver)
+    }
+
+    fun loadArticles(query: String? = null) {
+        val param = LoadArticleListUseCase.Param(mode, hideRead, subscription?.id, query)
         loadArticleListUseCase(param) {
             onSuccess { articles ->
                 articleLiveData.value = articles
@@ -165,13 +171,8 @@ class ArticleListViewModel(
         }
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        syncManager.state.removeObserver(jobStatusObserver)
-    }
-
     private fun undoMarkAllRead(ids: List<String>) =
-            showSnackbar(R.string.mark_all_read_snackbar, Snackbar.LENGTH_LONG) {
+            showLongSnackbar(R.string.mark_all_read_snackbar) {
                 args(ids.size)
 
                 action(R.string.undo) {
@@ -188,7 +189,7 @@ class ArticleListViewModel(
             }
 
     private fun undoDeleteArticles(ids: List<String>) =
-            showSnackbar(R.string.delete_articles_snackbar, Snackbar.LENGTH_LONG) {
+            showLongSnackbar(R.string.delete_articles_snackbar) {
                 args(ids.size)
 
                 action(R.string.undo) {
@@ -196,6 +197,20 @@ class ArticleListViewModel(
                         onSuccess {
                             loadArticles()
                         }
+
+                        onFailure {
+                            showOopsSnackBar()
+                        }
+                    }
+                }
+            }
+
+    private fun addSubscription(subscription: Subscription) =
+            showShortSnackbar(R.string.unsubscribe_snackbar) {
+                args(subscription.title)
+
+                action(R.string.undo) {
+                    addSubscriptionUseCase(subscription) {
 
                         onFailure {
                             showOopsSnackBar()

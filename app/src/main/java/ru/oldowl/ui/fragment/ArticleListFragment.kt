@@ -1,9 +1,10 @@
 package ru.oldowl.ui.fragment
 
 import android.os.Bundle
+import android.view.*
+import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import android.view.*
 import org.koin.android.viewmodel.ext.android.sharedViewModel
 import ru.oldowl.R
 import ru.oldowl.core.UiEvent.CloseScreen
@@ -99,6 +100,8 @@ class ArticleListFragment : BaseFragment() {
         with(menu) {
             findItem(R.id.hide_read)?.isChecked = viewModel.hideRead
             findItem(R.id.unsubscribe)?.isVisible = viewModel.hasSubscription()
+
+            initSearchView(findItem(R.id.search_view))
         }
     }
 
@@ -141,6 +144,37 @@ class ArticleListFragment : BaseFragment() {
         }
 
         else -> super.onOptionsItemSelected(item)
+    }
+
+    private fun initSearchView(menu: MenuItem?) = with(menu) {
+        this?.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
+            override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
+                return true
+            }
+
+            override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
+                viewModel.loadArticles()
+                return true
+            }
+        })
+
+        val searchView = this?.actionView as SearchView?
+
+        searchView?.setIconifiedByDefault(true)
+        searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                viewModel.loadArticles(query)
+                return false
+            }
+
+            override fun onQueryTextChange(query: String?): Boolean {
+                if (query.isNullOrBlank()) {
+                    viewModel.loadArticles()
+                }
+                return false
+            }
+        })
     }
 
     companion object {

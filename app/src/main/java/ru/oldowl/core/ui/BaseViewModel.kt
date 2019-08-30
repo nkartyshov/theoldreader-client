@@ -1,6 +1,7 @@
 package ru.oldowl.core.ui
 
 import androidx.annotation.StringRes
+import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.ViewModel
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineScope
@@ -10,10 +11,10 @@ import org.koin.standalone.KoinComponent
 import ru.oldowl.R
 import ru.oldowl.core.SingleLiveEvent
 import ru.oldowl.core.UiEvent
-import ru.oldowl.core.UiEvent.*
+import ru.oldowl.core.UiEvent.ShowSnackbar
 import kotlin.coroutines.CoroutineContext
 
-abstract class BaseViewModel : ViewModel(), KoinComponent, CoroutineScope {
+abstract class BaseViewModel : ViewModel(), KoinComponent, CoroutineScope, LifecycleObserver {
     private val job = Job()
 
     override val coroutineContext: CoroutineContext
@@ -34,11 +35,16 @@ abstract class BaseViewModel : ViewModel(), KoinComponent, CoroutineScope {
                 .apply(block)
     }
 
+    protected fun showLongSnackbar(message: Int, block: ShowSnackbar.() -> Unit = {}) {
+        event.value = ShowSnackbar(message, Snackbar.LENGTH_LONG)
+                .apply(block)
+    }
+
     protected fun showOopsSnackBar() {
         event.value = showSnackbar(R.string.something_went_wrong_error, Snackbar.LENGTH_SHORT)
     }
 
-    protected fun showSnackbar(@StringRes message: Int, duration: Int, block: ShowSnackbar.() -> Unit = {}): ShowSnackbar
+    private fun showSnackbar(@StringRes message: Int, duration: Int, block: ShowSnackbar.() -> Unit = {}): ShowSnackbar
             = ShowSnackbar(message, duration)
             .apply(block)
 }

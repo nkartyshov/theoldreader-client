@@ -28,7 +28,7 @@ class SearchSubscriptionAdapter
     class ViewHolder(
             private val dataBinding: ViewSearchSubscriptionItemBinding,
             private val onItemClick: (Subscription) -> Unit
-    ) : androidx.recyclerview.widget.RecyclerView.ViewHolder(dataBinding.root) {
+    ) : RecyclerView.ViewHolder(dataBinding.root) {
 
         fun bind(subscription: Subscription) {
             dataBinding.subscription = subscription

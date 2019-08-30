@@ -139,8 +139,8 @@
     </style>
 
     <style name="EmptyState.Image">
-        <item name="android:layout_width">128dp</item>
-        <item name="android:layout_height">128dp</item>
+        <item name="android:layout_width">96dp</item>
+        <item name="android:layout_height">96dp</item>
         <item name="android:layout_marginBottom">@dimen/indent_normal</item>
     </style>
 

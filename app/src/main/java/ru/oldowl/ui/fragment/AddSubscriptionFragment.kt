@@ -3,7 +3,6 @@ package ru.oldowl.ui.fragment
 import android.os.Bundle
 import android.view.*
 import androidx.appcompat.widget.SearchView
-import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView

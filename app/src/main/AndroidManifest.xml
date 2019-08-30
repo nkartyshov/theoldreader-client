@@ -36,6 +36,7 @@
 
         <activity
             android:name=".ui.ArticleActivity"
+            android:launchMode="singleTask"
             android:label="@string/empty" />
 
         <meta-data
