@@ -6,6 +6,7 @@ import android.webkit.WebView
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.StringRes
+import androidx.core.text.htmlEncode
 import androidx.databinding.BindingAdapter
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.amulyakhare.textdrawable.TextDrawable
@@ -65,6 +66,7 @@ object BindingAdapter {
                         .replace(HTML_TAGS_REGEX, "")
                         .replace(CONTROL_CHARS_REGEX, "")
                         .replace(REMOVE_EXTRA_SPACE, " ")
+                        .htmlEncode()
             }
 
     @JvmStatic

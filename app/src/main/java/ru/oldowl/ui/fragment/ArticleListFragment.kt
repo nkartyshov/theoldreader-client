@@ -1,11 +1,13 @@
 package ru.oldowl.ui.fragment
 
+import android.app.SearchManager
 import android.os.Bundle
 import android.view.*
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.android.viewmodel.ext.android.sharedViewModel
+import org.koin.standalone.inject
 import ru.oldowl.R
 import ru.oldowl.core.UiEvent.CloseScreen
 import ru.oldowl.core.UiEvent.ShowSnackbar
@@ -26,6 +28,7 @@ import ru.oldowl.viewmodel.ArticleListViewModel.Companion.SUBSCRIPTION
 class ArticleListFragment : BaseFragment() {
 
     private val viewModel: ArticleListViewModel by sharedViewModel()
+    private val searchManager: SearchManager by inject()
 
     init {
         setHasOptionsMenu(true)
@@ -101,7 +104,7 @@ class ArticleListFragment : BaseFragment() {
             findItem(R.id.hide_read)?.isChecked = viewModel.hideRead
             findItem(R.id.unsubscribe)?.isVisible = viewModel.hasSubscription()
 
-            initSearchView(findItem(R.id.search_view))
+            setupSearchView(findItem(R.id.search_view))
         }
     }
 
@@ -146,35 +149,10 @@ class ArticleListFragment : BaseFragment() {
         else -> super.onOptionsItemSelected(item)
     }
 
-    private fun initSearchView(menu: MenuItem?) = with(menu) {
-        this?.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
-            override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
-                return true
-            }
-
-            override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
-                viewModel.loadArticles()
-                return true
-            }
-        })
-
+    private fun setupSearchView(menu: MenuItem?) = with(menu) {
         val searchView = this?.actionView as SearchView?
-
+        searchView?.setSearchableInfo(searchManager.getSearchableInfo(activity?.componentName))
         searchView?.setIconifiedByDefault(true)
-        searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                viewModel.loadArticles(query)
-                return false
-            }
-
-            override fun onQueryTextChange(query: String?): Boolean {
-                if (query.isNullOrBlank()) {
-                    viewModel.loadArticles()
-                }
-                return false
-            }
-        })
     }
 
     companion object {

@@ -26,7 +26,7 @@ class SyncJob : CoroutineJobService() {
     override suspend fun startJob(params: JobParameters?): JobStatus {
         try {
             val extras = params?.extras
-            val subscriptionId = extras?.getLong(SUBSCRIPTION_ID) ?: -1
+            val subscriptionId = extras?.getString(SUBSCRIPTION_ID)
             val force: Boolean = extras?.getInt(FORCE) == 1
 
             if (!shouldUpdateSubscription(force, settingsStorage.lastSyncDate)) {
@@ -44,9 +44,9 @@ class SyncJob : CoroutineJobService() {
             syncSubscriptions()
 
             // Downloading new articles
-            val subscriptions: List<Subscription> = if (subscriptionId > 0)
+            val subscriptions: List<Subscription> = subscriptionId?.let {
                 listOf(subscriptionRepository.findById(subscriptionId))
-            else subscriptionRepository.findAll()
+            } ?: subscriptionRepository.findAll()
 
             val articles = subscriptions.flatMap { articleRepository.downloadArticles(it) }
             if (articles.isNotEmpty()) {

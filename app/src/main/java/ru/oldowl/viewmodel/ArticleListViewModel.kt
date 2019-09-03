@@ -158,8 +158,8 @@ class ArticleListViewModel(
         syncManager.state.removeObserver(jobStatusObserver)
     }
 
-    fun loadArticles(query: String? = null) {
-        val param = LoadArticleListUseCase.Param(mode, hideRead, subscription?.id, query)
+    fun loadArticles() {
+        val param = LoadArticleListUseCase.Param(mode, hideRead, subscription?.id)
         loadArticleListUseCase(param) {
             onSuccess { articles ->
                 articleLiveData.value = articles

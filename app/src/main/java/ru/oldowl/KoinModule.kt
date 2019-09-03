@@ -1,5 +1,7 @@
 package ru.oldowl
 
+import android.app.SearchManager
+import android.content.Context
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.OkHttpClient
@@ -27,6 +29,9 @@ val serviceModule = module {
     single { get<AppDatabase>().categoryDao() }
     single { get<AppDatabase>().articleDao() }
     single { get<AppDatabase>().eventDao() }
+
+    //Android
+    single { androidApplication().getSystemService(Context.SEARCH_SERVICE) as SearchManager }
 
     // OkHttp
     single {
@@ -95,6 +100,7 @@ val serviceModule = module {
     single { AddSubscriptionUseCase(get()) }
     single { MarkAllUnreadUseCase(get()) }
     single { AddArticlesUseCase(get()) }
+    single { SearchUseCase(get()) }
 
     // ViewModels
     viewModel { LoginViewModel(get()) }
@@ -105,4 +111,5 @@ val serviceModule = module {
         ArticleListViewModel(get(), get(), get(), get(),
                 get(), get(), get(), get(), get(), get(), get())
     }
+    viewModel { SearchViewModel(get()) }
 }

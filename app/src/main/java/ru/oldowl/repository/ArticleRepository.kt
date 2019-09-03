@@ -23,6 +23,8 @@ interface ArticleRepository {
 
     suspend fun save(article: Article)
 
+    suspend fun search(query: String): List<ArticleListItem>
+
     suspend fun markAllRead(): List<String>
 
     suspend fun markAllRead(subscription: Subscription): List<String>
@@ -73,9 +75,10 @@ interface ArticleRepository {
         override suspend fun findUnread(subscriptionId: String): List<ArticleListItem> =
                 articleDao.findUnread(subscriptionId)
 
-        override suspend fun save(article: Article) {
-            articleDao.save(article)
-        }
+        override suspend fun save(article: Article) = articleDao.save(article)
+
+        override suspend fun search(query: String): List<ArticleListItem> =
+                articleDao.search(query)
 
         override suspend fun markAllRead(): List<String> =
                 articleDao.findIds().let {

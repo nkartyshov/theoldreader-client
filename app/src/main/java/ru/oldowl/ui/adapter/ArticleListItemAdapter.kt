@@ -32,7 +32,7 @@ class ArticleListItemAdapter
     }
 
     class ViewHolder(private val dataBinding: ViewArticleItemBinding)
-        : androidx.recyclerview.widget.RecyclerView.ViewHolder(dataBinding.root) {
+        : RecyclerView.ViewHolder(dataBinding.root) {
 
         fun bind(item: ArticleListItem) {
             dataBinding.article = item.article

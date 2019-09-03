@@ -8,7 +8,7 @@ import ru.oldowl.db.model.SubscriptionNavItem
 interface SubscriptionDao {
 
     @Query("select * from subscriptions where id = :subscriptionId")
-    fun findById(subscriptionId: Long): Subscription
+    fun findById(subscriptionId: String): Subscription
 
     @Query("select * from subscriptions")
     fun findAll(): List<Subscription>

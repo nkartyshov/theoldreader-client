@@ -13,7 +13,7 @@ interface SubscriptionRepository {
 
     suspend fun findAll(): List<Subscription>
 
-    suspend fun findById(id: Long): Subscription
+    suspend fun findById(id: String): Subscription
 
     suspend fun saveOrUpdate(subscription: Subscription)
 
@@ -42,7 +42,7 @@ interface SubscriptionRepository {
 
         override suspend fun findAll(): List<Subscription> = subscriptionDao.findAll()
 
-        override suspend fun findById(id: Long): Subscription = subscriptionDao.findById(id)
+        override suspend fun findById(id: String): Subscription = subscriptionDao.findById(id)
 
         override suspend fun addSubscription(subscription: Subscription): Boolean {
             val feedId = theOldReaderApi.addSubscription(subscription.url, authToken)

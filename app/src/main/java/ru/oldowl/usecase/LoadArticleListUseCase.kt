@@ -23,21 +23,12 @@ class LoadArticleListUseCase(
                 else repository.findAll(param.subscriptionId!!)
         }
 
-        return Result.success(
-                param.query?.let { query ->
-                    list.filter {
-                        it.article.title.contains(query, true)
-                                || it.article.description.contains(query, true)
-                                || it.subscriptionTitle?.contains(query, true) ?: false
-                    }
-                } ?: list
-        )
+        return Result.success(list)
     }
 
     data class Param(
             val mode: ArticleListMode,
             val hideRead: Boolean,
-            val subscriptionId: String? = null,
-            val query: String?
+            val subscriptionId: String? = null
     )
 }

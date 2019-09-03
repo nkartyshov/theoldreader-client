@@ -14,6 +14,8 @@
 
     <string name="search">Search</string>
 
+    <string name="search_hint">Search</string>
+
     <string name="undo">Undo</string>
 
     <!-- Login -->
@@ -48,7 +50,7 @@
     <string name="sync">Sync</string>
 
     <string name="empty_state_article_title">No articles</string>
-    <string name="empty_state_article_message">You already read all article \nor check search query</string>
+    <string name="empty_state_article_message">Pull down to refresh</string>
 
     <string name="empty_state_favorite_title">No favorite articles yet</string>
     <string name="empty_state_favorite_message">Click the \'Star\' button on any article to add a favorite</string>

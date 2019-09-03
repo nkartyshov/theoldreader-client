@@ -30,7 +30,7 @@
             android:layout_width="0dp"
             android:layout_marginEnd="8dp"
             android:paddingBottom="@dimen/indent_small"
-            android:text="@{article.title}"
+            escapeText="@{article.title}"
             android:textColor="@{article.read ? @color/gray : @color/black}"
             app:layout_constraintEnd_toStartOf="@+id/imageView"
             app:layout_constraintStart_toStartOf="parent"
