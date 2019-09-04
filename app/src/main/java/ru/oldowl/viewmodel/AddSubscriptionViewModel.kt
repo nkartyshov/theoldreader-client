@@ -1,6 +1,10 @@
 package ru.oldowl.viewmodel
 
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.launch
 import ru.oldowl.R
 import ru.oldowl.core.ui.BaseViewModel
 import ru.oldowl.db.model.Subscription
@@ -11,7 +15,7 @@ class AddSubscriptionViewModel(
         private val searchSubscriptionUseCase: SearchSubscriptionUseCase,
         private val addSubscriptionUseCase: AddSubscriptionUseCase) : BaseViewModel() {
 
-    val dataLoading = MutableLiveData<Boolean>()
+    val dataLoading = MutableLiveData<Boolean>(false)
     val searchResult: MutableLiveData<List<Subscription>> = MutableLiveData()
 
     fun search(query: String) {

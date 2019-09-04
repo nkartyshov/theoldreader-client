@@ -76,7 +76,9 @@
     <string name="notification_general_channel_name">General</string>
     <string name="notification_new_article_title">New articles: %d</string>
     <string name="notification_new_article_text">Tap to start reading</string>
-    
+
+    <string name="add_subscription_search_hint">Enter keyword</string>
+
     <string name="empty_state_search_item_title">No search result</string>
     <string name="empty_state_search_item_text">Please, check search query</string>
 

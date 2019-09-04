@@ -13,7 +13,8 @@
         style="@style/ContentFullParent">
 
         <com.google.android.material.appbar.AppBarLayout
-            style="@style/ContentFullWidth">
+            style="@style/ContentFullWidth"
+            android:elevation="@dimen/default_elevation">
 
             <include layout="@layout/toolbar" />
         </com.google.android.material.appbar.AppBarLayout>

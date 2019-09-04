@@ -45,6 +45,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/email"
+                    android:drawableStart="@drawable/ic_person_black_24dp"
+                    android:drawablePadding="@dimen/indent_small"
                     android:inputType="textEmailAddress"
                     android:text="@={viewModel.email}" />
 
@@ -52,10 +54,9 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/ContentFullWidth"
-                android:layout_marginTop="@dimen/indent_default"
+                android:layout_marginTop="@dimen/indent_small"
                 app:error="@{viewModel.passwordError}"
-                app:errorEnabled="true"
-                app:passwordToggleEnabled="true">
+                app:errorEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/password"
@@ -63,6 +64,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/password"
+                    android:drawableStart="@drawable/ic_security_black_24dp"
+                    android:drawablePadding="@dimen/indent_small"
                     android:inputType="textPassword"
                     android:text="@={viewModel.password}" />
 
@@ -71,7 +74,7 @@
             <ru.oldowl.core.ui.view.ProgressButton
                 android:id="@+id/sign_in"
                 style="@style/ContentFullWidth"
-                android:layout_marginTop="@dimen/indent_big"
+                android:layout_marginTop="@dimen/indent_normal"
                 android:onClick="@{onSingIn}"
                 android:layout_gravity="center"
                 android:text="@string/sing_in"
@@ -81,7 +84,9 @@
                 android:id="@+id/reset_password"
                 style="@style/TextNormal.Bold"
                 android:layout_gravity="center"
-                android:layout_marginTop="@dimen/indent_default"
+                android:background="?selectableItemBackground"
+                android:layout_marginTop="@dimen/indent_small"
+                android:padding="@dimen/indent_xsmall"
                 android:onClick="@{onResetPassword}"
                 android:text="@string/forgot_your_password" />
 
@@ -89,7 +94,9 @@
                 android:id="@+id/sing_up"
                 style="@style/TextNormal"
                 android:layout_gravity="center"
-                android:layout_marginTop="@dimen/indent_default"
+                android:background="?selectableItemBackground"
+                android:padding="@dimen/indent_xsmall"
+                android:layout_marginTop="@dimen/indent_small"
                 android:onClick="@{onSingUp}"
                 android:text="@string/sign_up" />
 

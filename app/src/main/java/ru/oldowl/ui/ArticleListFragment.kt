@@ -1,4 +1,4 @@
-package ru.oldowl.ui.fragment
+package ru.oldowl.ui
 
 import android.app.SearchManager
 import android.os.Bundle
@@ -18,7 +18,6 @@ import ru.oldowl.core.extension.showMessage
 import ru.oldowl.core.ui.BaseFragment
 import ru.oldowl.databinding.FragmentArticleListBinding
 import ru.oldowl.db.model.Subscription
-import ru.oldowl.ui.ArticleActivity
 import ru.oldowl.ui.adapter.ArticleListItemAdapter
 import ru.oldowl.viewmodel.ArticleListMode
 import ru.oldowl.viewmodel.ArticleListViewModel

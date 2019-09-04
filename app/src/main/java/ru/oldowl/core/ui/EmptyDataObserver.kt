@@ -4,9 +4,9 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 
 class EmptyDataObserver(
-        private val recyclerView: androidx.recyclerview.widget.RecyclerView,
+        private val recyclerView: RecyclerView,
         private val emptyView: View
-) : androidx.recyclerview.widget.RecyclerView.AdapterDataObserver() {
+) : RecyclerView.AdapterDataObserver() {
 
     override fun onChanged() {
         checkIfEmpty()

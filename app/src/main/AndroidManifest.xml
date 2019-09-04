@@ -31,6 +31,10 @@
             android:label="@string/sing_in" />
 
         <activity
+            android:name=".ui.AddSubscriptionActivity"
+            android:label="@string/nav_add_subscription"/>
+
+        <activity
             android:name=".ui.MainActivity"
             android:label="@string/empty"/>
 

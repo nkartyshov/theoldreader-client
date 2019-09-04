@@ -13,12 +13,10 @@ import ru.oldowl.R
 import ru.oldowl.core.binding.RecyclerConfig
 import ru.oldowl.core.extension.observe
 import ru.oldowl.core.extension.replaceFragment
+import ru.oldowl.core.extension.startActivity
 import ru.oldowl.core.ui.BaseActivity
 import ru.oldowl.databinding.ActivityMainBinding
 import ru.oldowl.ui.adapter.SubscriptionNavItemAdapter
-import ru.oldowl.ui.fragment.AddSubscriptionFragment
-import ru.oldowl.ui.fragment.ArticleListFragment
-import ru.oldowl.ui.fragment.SettingsFragment
 import ru.oldowl.viewmodel.MainViewModel
 
 class MainActivity : BaseActivity() {
@@ -49,7 +47,7 @@ class MainActivity : BaseActivity() {
             }
 
             navigationView.setOnAddSubscription {
-                openFragment(AddSubscriptionFragment(), addToBackStack = true)
+                startActivity<AddSubscriptionActivity>()
             }
 
             navigationView.setOnSettings {

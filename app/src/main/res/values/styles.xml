@@ -19,6 +19,8 @@
         <item name="android:alertDialogTheme">@style/AppDialogTheme</item>
 
         <item name="buttonStyle">@style/Base.Widget.AppCompat.Button.Colored</item>
+
+        <item name="textInputStyle">@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox</item>
     </style>
 
     <style name="AppTheme" parent="BaseTheme">
