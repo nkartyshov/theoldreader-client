@@ -21,7 +21,7 @@
             app:text="@{subscription.title}" />
 
         <TextView
-            style="@style/TextNormal"
+            style="@style/TextNormal.SingleLine"
             android:layout_weight="1"
             android:text="@{subscription.title}"
 
