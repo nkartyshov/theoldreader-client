@@ -81,7 +81,9 @@ class MainActivity : BaseActivity() {
             adapter.submitList(it)
         }
 
-        openFragment(ArticleListFragment.openAllArticles())
+        if(savedInstanceState == null) {
+            openFragment(ArticleListFragment.openAllArticles())
+        }
 
         updateDrawer()
         mainViewModel.startScheduleUpdate()
@@ -93,9 +95,7 @@ class MainActivity : BaseActivity() {
     }
 
     private fun openFragment(fragment: Fragment, addToBackStack: Boolean = false) {
-
         replaceFragment(R.id.fragment_container, fragment, addToBackStack)
-
         drawer_view.closeDrawers()
     }
 }

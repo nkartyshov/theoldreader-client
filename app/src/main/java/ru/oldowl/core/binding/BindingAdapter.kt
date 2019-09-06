@@ -7,6 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.StringRes
 import androidx.databinding.BindingAdapter
+import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.amulyakhare.textdrawable.TextDrawable
 import com.amulyakhare.textdrawable.util.ColorGenerator
@@ -92,7 +93,7 @@ object BindingAdapter {
 
     @JvmStatic
     @BindingAdapter("config")
-    fun configRecyclerView(recyclerView: androidx.recyclerview.widget.RecyclerView, config: RecyclerConfig?) {
+    fun configRecyclerView(recyclerView: RecyclerView, config: RecyclerConfig?) {
         if (config == null) {
             return
         }

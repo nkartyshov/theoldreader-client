@@ -36,7 +36,7 @@ class SubscriptionNavItemAdapter
 
     class ViewHolder(
             private val dataBinding: ViewSubscriptionItemBinding
-    ) : androidx.recyclerview.widget.RecyclerView.ViewHolder(dataBinding.root) {
+    ) : RecyclerView.ViewHolder(dataBinding.root) {
 
         private val context: Context = dataBinding.root.context
 
