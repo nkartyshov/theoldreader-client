@@ -28,7 +28,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/indent_small"
-                android:layout_marginEnd="@dimen/indent_small"
                 android:layout_marginBottom="@dimen/indent_small"
                 android:hint="@string/add_subscription_search_hint">
 
@@ -38,7 +37,8 @@
                     android:imeOptions="actionSearch"
                     android:inputType="text"
                     android:drawableStart="@drawable/ic_search_black_24dp"
-                    android:drawablePadding="@dimen/indent_small" />
+                    android:drawablePadding="@dimen/indent_small"
+                    android:layout_marginStart="@dimen/indent_small" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
