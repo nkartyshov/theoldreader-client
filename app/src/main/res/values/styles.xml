@@ -24,10 +24,6 @@
         <item name="preferenceTheme">@style/AppPreferenceTheme</item>
     </style>
 
-    <style name="AppPreferenceTheme" parent="PreferenceThemeOverlay.v14.Material">
-        <item name="android:colorAccent">@color/black</item>
-    </style>
-
     <style name="AppTheme" parent="BaseTheme">
         <item name="android:navigationBarColor">@color/black</item>
     </style>
@@ -38,6 +34,10 @@
         <item name="android:windowBackground">@drawable/dialog_background_round</item>
         
         <item name="android:buttonBarButtonStyle">@style/Widget.MaterialComponents.Button.TextButton.Dialog</item>
+    </style>
+
+    <style name="AppPreferenceTheme" parent="PreferenceThemeOverlay.v14.Material">
+        <item name="android:colorAccent">@color/black</item>
     </style>
 
     <style name="TextNormal" parent="TextAppearance.AppCompat.Body1">
@@ -70,7 +70,7 @@
         <item name="android:singleLine">true</item>
     </style>
 
-    <style name="TextHeader" parent="Base.TextAppearance.AppCompat.Subhead">
+    <style name="TextHeader" parent="TextAppearance.AppCompat.Subhead">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
 
@@ -104,7 +104,9 @@
         <item name="android:layout_marginRight">@dimen/indent_default</item>
     </style>
 
-    <style name="NavSubHeader" parent="TextNormal">
+    <style name="NavSubHeader" parent="TextAppearance.AppCompat.Body2">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
         <item name="android:padding">@dimen/indent_default</item>
     </style>
 
