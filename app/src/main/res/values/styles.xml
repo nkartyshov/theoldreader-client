@@ -38,6 +38,9 @@
 
     <style name="AppPreferenceTheme" parent="PreferenceThemeOverlay.v14.Material">
         <item name="android:colorAccent">@color/black</item>
+        
+        <item name="android:textAppearanceListItem">@style/TextNormal</item>
+        <item name="android:textAppearanceListItemSecondary">@style/TextCaption</item>
     </style>
 
     <style name="TextNormal" parent="TextAppearance.AppCompat.Body1">
@@ -104,7 +107,7 @@
         <item name="android:layout_marginRight">@dimen/indent_default</item>
     </style>
 
-    <style name="NavSubHeader" parent="TextAppearance.AppCompat.Body2">
+    <style name="NavSubHeader" parent="TextAppearance.AppCompat.Body1">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:padding">@dimen/indent_default</item>
