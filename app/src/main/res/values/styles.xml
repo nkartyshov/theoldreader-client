@@ -19,8 +19,13 @@
         <item name="android:alertDialogTheme">@style/AppDialogTheme</item>
 
         <item name="buttonStyle">@style/Base.Widget.AppCompat.Button.Colored</item>
-
         <item name="textInputStyle">@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox</item>
+
+        <item name="preferenceTheme">@style/AppPreferenceTheme</item>
+    </style>
+
+    <style name="AppPreferenceTheme" parent="PreferenceThemeOverlay.v14.Material">
+        <item name="android:colorAccent">@color/black</item>
     </style>
 
     <style name="AppTheme" parent="BaseTheme">
@@ -84,10 +89,10 @@
         <item name="android:background">@color/lightGray</item>
     </style>
 
-    <style name="NavItem">
+    <style name="NavItem" parent="TextNormal">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
-        <item name="android:orientation">horizontal</item>
+        <item name="android:drawablePadding">@dimen/indent_default</item>
         <item name="android:background">?selectableItemBackground</item>
         <item name="android:padding">@dimen/indent_default</item>
         <item name="android:gravity">center_vertical</item>
@@ -127,6 +132,10 @@
 
     <style name="ContentFullWidth.Horizontal">
         <item name="android:orientation">horizontal</item>
+    </style>
+
+    <style name="ListItem" parent="ContentFullWidth">
+        <item name="android:background">?selectableItemBackground</item>
     </style>
 
     <style name="FloatingButton">

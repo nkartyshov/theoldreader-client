@@ -23,10 +23,10 @@ class MainActivity : BaseActivity() {
 
     private val mainViewModel: MainViewModel by viewModel()
 
-    private val adapter = SubscriptionNavItemAdapter()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val adapter = SubscriptionNavItemAdapter()
         DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main).apply {
             viewModel = mainViewModel
             lifecycleOwner = this@MainActivity

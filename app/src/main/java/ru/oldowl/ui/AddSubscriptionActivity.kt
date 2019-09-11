@@ -15,6 +15,7 @@ import org.koin.android.viewmodel.ext.android.viewModel
 import ru.oldowl.R
 import ru.oldowl.core.UiEvent.ShowSnackbar
 import ru.oldowl.core.binding.RecyclerConfig
+import ru.oldowl.core.extension.hideSoftKeyboard
 import ru.oldowl.core.extension.observe
 import ru.oldowl.core.extension.showMessage
 import ru.oldowl.core.ui.BaseActivity
@@ -43,6 +44,7 @@ class AddSubscriptionActivity : BaseActivity() {
 
             it.searchField.setOnEditorActionListener { v, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    hideSoftKeyboard()
                     viewModel.search(v.text.toString())
                     return@setOnEditorActionListener true
                 }

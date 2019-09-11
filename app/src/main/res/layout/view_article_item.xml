@@ -21,7 +21,7 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        style="@style/ContentFullWidth"
+        style="@style/ListItem"
         android:padding="@dimen/indent_default">
 
         <TextView
