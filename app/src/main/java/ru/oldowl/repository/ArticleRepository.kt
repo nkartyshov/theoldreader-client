@@ -81,14 +81,14 @@ interface ArticleRepository {
                 articleDao.search(query)
 
         override suspend fun markAllRead(): List<String> =
-                articleDao.findIds().let {
+                articleDao.findIds(read = false).let {
                     updateReadStates(it, true)
                     syncEventDao.save(SyncEvent.markAllRead())
                     it
                 }
 
         override suspend fun markAllRead(subscription: Subscription): List<String> =
-                articleDao.findIds(subscriptionId = subscription.id).let {
+                articleDao.findIds(read = false, subscriptionId = subscription.id).let {
                     updateReadStates(it, true)
                     syncEventDao.save(SyncEvent.markAllRead(subscription.id))
                     it
