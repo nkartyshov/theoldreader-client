@@ -38,6 +38,8 @@
     <string name="nav_subscriptions">Subscriptions</string>
     <string name="nav_add_subscription">Add subscription</string>
     <string name="nav_settings">Settings</string>
+    <string name="nav_logout">Logout</string>
+
     <string name="nav_last_sync_date">Last sync date: %s</string>
     <string name="nav_last_sync_date_not_sync">Last sync date: not sync yet</string>
 

@@ -69,8 +69,12 @@ fun Context.copyToClipboard(url: String) {
     clipboardManager?.primaryClip = ClipData.newRawUri(url, Uri.parse(url))
 }
 
-inline fun <reified T : Context> Context.startActivity(bundle: Bundle? = null) {
+inline fun <reified T : Context> Context.startActivity(bundle: Bundle? = null, flags: Int? = null) {
     val intent = Intent(this, T::class.java)
+
+    flags?.let {
+        intent.setFlags(it)
+    }
 
     bundle?.let {
         intent.putExtras(it)

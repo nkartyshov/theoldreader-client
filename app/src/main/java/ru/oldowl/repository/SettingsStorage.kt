@@ -62,7 +62,6 @@ class SettingsStorage(
         override fun setValue(thisRef: Any, property: KProperty<*>, value: Long) {
             sharedPreferences.edit {
                 putString(key, value.toString())
-                apply()
             }
         }
     }
@@ -77,7 +76,6 @@ class SettingsStorage(
         override fun setValue(thisRef: Any, property: KProperty<*>, value: Boolean) {
             sharedPreferences.edit {
                 putBoolean(key, value)
-                apply()
             }
         }
     }
@@ -92,10 +90,10 @@ class SettingsStorage(
         }
 
         override fun setValue(thisRef: Any, property: KProperty<*>, value: Date?) {
-            value?.let {
-                sharedPreferences.edit {
-                    putLong(key, value.time)
-                    apply()
+            sharedPreferences.edit {
+                remove(key)
+                value?.let {
+                    putLong(key, it.time)
                 }
             }
         }
@@ -117,7 +115,10 @@ class SettingsStorage(
         override fun setValue(thisRef: Any, property: KProperty<*>, value: Account?) =
                 sharedPreferences.edit {
                     remove(key)
-                    putString(key, adapter.toJson(value))
+
+                    value?.let {
+                        putString(key, adapter.toJson(it))
+                    }
                 }
     }
 }

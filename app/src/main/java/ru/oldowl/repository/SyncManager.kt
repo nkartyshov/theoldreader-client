@@ -59,4 +59,9 @@ class SyncManager(
 
         jobScheduler.schedule(job)
     }
+
+    fun cancelAllJobs() {
+        jobScheduler.cancel(AUTO_UPDATE_ID)
+        jobScheduler.cancel(FORCED_UPDATE_ID)
+    }
 }

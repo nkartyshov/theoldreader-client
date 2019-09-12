@@ -1,20 +1,22 @@
 package ru.oldowl.viewmodel
 
 import androidx.lifecycle.MutableLiveData
-import ru.oldowl.core.extension.toShortDateTime
+import ru.oldowl.core.UiEvent
 import ru.oldowl.core.ui.BaseViewModel
 import ru.oldowl.db.model.SubscriptionNavItem
-import ru.oldowl.repository.AccountRepository
-import ru.oldowl.repository.SettingsStorage
 import ru.oldowl.repository.SyncManager
+import ru.oldowl.usecase.GetEmailUseCase
+import ru.oldowl.usecase.GetLastSyncDateUseCase
 import ru.oldowl.usecase.GetNavigationItemListUseCase
+import ru.oldowl.usecase.LogoutUseCase
 
 class MainViewModel(private val getNavigationItemListUseCase: GetNavigationItemListUseCase,
-                    private val syncManager: SyncManager,
-                    private val accountRepository: AccountRepository,
-                    private val settingsStorage: SettingsStorage) : BaseViewModel() {
+                    private val getEmailUseCase: GetEmailUseCase,
+                    private val getLastSyncDateUseCase: GetLastSyncDateUseCase,
+                    private val logoutUseCase: LogoutUseCase,
+                    private val syncManager: SyncManager) : BaseViewModel() {
 
-    val email: String by lazy { accountRepository.getAccount()?.email ?: "" }
+    val email: MutableLiveData<String> = MutableLiveData()
 
     val subscriptions: MutableLiveData<List<SubscriptionNavItem>> = MutableLiveData()
     val hasItems: MutableLiveData<Boolean> = MutableLiveData()
@@ -22,20 +24,55 @@ class MainViewModel(private val getNavigationItemListUseCase: GetNavigationItemL
 
     fun startScheduleUpdate() = syncManager.scheduleUpdate()
 
-    fun updateLastSyncDate() {
-        settingsStorage.lastSyncDate?.let {
-            lastSyncDate.value = it.toShortDateTime()
+    fun loadEmail() {
+        getEmailUseCase(Unit) {
+            onSuccess {
+                email.value = it
+            }
+
+            onFailure {
+                // todo log error
+            }
         }
     }
 
-    fun updateSubscriptions() {
+    fun updateDrawer() {
+        updateLastSyncDate()
+        updateSubscriptions()
+    }
+
+    fun logout() {
+        logoutUseCase(Unit) {
+            onSuccess {
+                event.value = UiEvent.CloseScreen
+            }
+
+            onFailure {
+                showOopsSnackBar()
+            }
+        }
+    }
+
+    private fun updateLastSyncDate() {
+        getLastSyncDateUseCase(Unit) {
+            onSuccess {
+                lastSyncDate.value = it
+            }
+
+            onFailure {
+                // todo log error
+            }
+        }
+    }
+
+    private fun updateSubscriptions() {
         getNavigationItemListUseCase(Unit) {
             onSuccess {
                 subscriptions.value = it
                 hasItems.value = !it.isNullOrEmpty()
             }
             onFailure {
-               hasItems.value = false
+                hasItems.value = false
             }
         }
     }

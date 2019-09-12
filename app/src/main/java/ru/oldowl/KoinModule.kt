@@ -88,6 +88,7 @@ val serviceModule = module {
 
     // Use case
     single { LoginUseCase(BuildConfig.APPLICATION_ID, get(), get()) }
+    single { LogoutUseCase(get(), get(), get()) }
     single { GetNavigationItemListUseCase(get()) }
     single { ToggleFavoriteUseCase(get()) }
     single { ToggleReadUseCase(get()) }
@@ -101,12 +102,14 @@ val serviceModule = module {
     single { MarkAllUnreadUseCase(get()) }
     single { AddArticlesUseCase(get()) }
     single { SearchUseCase(get()) }
+    single { GetLastSyncDateUseCase(get()) }
+    single { GetEmailUseCase(get()) }
 
     // ViewModels
     viewModel { LoginViewModel(get()) }
     viewModel { ArticleViewModel(get(), get()) }
     viewModel { AddSubscriptionViewModel(get(), get()) }
-    viewModel { MainViewModel(get(), get(), get(), get()) }
+    viewModel { MainViewModel(get(), get(), get(), get(), get()) }
     viewModel {
         ArticleListViewModel(get(), get(), get(), get(),
                 get(), get(), get(), get(), get(), get(), get())

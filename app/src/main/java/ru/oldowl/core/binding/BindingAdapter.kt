@@ -28,16 +28,18 @@ object BindingAdapter {
     @SuppressLint("DefaultLocale")
     @JvmStatic
     @BindingAdapter("text")
-    fun setText(imageView: ImageView, text: String) {
-        val chars = if (text.length > 1) text.substring(0, 1) else text
+    fun setText(imageView: ImageView, text: String?) {
+        text?.let {
+            val chars = if (text.length > 1) text.substring(0, 1) else text
 
-        val drawable = TextDrawable.builder()
-                .beginConfig()
-                .bold()
-                .endConfig()
-                .buildRound(chars.toUpperCase(), ColorGenerator.MATERIAL.getColor(chars))
+            val drawable = TextDrawable.builder()
+                    .beginConfig()
+                    .bold()
+                    .endConfig()
+                    .buildRound(chars.toUpperCase(), ColorGenerator.MATERIAL.getColor(chars))
 
-        imageView.setImageDrawable(drawable)
+            imageView.setImageDrawable(drawable)
+        }
     }
 
     @JvmStatic

@@ -17,20 +17,8 @@
             type="ru.oldowl.core.binding.RecyclerConfig" />
 
         <variable
-            name="onAllPage"
-            type="Runnable" />
-
-        <variable
-            name="onFavoritePage"
-            type="Runnable" />
-
-        <variable
-            name="onAddSubscription"
-            type="Runnable" />
-
-        <variable
-            name="onSettings"
-            type="Runnable" />
+            name="onNavClick"
+            type="android.view.View.OnClickListener" />
     </data>
 
     <androidx.core.widget.NestedScrollView
@@ -51,16 +39,18 @@
             <View style="@style/VerticalDivider" />
 
             <TextView
+                android:id="@+id/all"
                 style="@style/NavItem"
                 android:drawableStart="@drawable/ic_home"
                 android:text="@string/nav_all"
-                android:onClick="@{onAllPage}" />
+                android:onClick="@{onNavClick}" />
 
             <TextView
+                android:id="@+id/favorite"
                 style="@style/NavItem"
                 android:text="@string/nav_favorite"
                 android:drawableStart="@drawable/ic_bookmark"
-                android:onClick="@{onFavoritePage}" />
+                android:onClick="@{onNavClick}" />
 
             <LinearLayout
                 style="@style/ContentFullWidth.Vertical"
@@ -84,16 +74,27 @@
             <View style="@style/VerticalDivider" />
 
             <TextView
+                android:id="@+id/add_subscription"
                 style="@style/NavItem"
                 android:text="@string/nav_add_subscription"
                 android:drawableStart="@drawable/ic_rss_feed"
-                android:onClick="@{onAddSubscription}" />
+                android:onClick="@{onNavClick}" />
 
             <TextView
+                android:id="@+id/setting"
                 style="@style/NavItem"
                 android:text="@string/nav_settings"
                 android:drawableStart="@drawable/ic_settings"
-                android:onClick="@{onSettings}"/>
+                android:onClick="@{onNavClick}"/>
+
+            <View style="@style/VerticalDivider" />
+
+            <TextView
+                android:id="@+id/logout"
+                style="@style/NavItem"
+                android:text="@string/nav_logout"
+                android:drawableStart="@drawable/ic_logout_black_24dp"
+                android:onClick="@{onNavClick}"/>
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

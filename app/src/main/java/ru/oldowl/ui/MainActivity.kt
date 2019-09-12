@@ -1,5 +1,6 @@
 package ru.oldowl.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -10,6 +11,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.toolbar.*
 import org.koin.android.viewmodel.ext.android.viewModel
 import ru.oldowl.R
+import ru.oldowl.core.UiEvent
 import ru.oldowl.core.binding.RecyclerConfig
 import ru.oldowl.core.extension.observe
 import ru.oldowl.core.extension.replaceFragment
@@ -26,32 +28,30 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        mainViewModel.loadEmail()
+        mainViewModel.updateDrawer()
+        mainViewModel.startScheduleUpdate()
+
         val adapter = SubscriptionNavItemAdapter()
-        DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main).apply {
-            viewModel = mainViewModel
-            lifecycleOwner = this@MainActivity
+        DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main).also {
+            it.viewModel = mainViewModel
+            it.lifecycleOwner = this@MainActivity
 
-            navigationView.recyclerConfig = RecyclerConfig(adapter, LinearLayoutManager(this@MainActivity))
-            navigationView.viewModel = mainViewModel
-            navigationView.lifecycleOwner = this@MainActivity
+            it.navigationView.recyclerConfig = RecyclerConfig(adapter, LinearLayoutManager(this@MainActivity))
+            it.navigationView.viewModel = mainViewModel
+            it.navigationView.lifecycleOwner = this@MainActivity
 
-            navigationView.navigationHeader.viewModel = mainViewModel
-            navigationView.navigationHeader.lifecycleOwner = this@MainActivity
+            it.navigationView.navigationHeader.viewModel = mainViewModel
+            it.navigationView.navigationHeader.lifecycleOwner = this@MainActivity
 
-            navigationView.setOnAllPage {
-                openFragment(ArticleListFragment.openAllArticles())
-            }
-
-            navigationView.setOnFavoritePage {
-                openFragment(ArticleListFragment.openFavorites(), addToBackStack = true)
-            }
-
-            navigationView.setOnAddSubscription {
-                startActivity<AddSubscriptionActivity>()
-            }
-
-            navigationView.setOnSettings {
-                openFragment(SettingsFragment(), addToBackStack = true)
+            it.navigationView.setOnNavClick { v ->
+                when (v.id) {
+                    R.id.all -> openFragment(ArticleListFragment.openAllArticles())
+                    R.id.favorite -> openFragment(ArticleListFragment.openFavorites(), addToBackStack = true)
+                    R.id.add_subscription -> startActivity<AddSubscriptionActivity>()
+                    R.id.setting -> openFragment(SettingsFragment(), addToBackStack = true)
+                    R.id.logout -> mainViewModel.logout()
+                }
             }
         }
 
@@ -69,7 +69,7 @@ class MainActivity : BaseActivity() {
         drawer_view.addDrawerListener(object : androidx.drawerlayout.widget.DrawerLayout.SimpleDrawerListener() {
             override fun onDrawerOpened(drawerView: View) {
                 super.onDrawerOpened(drawerView)
-                updateDrawer()
+                mainViewModel.updateDrawer()
             }
         })
 
@@ -81,17 +81,19 @@ class MainActivity : BaseActivity() {
             adapter.submitList(it)
         }
 
-        if(savedInstanceState == null) {
+        observe(mainViewModel.event) {
+            when (it) {
+                UiEvent.CloseScreen -> startActivity<LoginActivity>(
+                        flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                )
+            }
+        }
+
+        if (savedInstanceState == null) {
             openFragment(ArticleListFragment.openAllArticles())
         }
 
-        updateDrawer()
-        mainViewModel.startScheduleUpdate()
-    }
 
-    private fun updateDrawer() {
-        mainViewModel.updateLastSyncDate()
-        mainViewModel.updateSubscriptions()
     }
 
     private fun openFragment(fragment: Fragment, addToBackStack: Boolean = false) {
