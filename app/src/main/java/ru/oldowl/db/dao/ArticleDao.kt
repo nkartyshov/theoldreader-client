@@ -52,7 +52,8 @@ interface ArticleDao {
 
     @Query("select id from articles " +
             "where (:subscriptionId is null or subscription_id = :subscriptionId) " +
-            "and (:read is null or read = :read)")
+            "and (:read is null or read = :read)" +
+            "and favorite = 0")
     fun findIds(subscriptionId: String? = null, read: Boolean? = null): List<String>
 
     @Query("select a.*, s.title as subscription_title " +
