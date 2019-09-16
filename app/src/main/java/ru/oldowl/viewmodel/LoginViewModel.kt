@@ -1,14 +1,17 @@
 package ru.oldowl.viewmodel
 
-import androidx.lifecycle.MutableLiveData
 import androidx.databinding.ObservableField
-import kotlinx.coroutines.launch
+import androidx.lifecycle.MutableLiveData
 import ru.oldowl.R
 import ru.oldowl.core.UiEvent.CloseScreen
 import ru.oldowl.core.ui.BaseViewModel
+import ru.oldowl.repository.NetworkManager
 import ru.oldowl.usecase.LoginUseCase
 
-class LoginViewModel(private val loginUseCase: LoginUseCase) : BaseViewModel() {
+class LoginViewModel(
+        private val networkManager: NetworkManager,
+        private val loginUseCase: LoginUseCase
+) : BaseViewModel() {
 
     val email: MutableLiveData<String> = MutableLiveData()
     val emailError: MutableLiveData<Int> = MutableLiveData()
@@ -16,9 +19,14 @@ class LoginViewModel(private val loginUseCase: LoginUseCase) : BaseViewModel() {
     val password: MutableLiveData<String> = MutableLiveData()
     val passwordError: MutableLiveData<Int> = MutableLiveData()
 
-    val progress: ObservableField<Boolean> = ObservableField(false)
+    val progress: MutableLiveData<Boolean> = MutableLiveData(false)
 
-    fun authentication() = launch {
+    fun authentication() {
+        if (networkManager.isNetworkUnavailable) {
+            showLongSnackbar(R.string.network_unavailable_error)
+            return
+        }
+
         val email = email.value ?: ""
         val password = password.value ?: ""
 
@@ -33,10 +41,10 @@ class LoginViewModel(private val loginUseCase: LoginUseCase) : BaseViewModel() {
         }
 
         if (emailError.value != null || passwordError.value != null) {
-            return@launch
+            return
         }
 
-        progress.set(true)
+        progress.value = true
 
         val param = LoginUseCase.Param(email, password)
         loginUseCase(param) {
@@ -45,7 +53,7 @@ class LoginViewModel(private val loginUseCase: LoginUseCase) : BaseViewModel() {
             }
 
             onComplete {
-                progress.set(false)
+                progress.value = false
             }
 
             onFailure {

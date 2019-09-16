@@ -1,7 +1,9 @@
 package ru.oldowl
 
 import android.app.SearchManager
+import android.app.job.JobScheduler
 import android.content.Context
+import android.net.ConnectivityManager
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.OkHttpClient
@@ -32,6 +34,8 @@ val serviceModule = module {
 
     //Android
     single { androidApplication().getSystemService(Context.SEARCH_SERVICE) as SearchManager }
+    single { androidApplication().getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler }
+    single { androidApplication().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager }
 
     // OkHttp
     single {
@@ -79,7 +83,8 @@ val serviceModule = module {
     // Repository
     single { NotificationManager(androidApplication()) }
     single { SettingsStorage(androidApplication(), get()) }
-    single { SyncManager(androidApplication(), get()) }
+    single { SyncManager(androidApplication(), get(), get()) }
+    single { NetworkManager(get()) }
     single<SyncEventRepository> { SyncEventRepository.SyncEventRepositoryImpl(get(), get(), get(), get()) }
     single<AccountRepository> { AccountRepository.AccountRepositoryImpl(get()) }
     single<CategoryRepository> { CategoryRepository.CategoryRepositoryImpl(get(), get(), get()) }
@@ -106,13 +111,14 @@ val serviceModule = module {
     single { GetEmailUseCase(get()) }
 
     // ViewModels
-    viewModel { LoginViewModel(get()) }
+    viewModel { LoginViewModel(get(), get()) }
     viewModel { ArticleViewModel(get(), get()) }
-    viewModel { AddSubscriptionViewModel(get(), get()) }
+    viewModel { AddSubscriptionViewModel(get(), get(), get()) }
     viewModel { MainViewModel(get(), get(), get(), get(), get()) }
     viewModel {
         ArticleListViewModel(get(), get(), get(), get(),
-                get(), get(), get(), get(), get(), get(), get())
+                get(), get(), get(), get(),
+                get(), get(), get(), get())
     }
     viewModel { SearchViewModel(get()) }
 }

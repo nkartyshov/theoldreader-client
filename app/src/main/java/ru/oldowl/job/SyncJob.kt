@@ -38,7 +38,8 @@ class SyncJob : CoroutineJobService() {
             syncEventRepository.syncEvents()
 
             // Save new categories
-            categoryRepository.downloadCategory().forEach { categoryRepository.saveOrUpdate(it) }
+            categoryRepository.downloadCategory()
+                    .forEach { categoryRepository.saveOrUpdate(it) }
 
             // Sync subscriptions
             syncSubscriptions()

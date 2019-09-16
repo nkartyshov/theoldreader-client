@@ -10,6 +10,7 @@ import ru.oldowl.core.ui.BaseViewModel
 import ru.oldowl.db.model.ArticleListItem
 import ru.oldowl.db.model.Subscription
 import ru.oldowl.job.JobStatus
+import ru.oldowl.repository.NetworkManager
 import ru.oldowl.repository.SettingsStorage
 import ru.oldowl.repository.SyncManager
 import ru.oldowl.usecase.*
@@ -18,6 +19,7 @@ class ArticleListViewModel(
         private val application: Application,
         private val settingsStorage: SettingsStorage,
         private val syncManager: SyncManager,
+        private val networkManager: NetworkManager,
         private val loadArticleListUseCase: LoadArticleListUseCase,
         private val deleteAllUseCase: DeleteAllUseCase,
         private val deleteAllReadUseCase: DeleteAllReadUseCase,
@@ -92,7 +94,15 @@ class ArticleListViewModel(
 
     fun hasSubscription() = subscription != null
 
-    fun sync() = syncManager.forceUpdate(subscription)
+    fun sync() {
+        if (networkManager.isNetworkUnavailable) {
+            dataLoading.value = false
+            showLongSnackbar(R.string.network_unavailable_error)
+            return
+        }
+
+        syncManager.forceUpdate(subscription)
+    }
 
     fun deleteAll() =
             deleteAllUseCase(subscription?.id) {

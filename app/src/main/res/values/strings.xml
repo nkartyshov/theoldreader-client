@@ -18,6 +18,8 @@
 
     <string name="undo">Undo</string>
 
+    <string name="network_unavailable_error">Network unavailable</string>
+
     <!-- Login -->
     <string name="sing_in">Sing in</string>
     <string name="email">Email</string>

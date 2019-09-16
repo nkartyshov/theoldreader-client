@@ -1,11 +1,7 @@
 package ru.oldowl.ui
 
 import android.os.Bundle
-import android.os.PersistableBundle
-import android.view.ActionMode
-import android.view.Menu
 import android.view.inputmethod.EditorInfo
-import androidx.core.widget.doOnTextChanged
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager

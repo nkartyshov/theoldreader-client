@@ -18,10 +18,9 @@ private const val AUTO_UPDATE_ID = 2
 
 class SyncManager(
         private val context: Context,
+        private val jobScheduler: JobScheduler,
         private val settingsStorage: SettingsStorage
 ) {
-
-    private val jobScheduler by lazy { context.getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler }
 
     val state
         get() = jobStatusLiveData

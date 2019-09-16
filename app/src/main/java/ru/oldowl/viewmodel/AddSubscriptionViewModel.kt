@@ -1,17 +1,15 @@
 package ru.oldowl.viewmodel
 
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.launch
 import ru.oldowl.R
 import ru.oldowl.core.ui.BaseViewModel
 import ru.oldowl.db.model.Subscription
+import ru.oldowl.repository.NetworkManager
 import ru.oldowl.usecase.AddSubscriptionUseCase
 import ru.oldowl.usecase.SearchSubscriptionUseCase
 
 class AddSubscriptionViewModel(
+        private val networkManager: NetworkManager,
         private val searchSubscriptionUseCase: SearchSubscriptionUseCase,
         private val addSubscriptionUseCase: AddSubscriptionUseCase) : BaseViewModel() {
 
@@ -19,6 +17,11 @@ class AddSubscriptionViewModel(
     val searchResult: MutableLiveData<List<Subscription>> = MutableLiveData()
 
     fun search(query: String) {
+        if (networkManager.isNetworkUnavailable) {
+            showLongSnackbar(R.string.network_unavailable_error)
+            return
+        }
+
         dataLoading.value = true
 
         searchSubscriptionUseCase(query) {
@@ -34,10 +37,6 @@ class AddSubscriptionViewModel(
                 dataLoading.value = false
             }
         }
-    }
-
-    fun reset() {
-        searchResult.value = emptyList()
     }
 
     fun save(value: Subscription) {
