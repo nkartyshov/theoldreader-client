@@ -6,5 +6,7 @@ class NetworkManager(
         private val connectivityManager: ConnectivityManager
 ) {
     val isNetworkUnavailable: Boolean
-        get() = connectivityManager.activeNetworkInfo?.isConnected ?: true
+        get() = connectivityManager.activeNetworkInfo?.let {
+            !it.isConnected
+        } ?: true
 }

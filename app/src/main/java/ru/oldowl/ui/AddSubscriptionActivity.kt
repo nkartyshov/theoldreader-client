@@ -6,6 +6,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.activity_add_subscription.*
 import kotlinx.android.synthetic.main.toolbar.*
 import org.koin.android.viewmodel.ext.android.viewModel
 import ru.oldowl.R
@@ -65,7 +66,7 @@ class AddSubscriptionActivity : BaseActivity() {
 
         observe(viewModel.event) {
             when (it) {
-                is ShowSnackbar -> showMessage(window.decorView, it)
+                is ShowSnackbar -> showMessage(content, it)
             }
         }
     }

@@ -22,6 +22,9 @@ class LoginViewModel(
     val progress: MutableLiveData<Boolean> = MutableLiveData(false)
 
     fun authentication() {
+        emailError.value = null
+        passwordError.value = null
+
         if (networkManager.isNetworkUnavailable) {
             showLongSnackbar(R.string.network_unavailable_error)
             return
@@ -30,12 +33,10 @@ class LoginViewModel(
         val email = email.value ?: ""
         val password = password.value ?: ""
 
-        emailError.value = null
         if (email.isBlank()) {
             emailError.value = R.string.email_error
         }
 
-        passwordError.value = null
         if (password.isBlank()) {
             passwordError.value = R.string.password_error
         }

@@ -5,7 +5,7 @@
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:name=".AppApplication"
@@ -33,11 +33,11 @@
 
         <activity
             android:name=".ui.AddSubscriptionActivity"
-            android:label="@string/nav_add_subscription"/>
+            android:label="@string/nav_add_subscription" />
 
         <activity
             android:name=".ui.MainActivity"
-            android:label="@string/empty"/>
+            android:label="@string/empty" />
 
         <activity
             android:name=".ui.ArticleActivity"
@@ -54,7 +54,7 @@
             </intent-filter>
 
             <meta-data android:name="android.app.searchable"
-                android:resource="@xml/searchable"/>
+                android:resource="@xml/searchable" />
         </activity>
 
         <meta-data
@@ -62,7 +62,7 @@
             android:value="false" />
 
         <meta-data android:name="android.app.default_searchable"
-            android:value=".ui.SearchActivity"/>
+            android:value=".ui.SearchActivity" />
 
         <service
             android:name=".job.SyncJob"

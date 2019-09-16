@@ -16,6 +16,7 @@
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/content"
         style="@style/ContentFullParent">
 
         <com.google.android.material.appbar.AppBarLayout

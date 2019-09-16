@@ -90,9 +90,7 @@ fun PreferenceFragmentCompat.findPreference(@StringRes stringRes: Int): Preferen
 
 fun Activity.hideSoftKeyboard() {
     val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
-    currentFocus?.let {
-        imm?.hideSoftInputFromWindow(it.windowToken, 0)
-    }
+    imm?.hideSoftInputFromWindow(window.decorView.windowToken, 0)
 }
 
 fun JobScheduler.isScheduled(jobId: Int): Boolean {
