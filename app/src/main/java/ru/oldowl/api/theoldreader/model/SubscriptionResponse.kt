@@ -12,7 +12,11 @@ data class SubscriptionResponse(
         var categories: List<CategoryResponse>
 )
 
+data class CategoriesResponse(
+        val tags: List<CategoryResponse>
+)
+
 data class CategoryResponse(
         var id: String,
-        var label: String
+        var label: String?
 )

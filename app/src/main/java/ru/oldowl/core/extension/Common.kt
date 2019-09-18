@@ -9,6 +9,9 @@ import java.util.*
 val Date.epochTime
     get() = this.time / 1000
 
+fun Date?.toEpochTime(): String? =
+        this?.epochTime?.toString()
+
 fun Date.toShortDateTime(): String =
         DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(this)
 

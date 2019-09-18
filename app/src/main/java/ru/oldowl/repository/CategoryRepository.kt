@@ -14,7 +14,6 @@ interface CategoryRepository {
 
     class CategoryRepositoryImpl(
             private val categoryDao: CategoryDao,
-            private val accountRepository: AccountRepository,
             private val theOldReaderApi: TheOldReaderApi
     ) : CategoryRepository {
 
@@ -27,7 +26,7 @@ interface CategoryRepository {
         }
 
         override suspend fun downloadCategory(): List<Category> =
-                theOldReaderApi.getCategories(accountRepository.getAuthTokenOrThrow())
+                theOldReaderApi.getCategories()
 
     }
 }

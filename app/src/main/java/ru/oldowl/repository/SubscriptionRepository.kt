@@ -45,7 +45,7 @@ interface SubscriptionRepository {
         override suspend fun findById(id: String): Subscription = subscriptionDao.findById(id)
 
         override suspend fun addSubscription(subscription: Subscription): Boolean {
-            val feedId = theOldReaderApi.addSubscription(subscription.url, authToken)
+            val feedId = theOldReaderApi.addSubscription(subscription.url)
 
             return feedId?.let {
                 subscription.id = it
@@ -70,7 +70,7 @@ interface SubscriptionRepository {
         }
 
         override suspend fun downloadSubscription(): List<Subscription> =
-                theOldReaderApi.getSubscriptions(authToken).map {
+                theOldReaderApi.getSubscriptions().map {
                     val categories = it.categories
                     val category = categories.singleOrNull()
 

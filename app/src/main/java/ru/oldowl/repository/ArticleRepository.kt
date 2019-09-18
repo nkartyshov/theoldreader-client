@@ -23,6 +23,8 @@ interface ArticleRepository {
 
     suspend fun save(article: Article)
 
+    suspend fun saveAll(articles: List<Article>)
+
     suspend fun search(query: String): List<ArticleListItem>
 
     suspend fun markAllRead(): List<String>
@@ -57,11 +59,8 @@ interface ArticleRepository {
             private val articleDao: ArticleDao,
             private val syncEventDao: SyncEventDao,
             private val theOldReaderApi: TheOldReaderApi,
-            private val accountRepository: AccountRepository,
             private val settingsStorage: SettingsStorage
     ) : ArticleRepository {
-
-        private val authToken by lazy { accountRepository.getAuthTokenOrThrow() }
 
         override suspend fun findFavorite(): List<ArticleListItem> = articleDao.findFavorite()
 
@@ -76,6 +75,8 @@ interface ArticleRepository {
                 articleDao.findUnread(subscriptionId)
 
         override suspend fun save(article: Article) = articleDao.save(article)
+
+        override suspend fun saveAll(articles: List<Article>) = articleDao.saveAll(articles)
 
         override suspend fun search(query: String): List<ArticleListItem> =
                 articleDao.search(query)
@@ -157,13 +158,13 @@ interface ArticleRepository {
 
         override suspend fun downloadArticles(subscription: Subscription, newerThan: Date?): List<Article> {
             val date = newerThan ?: settingsStorage.lastSyncDate
-            val itemIds = theOldReaderApi.getItemIds(subscription.id, authToken, newerThan = date)
+            val itemIds = theOldReaderApi.getItemIds(subscription.id, newerThan = date)
 
             if (itemIds.isEmpty()) {
                 return emptyList()
             }
 
-            return theOldReaderApi.getContents(itemIds, authToken)
+            return theOldReaderApi.getContents(itemIds)
                     .map {
                         Article(
                                 id = it.itemId,
@@ -177,9 +178,9 @@ interface ArticleRepository {
         }
 
         override suspend fun downloadFavorites(): List<Article> {
-            val favoriteIds = theOldReaderApi.getFavoriteIds(authToken)
+            val favoriteIds = theOldReaderApi.getFavoriteIds()
 
-            return theOldReaderApi.getContents(favoriteIds, authToken)
+            return theOldReaderApi.getContents(favoriteIds)
                     .map {
                         Article(
                                 id = it.itemId,

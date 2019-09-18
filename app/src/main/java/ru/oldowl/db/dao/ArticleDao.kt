@@ -68,6 +68,9 @@ interface ArticleDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun save(article: Article)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun saveAll(articles: List<Article>)
+
     @Delete
     fun delete(article: Article)
 
@@ -88,4 +91,6 @@ interface ArticleDao {
 
     @Query("delete from articles where read = :read and favorite = 0 and publish_date <= :cleanupPeriod")
     fun cleanup(cleanupPeriod: Date, read: Boolean)
+
+
 }

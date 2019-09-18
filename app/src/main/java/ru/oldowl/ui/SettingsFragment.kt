@@ -24,22 +24,22 @@ class SettingsFragment : PreferenceFragmentCompat(), KoinComponent {
         activity?.title = getString(R.string.nav_settings)
 
         val versionName = findPreference(R.string.key_version_name)
-        versionName.summary = BuildConfig.VERSION_NAME
+        versionName?.summary = BuildConfig.VERSION_NAME
 
         val sendFeedback = findPreference(R.string.key_send_feedback)
-        sendFeedback.setOnPreferenceClickListener {
+        sendFeedback?.setOnPreferenceClickListener {
             context?.browse(BuildConfig.SEND_FEEDBACK_URL)
             true
         }
 
         val autoUpdate = findPreference(R.string.key_auto_update)
-        autoUpdate.setOnPreferenceChangeListener { _, _ ->
+        autoUpdate?.setOnPreferenceChangeListener { _, _ ->
             syncManager.scheduleUpdate()
             true
         }
 
         val autoUpdatePeriod = findPreference(R.string.key_auto_update_period)
-        autoUpdatePeriod.setOnPreferenceChangeListener { _, _ ->
+        autoUpdatePeriod?.setOnPreferenceChangeListener { _, _ ->
             syncManager.scheduleUpdate()
             true
         }

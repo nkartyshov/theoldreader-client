@@ -14,35 +14,31 @@ interface SyncEventRepository {
     class SyncEventRepositoryImpl(
             private val syncEventDao: SyncEventDao,
             private val articleDao: ArticleDao,
-
-            private val accountRepository: AccountRepository,
             private val theOldReaderApi: TheOldReaderApi
     ) : SyncEventRepository {
 
         override suspend fun findAll(): List<SyncEvent> = syncEventDao.findAll()
 
         override suspend fun syncEvents() {
-            val authToken = accountRepository.getAuthTokenOrThrow()
-
             syncEventDao.findAll()
                     .forEach { event ->
                         when (event.eventType) {
                             SyncEventType.UPDATE_READ -> event.payload?.let {
                                 val article = articleDao.findById(it)
-                                theOldReaderApi.updateReadState(article!!.id, article.read, authToken)
+                                theOldReaderApi.updateReadState(article!!.id, article.read)
                             }
 
                             SyncEventType.UPDATE_FAVORITE -> event.payload?.let {
                                 val article = articleDao.findById(it)
-                                theOldReaderApi.updateFavoriteState(article!!.id, article.favorite, authToken)
+                                theOldReaderApi.updateFavoriteState(article!!.id, article.favorite)
                             }
 
                             SyncEventType.MARK_ALL_READ -> {
-                                theOldReaderApi.markAllRead(event.payload, authToken, event.createdDate)
+                                theOldReaderApi.markAllRead(event.payload, event.createdDate)
                             }
 
                             SyncEventType.UNSUBSCRIBE -> event.payload?.let {
-                                theOldReaderApi.unsubscribe(it, authToken)
+                                theOldReaderApi.unsubscribe(it)
                             }
                         }
 

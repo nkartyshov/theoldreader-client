@@ -83,10 +83,11 @@ inline fun <reified T : Context> Context.startActivity(bundle: Bundle? = null, f
     this.startActivity(intent)
 }
 
-fun PreferenceFragmentCompat.findPreference(@StringRes stringRes: Int): Preference {
-    val key = this.context?.getString(stringRes)
-    return this.findPreference(key)
-}
+fun PreferenceFragmentCompat.findPreference(@StringRes stringRes: Int): Preference? =
+    this.context?.getString(stringRes)?.let {
+        this.findPreference(it)
+    }
+
 
 fun Activity.hideSoftKeyboard() {
     val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?

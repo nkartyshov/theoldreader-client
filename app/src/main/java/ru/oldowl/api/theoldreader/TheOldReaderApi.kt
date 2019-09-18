@@ -1,16 +1,18 @@
 package ru.oldowl.api.theoldreader
 
 import com.rometools.rome.feed.synd.SyndFeed
-import retrofit2.Call
+import kotlinx.coroutines.Deferred
 import retrofit2.http.*
 import ru.oldowl.api.theoldreader.model.*
-import ru.oldowl.core.extension.epochTime
+import ru.oldowl.core.extension.toEpochTime
 import ru.oldowl.db.model.Category
 import timber.log.Timber
 import java.util.*
 import java.util.concurrent.TimeUnit
 
 private const val CLIENT_LOGIN = "accounts/ClientLogin"
+
+private const val CATEGORY_LIST = "reader/api/0/tag/list"
 
 private const val SUBSCRIPTION_LIST = "reader/api/0/subscription/list"
 private const val SUBSCRIPTION_ADD = "reader/api/0/subscription/quickadd"
@@ -49,54 +51,49 @@ interface TheOldReaderWebService {
                        @Field("Passwd") password: String,
                        @Field("client") appName: String,
                        @Field("accountType") accountType: String = "HOSTED_OR_GOOGLE",
-                       @Field(OUTPUT_PARAM) output: String = OUTPUT_JSON): Call<AuthResponse>
+                       @Field(OUTPUT_PARAM) output: String = OUTPUT_JSON): Deferred<AuthResponse>
+
+    @GET(CATEGORY_LIST)
+    fun getCategory(@Query(OUTPUT_PARAM) output: String = OUTPUT_JSON): Deferred<CategoriesResponse>
 
     @GET(SUBSCRIPTION_LIST)
-    fun getSubscriptions(@Header(AUTHORIZATION_HEADER) token: String,
-                         @Query(OUTPUT_PARAM) output: String = OUTPUT_JSON): Call<SubscriptionsResponse>
+    fun getSubscriptions(@Query(OUTPUT_PARAM) output: String = OUTPUT_JSON): Deferred<SubscriptionsResponse>
 
     @POST(SUBSCRIPTION_ADD)
-    fun addSubscription(@Header(AUTHORIZATION_HEADER) token: String,
-                        @Query("quickadd") url: String): Call<AddSubscriptionResponse>
+    fun addSubscription(@Query("quickadd") url: String): Deferred<AddSubscriptionResponse>
 
     @FormUrlEncoded
     @POST(SUBSCRIPTION_UPDATE)
-    fun unsubscribe(@Header(AUTHORIZATION_HEADER) token: String,
-                    @Field("ac") action: String = "unsubscribe",
-                    @Field(QUERY_PARAM) query: String): Call<ErrorResponse>
+    fun unsubscribe(@Field("ac") action: String = "unsubscribe",
+                    @Field(QUERY_PARAM) query: String): Deferred<ErrorResponse>
 
     @GET(ITEM_IDS_LIST)
-    fun getItemIds(@Header(AUTHORIZATION_HEADER) token: String,
-                   @Query(QUERY_PARAM) query: String,
+    fun getItemIds(@Query(QUERY_PARAM) query: String,
                    @Query(NEWER_THAN_PARAM) newerThan: String? = null,
                    @Query(COUNT_PARAM) count: Int = COUNT_VALUE,
                    @Query(UNREAD_PARAM) xt: String = UNREAD_VALUE,
-                   @Query(OUTPUT_PARAM) output: String = OUTPUT_JSON): Call<ItemsRefResponse>
+                   @Query(OUTPUT_PARAM) output: String = OUTPUT_JSON): Deferred<ItemsRefResponse>
 
     @FormUrlEncoded
     @POST(CONTENTS_LIST)
-    fun getContents(@Header(AUTHORIZATION_HEADER) token: String,
-                    @Field(ITEMS_PARAM) itemIds: List<String>,
-                    @Field(OUTPUT_PARAM) output: String = OUTPUT_ATOM): Call<SyndFeed>
+    fun getContents(@Field(ITEMS_PARAM) itemIds: List<String>,
+                    @Field(OUTPUT_PARAM) output: String = OUTPUT_ATOM): Deferred<SyndFeed>
 
 
     @FormUrlEncoded
     @POST(UPDATE_ITEMS)
-    fun addArticleState(@Header(AUTHORIZATION_HEADER) token: String,
-                        @Field(ITEMS_PARAM) itemIds: List<String>,
-                        @Field(ITEMS_ADD_PARAM) state: String): Call<ErrorResponse>
+    fun addArticleState(@Field(ITEMS_PARAM) itemIds: List<String>,
+                        @Field(ITEMS_ADD_PARAM) state: String): Deferred<ErrorResponse>
 
     @FormUrlEncoded
     @POST(UPDATE_ITEMS)
-    fun removeArticleState(@Header(AUTHORIZATION_HEADER) token: String,
-                           @Field(ITEMS_PARAM) itemIds: List<String>,
-                           @Field(ITEMS_REMOVE_PARAM) state: String): Call<ErrorResponse>
+    fun removeArticleState(@Field(ITEMS_PARAM) itemIds: List<String>,
+                           @Field(ITEMS_REMOVE_PARAM) state: String): Deferred<ErrorResponse>
 
     @FormUrlEncoded
     @POST(MARK_ALL_READ)
-    fun markAllRead(@Header(AUTHORIZATION_HEADER) token: String,
-                    @Field(QUERY_PARAM) query: String,
-                    @Field("ts") olderThen: String? = null): Call<ErrorResponse>
+    fun markAllRead(@Field(QUERY_PARAM) query: String,
+                    @Field("ts") olderThen: String? = null): Deferred<ErrorResponse>
 
     companion object {
         const val BASE_URL = "https://theoldreader.com"
@@ -105,46 +102,26 @@ interface TheOldReaderWebService {
 
 class TheOldReaderApi(private val theOldReaderWebService: TheOldReaderWebService) {
 
-    fun authentication(email: String, password: String, appName: String): String? {
+    suspend fun authentication(email: String, password: String, appName: String): String? =
+            theOldReaderWebService.authentication(email, password, appName).await().auth
 
-        return theOldReaderWebService.authentication(email, password, appName)
-                .execute()
-                .body()
-                ?.auth
-    }
 
-    fun getSubscriptions(token: String): List<SubscriptionResponse> {
+    suspend fun getSubscriptions(): List<SubscriptionResponse> =
+            theOldReaderWebService.getSubscriptions()
+                    .await()
+                    .subscriptions
+                    .filterNot { it.id.contains("sponsored") }
 
-        return theOldReaderWebService.getSubscriptions(authorizationHeader(token))
-                .execute()
-                .body()
-                ?.subscriptions
-                ?.filterNot { it.id.contains("sponsored") } ?: emptyList()
-    }
 
-    fun addSubscription(url: String, token: String): String? {
+    suspend fun addSubscription(url: String): String? =
+            theOldReaderWebService.addSubscription(url)
+                    .await()
+                    .streamId
 
-        val response = theOldReaderWebService.addSubscription(authorizationHeader(token), url)
-                .execute()
-                .body()
-
-        if (response?.error.isNullOrBlank()) {
-            return response?.streamId!!
-        }
-
-        Timber.e("Error adding the subscription $url, error ${response?.error}")
-        return null
-    }
-
-    fun unsubscribe(feedId: String, token: String): Boolean {
-
-        val body = theOldReaderWebService.unsubscribe(
-                authorizationHeader(token),
-                query = feedId)
-                .execute()
-                .body()
-                ?.errors
-                ?.joinToString() ?: ""
+    suspend fun unsubscribe(feedId: String): Boolean {
+        val body = theOldReaderWebService.unsubscribe(query = feedId)
+                .await()
+                .errors.joinToString()
 
         if (body.isNotBlank()) {
             Timber.e("Error unsubscribe from $feedId\n$body")
@@ -152,42 +129,36 @@ class TheOldReaderApi(private val theOldReaderWebService: TheOldReaderWebService
         }
 
         return true
-
     }
 
-    fun getFavoriteIds(token: String): List<String> {
+    suspend fun getFavoriteIds(): List<String> =
+            theOldReaderWebService.getItemIds(STARRED_STATE)
+                    .await()
+                    .itemRefs.map { it.id }
 
-        return theOldReaderWebService.getItemIds(
-                authorizationHeader(token),
-                "user/-/state/com.google/starred")
-                .execute()
-                .body()
-                ?.itemRefs?.map { it.id } ?: emptyList()
-    }
+    suspend fun getItemIds(
+            feedId: String,
+            onlyUnread: Boolean = true,
+            newerThan: Date? = null
+    ): List<String> =
+            theOldReaderWebService.getItemIds(
+                    feedId,
+                    newerThan?.toEpochTime(),
+                    xt = if (onlyUnread) READ_STATE else ""
+            ).await().itemRefs.map { it.id }
 
-    fun getItemIds(feedId: String, token: String, onlyUnread: Boolean = true, newerThan: Date? = null): List<String> {
 
-        return theOldReaderWebService.getItemIds(
-                authorizationHeader(token),
-                feedId,
-                newerThan?.epochTime.toString(),
-                xt = if (onlyUnread) "user/-/state/com.google/read" else "")
-                .execute()
-                .body()
-                ?.itemRefs?.map { it.id } ?: emptyList()
-    }
-
-    fun getContents(itemIds: List<String>, token: String): List<ContentResponse> {
+    // TODO refactoring
+    suspend fun getContents(itemIds: List<String>): List<ContentResponse> {
 
         if (itemIds.isNullOrEmpty()) {
             return emptyList()
         }
 
-        return theOldReaderWebService.getContents(authorizationHeader(token), itemIds)
-                .execute()
-                .body()
-                ?.entries
-                ?.map { entry ->
+        return theOldReaderWebService.getContents(itemIds)
+                .await()
+                .entries
+                .map { entry ->
                     val description = if (entry.contents.isEmpty()) {
                         entry.description.value ?: ""
                     } else {
@@ -202,16 +173,21 @@ class TheOldReaderApi(private val theOldReaderWebService: TheOldReaderWebService
                             feedId = entry.source?.uri?.removePrefix(READER_PREFIX),
                             publishDate = entry.publishedDate
                     )
-                } ?: emptyList()
+                }
     }
 
-    fun markAllRead(feedId: String? = null, token: String, olderThen: Date = Date()): Boolean {
+    suspend fun markAllRead(
+            feedId: String? = null,
+            olderThen: Date = Date()
+    ): Boolean {
 
-        val body = theOldReaderWebService.markAllRead(
-                authorizationHeader(token),
-                feedId ?: "user/-/state/com.google/reading-list",
-                TimeUnit.MILLISECONDS.toNanos(olderThen.time).toString()
-        ).execute().body()?.errors?.joinToString() ?: ""
+        val query = feedId ?: READLING_LIST_STATE
+        val olderThenMs = TimeUnit.MILLISECONDS.toNanos(olderThen.time)
+
+        val body = theOldReaderWebService.markAllRead(query, olderThenMs.toString())
+                .await()
+                .errors
+                .joinToString()
 
         if (body.isBlank()) {
             Timber.e("Error mark all read\n$body")
@@ -221,19 +197,17 @@ class TheOldReaderApi(private val theOldReaderWebService: TheOldReaderWebService
         return true
     }
 
-    fun updateReadState(itemId: String, state: Boolean, token: String): Boolean {
+    suspend fun updateReadState(itemId: String, state: Boolean): Boolean {
 
-        val authorization = authorizationHeader(token)
         val itemIds = arrayListOf(addItemIdPrefixIfExists(itemId))
-        val readState = "user/-/state/com.google/read"
 
         val response = if (state)
-            theOldReaderWebService.addArticleState(authorization, itemIds, readState)
-        else theOldReaderWebService.removeArticleState(authorization, itemIds, readState)
+            theOldReaderWebService.addArticleState(itemIds, READ_STATE)
+        else theOldReaderWebService.removeArticleState(itemIds, READ_STATE)
 
-        val body = response.execute().body()?.errors?.joinToString()
+        val body = response.await().errors.joinToString()
 
-        if (body.isNullOrBlank()) {
+        if (body.isBlank()) {
             return true
         }
 
@@ -241,19 +215,17 @@ class TheOldReaderApi(private val theOldReaderWebService: TheOldReaderWebService
         return false
     }
 
-    fun updateFavoriteState(itemId: String, state: Boolean, token: String): Boolean {
+    suspend fun updateFavoriteState(itemId: String, state: Boolean): Boolean {
 
-        val authorization = authorizationHeader(token)
         val itemIds = arrayListOf(addItemIdPrefixIfExists(itemId))
-        val readState = "user/-/state/com.google/starred"
 
         val response = if (state)
-            theOldReaderWebService.addArticleState(authorization, itemIds, readState)
-        else theOldReaderWebService.removeArticleState(authorization, itemIds, readState)
+            theOldReaderWebService.addArticleState(itemIds, STARRED_STATE)
+        else theOldReaderWebService.removeArticleState(itemIds, STARRED_STATE)
 
-        val body = response.execute().body()?.errors?.joinToString()
+        val body = response.await().errors.joinToString()
 
-        if (body.isNullOrBlank()) {
+        if (body.isBlank()) {
             return true
         }
 
@@ -261,26 +233,33 @@ class TheOldReaderApi(private val theOldReaderWebService: TheOldReaderWebService
         return false
     }
 
-    fun getCategories(authToken: String): List<Category> =
-            theOldReaderWebService.getSubscriptions(authorizationHeader(authToken))
-                    .execute()
-                    .body()
-                    ?.subscriptions
-                    ?.flatMap { it.categories }
-                    ?.map {
+    suspend fun getCategories(): List<Category> =
+            theOldReaderWebService.getCategory()
+                    .await()
+                    .tags
+                    .filterNot { CATEGORY_EXCLUSIONS.contains(it.id) }
+                    .map {
                         Category(
                                 id = it.id,
-                                title = it.label
+                                title = it.label ?: it.id.removePrefix(CATEGORY_PREFIX)
                         )
-                    } ?: emptyList()
+                    }
 
     companion object {
-        private fun authorizationHeader(token: String) = "GoogleLogin auth=$token"
 
         private fun addItemIdPrefixIfExists(itemId: String) =
                 if (itemId.startsWith(ITEM_PREFIX)) itemId else ITEM_PREFIX + itemId
 
         private const val ITEM_PREFIX = "tag:google.com,2005:reader/item/"
         private const val READER_PREFIX = "tag:google.com,2005:reader/"
+        private const val CATEGORY_PREFIX = "user/-/label/"
+
+        private const val STARRED_STATE = "user/-/state/com.google/starred"
+        private const val READ_STATE = "user/-/state/com.google/read"
+        private const val READLING_LIST_STATE = "user/-/state/com.google/reading-list"
+
+        private val CATEGORY_EXCLUSIONS = arrayListOf(
+                "user/-/state/com.google/starred"
+        )
     }
 }
