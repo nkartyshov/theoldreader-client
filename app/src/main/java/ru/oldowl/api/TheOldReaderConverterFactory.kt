@@ -38,6 +38,8 @@ class TheOldReaderConverterFactory : Converter.Factory() {
             private val delegate: Converter<ResponseBody, Any?>
     ) : Converter<ResponseBody, Any?> {
 
-        override fun convert(value: ResponseBody): Any? = if (value.contentLength() < 2) delegate.convert(value) else null
+        override fun convert(value: ResponseBody): Any? =
+                if (value.contentLength() < 2) delegate.convert(value)
+                else null
     }
 }

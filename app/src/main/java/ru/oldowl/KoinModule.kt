@@ -4,7 +4,6 @@ import android.app.SearchManager
 import android.app.job.JobScheduler
 import android.content.Context
 import android.net.ConnectivityManager
-import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.OkHttpClient
@@ -64,7 +63,6 @@ val serviceModule = module {
         Retrofit.Builder()
                 .baseUrl(FeedlyWebService.BASE_URL)
                 .addConverterFactory(MoshiConverterFactory.create(get()))
-                .addCallAdapterFactory(CoroutineCallAdapterFactory())
                 .client(get())
                 .build()
                 .create(FeedlyWebService::class.java)
@@ -75,7 +73,6 @@ val serviceModule = module {
                 .baseUrl(TheOldReaderWebService.BASE_URL)
                 .addConverterFactory(TheOldReaderConverterFactory())
                 .addConverterFactory(MoshiConverterFactory.create(get()))
-                .addCallAdapterFactory(CoroutineCallAdapterFactory())
                 .client(get())
                 .build()
                 .create(TheOldReaderWebService::class.java)

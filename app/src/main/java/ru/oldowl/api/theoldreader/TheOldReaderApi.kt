@@ -1,7 +1,6 @@
 package ru.oldowl.api.theoldreader
 
 import com.rometools.rome.feed.synd.SyndFeed
-import kotlinx.coroutines.Deferred
 import retrofit2.http.*
 import ru.oldowl.api.theoldreader.model.*
 import ru.oldowl.core.extension.toEpochTime
@@ -24,8 +23,6 @@ private const val MARK_ALL_READ = "reader/api/0/mark-all-as-read"
 
 private const val CONTENTS_LIST = "reader/api/0/stream/items/contents"
 
-private const val AUTHORIZATION_HEADER = "Authorization"
-
 private const val QUERY_PARAM = "s"
 private const val NEWER_THAN_PARAM = "ot"
 private const val ITEMS_PARAM = "i"
@@ -47,53 +44,53 @@ interface TheOldReaderWebService {
 
     @FormUrlEncoded
     @POST(CLIENT_LOGIN)
-    fun authentication(@Field("Email") email: String,
-                       @Field("Passwd") password: String,
-                       @Field("client") appName: String,
-                       @Field("accountType") accountType: String = "HOSTED_OR_GOOGLE",
-                       @Field(OUTPUT_PARAM) output: String = OUTPUT_JSON): Deferred<AuthResponse>
+    suspend fun authentication(@Field("Email") email: String,
+                               @Field("Passwd") password: String,
+                               @Field("client") appName: String,
+                               @Field("accountType") accountType: String = "HOSTED_OR_GOOGLE",
+                               @Field(OUTPUT_PARAM) output: String = OUTPUT_JSON): AuthResponse
 
     @GET(CATEGORY_LIST)
-    fun getCategory(@Query(OUTPUT_PARAM) output: String = OUTPUT_JSON): Deferred<CategoriesResponse>
+    suspend fun getCategory(@Query(OUTPUT_PARAM) output: String = OUTPUT_JSON): CategoriesResponse
 
     @GET(SUBSCRIPTION_LIST)
-    fun getSubscriptions(@Query(OUTPUT_PARAM) output: String = OUTPUT_JSON): Deferred<SubscriptionsResponse>
+    suspend fun getSubscriptions(@Query(OUTPUT_PARAM) output: String = OUTPUT_JSON): SubscriptionsResponse
 
     @POST(SUBSCRIPTION_ADD)
-    fun addSubscription(@Query("quickadd") url: String): Deferred<AddSubscriptionResponse>
+    suspend fun addSubscription(@Query("quickadd") url: String): AddSubscriptionResponse
 
     @FormUrlEncoded
     @POST(SUBSCRIPTION_UPDATE)
-    fun unsubscribe(@Field("ac") action: String = "unsubscribe",
-                    @Field(QUERY_PARAM) query: String): Deferred<ErrorResponse>
+    suspend fun unsubscribe(@Field("ac") action: String = "unsubscribe",
+                            @Field(QUERY_PARAM) query: String): ErrorResponse
 
     @GET(ITEM_IDS_LIST)
-    fun getItemIds(@Query(QUERY_PARAM) query: String,
-                   @Query(NEWER_THAN_PARAM) newerThan: String? = null,
-                   @Query(COUNT_PARAM) count: Int = COUNT_VALUE,
-                   @Query(UNREAD_PARAM) xt: String = UNREAD_VALUE,
-                   @Query(OUTPUT_PARAM) output: String = OUTPUT_JSON): Deferred<ItemsRefResponse>
+    suspend fun getItemIds(@Query(QUERY_PARAM) query: String,
+                           @Query(NEWER_THAN_PARAM) newerThan: String? = null,
+                           @Query(COUNT_PARAM) count: Int = COUNT_VALUE,
+                           @Query(UNREAD_PARAM) xt: String = UNREAD_VALUE,
+                           @Query(OUTPUT_PARAM) output: String = OUTPUT_JSON): ItemsRefResponse
 
     @FormUrlEncoded
     @POST(CONTENTS_LIST)
-    fun getContents(@Field(ITEMS_PARAM) itemIds: List<String>,
-                    @Field(OUTPUT_PARAM) output: String = OUTPUT_ATOM): Deferred<SyndFeed>
+    suspend fun getContents(@Field(ITEMS_PARAM) itemIds: List<String>,
+                            @Field(OUTPUT_PARAM) output: String = OUTPUT_ATOM): SyndFeed
 
 
     @FormUrlEncoded
     @POST(UPDATE_ITEMS)
-    fun addArticleState(@Field(ITEMS_PARAM) itemIds: List<String>,
-                        @Field(ITEMS_ADD_PARAM) state: String): Deferred<ErrorResponse>
+    suspend fun addArticleState(@Field(ITEMS_PARAM) itemIds: List<String>,
+                                @Field(ITEMS_ADD_PARAM) state: String): ErrorResponse
 
     @FormUrlEncoded
     @POST(UPDATE_ITEMS)
-    fun removeArticleState(@Field(ITEMS_PARAM) itemIds: List<String>,
-                           @Field(ITEMS_REMOVE_PARAM) state: String): Deferred<ErrorResponse>
+    suspend fun removeArticleState(@Field(ITEMS_PARAM) itemIds: List<String>,
+                                   @Field(ITEMS_REMOVE_PARAM) state: String): ErrorResponse
 
     @FormUrlEncoded
     @POST(MARK_ALL_READ)
-    fun markAllRead(@Field(QUERY_PARAM) query: String,
-                    @Field("ts") olderThen: String? = null): Deferred<ErrorResponse>
+    suspend fun markAllRead(@Field(QUERY_PARAM) query: String,
+                            @Field("ts") olderThen: String? = null): ErrorResponse
 
     companion object {
         const val BASE_URL = "https://theoldreader.com"
@@ -103,24 +100,21 @@ interface TheOldReaderWebService {
 class TheOldReaderApi(private val theOldReaderWebService: TheOldReaderWebService) {
 
     suspend fun authentication(email: String, password: String, appName: String): String? =
-            theOldReaderWebService.authentication(email, password, appName).await().auth
+            theOldReaderWebService.authentication(email, password, appName).auth
 
 
     suspend fun getSubscriptions(): List<SubscriptionResponse> =
             theOldReaderWebService.getSubscriptions()
-                    .await()
                     .subscriptions
                     .filterNot { it.id.contains("sponsored") }
 
 
     suspend fun addSubscription(url: String): String? =
             theOldReaderWebService.addSubscription(url)
-                    .await()
                     .streamId
 
     suspend fun unsubscribe(feedId: String): Boolean {
         val body = theOldReaderWebService.unsubscribe(query = feedId)
-                .await()
                 .errors.joinToString()
 
         if (body.isNotBlank()) {
@@ -133,7 +127,6 @@ class TheOldReaderApi(private val theOldReaderWebService: TheOldReaderWebService
 
     suspend fun getFavoriteIds(): List<String> =
             theOldReaderWebService.getItemIds(STARRED_STATE)
-                    .await()
                     .itemRefs.map { it.id }
 
     suspend fun getItemIds(
@@ -145,7 +138,7 @@ class TheOldReaderApi(private val theOldReaderWebService: TheOldReaderWebService
                     feedId,
                     newerThan?.toEpochTime(),
                     xt = if (onlyUnread) READ_STATE else ""
-            ).await().itemRefs.map { it.id }
+            ).itemRefs.map { it.id }
 
 
     // TODO refactoring
@@ -156,7 +149,6 @@ class TheOldReaderApi(private val theOldReaderWebService: TheOldReaderWebService
         }
 
         return theOldReaderWebService.getContents(itemIds)
-                .await()
                 .entries
                 .map { entry ->
                     val description = if (entry.contents.isEmpty()) {
@@ -185,7 +177,6 @@ class TheOldReaderApi(private val theOldReaderWebService: TheOldReaderWebService
         val olderThenMs = TimeUnit.MILLISECONDS.toNanos(olderThen.time)
 
         val body = theOldReaderWebService.markAllRead(query, olderThenMs.toString())
-                .await()
                 .errors
                 .joinToString()
 
@@ -205,7 +196,7 @@ class TheOldReaderApi(private val theOldReaderWebService: TheOldReaderWebService
             theOldReaderWebService.addArticleState(itemIds, READ_STATE)
         else theOldReaderWebService.removeArticleState(itemIds, READ_STATE)
 
-        val body = response.await().errors.joinToString()
+        val body = response.errors.joinToString()
 
         if (body.isBlank()) {
             return true
@@ -223,7 +214,7 @@ class TheOldReaderApi(private val theOldReaderWebService: TheOldReaderWebService
             theOldReaderWebService.addArticleState(itemIds, STARRED_STATE)
         else theOldReaderWebService.removeArticleState(itemIds, STARRED_STATE)
 
-        val body = response.await().errors.joinToString()
+        val body = response.errors.joinToString()
 
         if (body.isBlank()) {
             return true
@@ -235,7 +226,6 @@ class TheOldReaderApi(private val theOldReaderWebService: TheOldReaderWebService
 
     suspend fun getCategories(): List<Category> =
             theOldReaderWebService.getCategory()
-                    .await()
                     .tags
                     .filterNot { CATEGORY_EXCLUSIONS.contains(it.id) }
                     .map {
